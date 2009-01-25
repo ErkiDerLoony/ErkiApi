@@ -1,0 +1,41 @@
+<project name="ErkiAPI" default="tar">
+
+  <property name="version" value="0.0.1" />
+  <property name="bin.dir" value="bin" />
+  <property name="src.dir" value="src" />
+  <property name="test.dir" value="test" />
+  <property name="lib.dir" value="lib" />
+  <property name="jar.file" value="${lib.dir}/${ant.project.name}-${version}.jar" />
+  <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
+
+  <target name="tar" depends="clean, clean tar, jar">
+    <tar destfile="${tar.file}" compression="bzip2">
+      <tarfileset prefix="${ant.project.name}-${version}" dir="." />
+    </tar>
+  </target>
+
+  <target name="make">
+    <mkdir dir="${bin.dir}" />
+    <javac destdir="${bin.dir}" srcdir="${src.dir}" debug="on"
+           debuglevel="lines,vars,source" />
+    <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on"
+           debuglevel="lines,vars,source" />
+  </target>
+
+  <target name="jar" depends="make">
+    <mkdir dir="${lib.dir}" />
+    <jar destfile="${jar.file}" basedir="${bin.dir}" />
+  </target>
+
+  <target name="clean all" depends="clean, clean tar" />
+
+  <target name="clean">
+    <delete dir="${bin.dir}" />
+    <delete dir="${lib.dir}" />
+  </target>
+
+  <target name="clean tar">
+    <delete file="${tar.file}" />
+  </target>
+
+</project>
