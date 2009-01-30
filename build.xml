@@ -10,6 +10,7 @@
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
   <target name="tar" depends="jar">
+    <delete file="${tar.file}" />
     <tar destfile="${tar.file}" compression="bzip2">
       <tarfileset prefix="${ant.project.name}-${version}" dir="."
                   excludes="**/.git **/.git/**" />
