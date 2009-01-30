@@ -9,6 +9,8 @@
   <property name="jar.file" value="${ant.project.name}-${version}.jar" />
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
+  <target name="all" depends="clean, make, jar, tar" />
+
   <target name="tar" depends="jar">
     <delete file="${tar.file}" />
     <tar destfile="${tar.file}" compression="bzip2">
