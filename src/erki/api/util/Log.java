@@ -1,9 +1,9 @@
 /*
- * (c) Copyright 2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * (c) Copyright 2008-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of the chatbot ABCPeter.
+ * This file is part of Erki's API.
  * 
- * The chatbot ABCPeter is free software; you can redistribute it and/or
+ * Erki's API is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -335,7 +335,7 @@ public class Log {
      * @param handler
      *        The new handler of log messages.
      */
-    public static void setHander(PrintStream handler) {
+    public static void setHandler(PrintStream handler) {
         Log.handler = handler;
     }
 }

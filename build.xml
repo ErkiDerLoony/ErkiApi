@@ -9,6 +9,12 @@
   <property name="jar.file" value="${ant.project.name}-${version}.jar" />
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
+  <path id="classpath">
+    <fileset dir="lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
   <target name="all" depends="clean, make, jar, tar" />
 
   <target name="tar" depends="jar">
@@ -26,9 +32,9 @@
   <target name="make">
     <mkdir dir="${bin.dir}" />
     <javac destdir="${bin.dir}" srcdir="${src.dir}" debug="on"
-           debuglevel="lines,vars,source" />
+           debuglevel="lines,vars,source" classpathref="classpath" />
     <javac destdir="${bin.dir}" srcdir="${test.dir}" debug="on"
-           debuglevel="lines,vars,source" />
+           debuglevel="lines,vars,source" classpathref="classpath"/>
   </target>
 
   <target name="clean">
