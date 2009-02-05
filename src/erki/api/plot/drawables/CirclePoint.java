@@ -15,7 +15,7 @@ public class CirclePoint extends Point2D.Double implements Drawable {
     
     private static final long serialVersionUID = -2994504030381719105L;
     
-    private static final Stroke STROKE = new BasicStroke(2.0f,
+    private static final Stroke STROKE = new BasicStroke(1.0f,
             BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     
     private static final int WIDTH = 10, HEIGHT = 10;
