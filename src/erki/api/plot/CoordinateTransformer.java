@@ -3,8 +3,6 @@ package erki.api.plot;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import erki.api.util.Log;
-
 public class CoordinateTransformer {
     
     private double minXCart;
@@ -28,8 +26,6 @@ public class CoordinateTransformer {
     public Point getScreenCoordinates(Point2D.Double point) {
         int x = (int) (((point.x - minXCart) / (maxXCart - minXCart)) * screenWidth);
         int y = (int) (((point.y - maxYCart) / (minYCart - maxYCart)) * screenHeight);
-        Log.debug(this, "Transformed (" + point.getX() + ", " + point.getY()
-                + ") into screen coordinates (" + x + ", " + y + ").");
         return new Point(x, y);
     }
     
@@ -38,25 +34,43 @@ public class CoordinateTransformer {
                 + ((point.getX() / screenWidth) * (maxXCart - minXCart));
         double y = maxYCart
                 - ((point.getY() / screenHeight) * (maxYCart - minYCart));
-        Log.debug(this, "Transformed (" + point.x + ", " + point.y
-                + ") into carthesian coordinates (" + x + ", " + y + ").");
         return new Point2D.Double(x, y);
     }
     
     public void setScreenSize(int width, int height) {
-        Log.debug(this, "Registered new screen size: (" + width + ", " + height
-                + ").");
         screenWidth = width;
         screenHeight = height;
     }
     
     public void setCarthesianCoordinates(double minX, double maxX, double minY,
             double maxY) {
-        Log.debug(this, "Registered new size of cartisian coordinate system: ("
-                + minX + ", " + maxX + "), (" + minY + ", " + maxY + ").");
         minXCart = minX;
         maxXCart = maxX;
         minYCart = minY;
         maxYCart = maxY;
+    }
+    
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+    
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+    
+    public double getCartMinX() {
+        return minXCart;
+    }
+    
+    public double getCartMaxX() {
+        return maxXCart;
+    }
+    
+    public double getCartMinY() {
+        return minYCart;
+    }
+    
+    public double getCartMaxY() {
+        return maxYCart;
     }
 }

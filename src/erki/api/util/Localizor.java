@@ -37,18 +37,18 @@ import java.util.TreeMap;
  * <p>
  * The localized strings are read from a file located at the subfolder {@code
  * locale/<locale>} of the program root directory where {@code <locale>} is the
- * two letter code of the used locale (for example »de_DE«) as returned by
+ * two letter code of the used locale (for example “de_DE”) as returned by
  * {@link Locale#toString()}. Every line in that file that does not start with
- * the character »#« is considered a definition. A definition consists of a
+ * the character “#” is considered a definition. A definition consists of a
  * unique keyword that is used in source code to identify the string, the
- * character »=« and the localized version of the string. As the character »=«
+ * character “=” and the localized version of the string. As the character “=”
  * is used as a separator of keys and values here it must not be contained in
  * any key.
  * <p>
  * The strings in the localization file are not trimmed when read from the file
  * as it may happen that some string needs a prepended or appended whitespace.
- * Thus the »=« character should be directly between the keys and values (like
- * in »key=value«, NOT like in »key = value«).
+ * Thus the “=” character should be directly between the keys and values (like
+ * in “key=value”, NOT like in “key = value”).
  * 
  * @author Edgar Kalkowski
  */

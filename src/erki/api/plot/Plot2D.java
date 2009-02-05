@@ -2,14 +2,39 @@ package erki.api.plot;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.DefaultFontMapper;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfTemplate;
+import com.lowagie.text.pdf.PdfWriter;
+
+import erki.api.util.ErrorBox;
+import erki.api.util.MathUtil;
 
 public class Plot2D extends JPanel {
     
@@ -17,18 +42,28 @@ public class Plot2D extends JPanel {
     
     private final Collection<Drawable> drawables = new LinkedList<Drawable>();
     
-    // private double minX, maxX, minY, maxY;
+    private String title;
+    
+    private Font titleFont = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
     
     private final CoordinateTransformer transformer;
     
+    private final double DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y,
+            DEFAULT_MAX_Y;
+    
     public Plot2D(String title, double minX, double maxX, double minY,
             double maxY) {
+        this.title = title;
+        DEFAULT_MIN_X = minX;
+        DEFAULT_MAX_X = maxX;
+        DEFAULT_MIN_Y = minY;
+        DEFAULT_MAX_Y = maxY;
+        
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(100, 100));
-        // this.minX = minX;
-        // this.maxX = maxX;
-        // this.minY = minY;
-        // this.maxY = maxY;
+        
+        addContextMenu();
+        
         transformer = new CoordinateTransformer(minX, maxX, minY, maxY,
                 getPreferredSize().width, getPreferredSize().height);
         
@@ -39,8 +74,13 @@ public class Plot2D extends JPanel {
                 super.componentResized(e);
                 transformer.setScreenSize(Plot2D.this.getWidth(), Plot2D.this
                         .getHeight());
+                repaint();
             }
         });
+    }
+    
+    public Plot2D(double minX, double maxX, double minY, double maxY) {
+        this(null, minX, maxX, minY, maxY);
     }
     
     public Plot2D(String title) {
@@ -48,7 +88,83 @@ public class Plot2D extends JPanel {
     }
     
     public Plot2D() {
-        this("", -1.0, 1.0, -1.0, 1.0);
+        this(null, -1.0, 1.0, -1.0, 1.0);
+    }
+    
+    private void addContextMenu() {
+        final JPopupMenu menu = new JPopupMenu();
+        JMenuItem item = new JMenuItem("Auto range");
+        menu.add(item);
+        
+        item.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autorange();
+            }
+        });
+        
+        item = new JMenuItem("Export as pdf");
+        menu.add(item);
+        
+        item.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser(new File("")
+                        .getAbsoluteFile());
+                
+                if (fileChooser.showSaveDialog(Plot2D.this) == JFileChooser.APPROVE_OPTION) {
+                    Document doc = new Document(new Rectangle(getWidth(),
+                            getHeight()));
+                    
+                    try {
+                        PdfWriter writer = PdfWriter.getInstance(doc,
+                                new FileOutputStream(fileChooser
+                                        .getSelectedFile()));
+                        doc.open();
+                        PdfContentByte cb = writer.getDirectContent();
+                        PdfTemplate tb = cb.createTemplate(getWidth(),
+                                getHeight());
+                        Graphics2D g2 = tb.createGraphics(getWidth(),
+                                getHeight(), new DefaultFontMapper());
+                        Plot2D.this.print(g2);
+                        g2.dispose();
+                        cb.addTemplate(tb, 0, 0);
+                    } catch (FileNotFoundException e1) {
+                        ErrorBox.showExceptionBox(Plot2D.this, e1);
+                    } catch (DocumentException e1) {
+                        ErrorBox.showExceptionBox(Plot2D.this, e1);
+                    }
+                    
+                    doc.close();
+                    JOptionPane.showMessageDialog(Plot2D.this, "Pdf saved to"
+                            + fileChooser.getSelectedFile().getAbsoluteFile()
+                            + ".", "Ok", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+        
+        addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                
+                if (e.isPopupTrigger()) {
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                
+                if (e.isPopupTrigger()) {
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
     }
     
     /** @return See {@link Collection#add(Object)}. */
@@ -65,6 +181,90 @@ public class Plot2D extends JPanel {
         return transformer;
     }
     
+    public void setRange(double minX, double maxX, double minY, double maxY) {
+        transformer.setCarthesianCoordinates(minX, maxX, minY, maxY);
+        repaint();
+    }
+    
+    public void setXRange(double minX, double maxX) {
+        transformer.setCarthesianCoordinates(minX, maxX, transformer
+                .getCartMinY(), transformer.getCartMaxY());
+        repaint();
+    }
+    
+    public void setYRange(double minY, double maxY) {
+        transformer.setCarthesianCoordinates(transformer.getCartMinX(),
+                transformer.getCartMaxX(), minY, maxY);
+        repaint();
+    }
+    
+    public void autorange() {
+        double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
+        
+        // Zoom to default values if there are no drawable objects.
+        if (drawables.isEmpty()) {
+            setRange(DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y, DEFAULT_MAX_Y);
+            return;
+        }
+        
+        for (Drawable d : drawables) {
+            Rectangle2D.Double bounds = d.getBounds();
+            
+            if (bounds.x < minX) {
+                minX = bounds.x;
+            }
+            
+            if (bounds.y < minY) {
+                minY = bounds.y;
+            }
+            
+            if (bounds.x + bounds.width > maxX) {
+                maxX = bounds.x + bounds.width;
+            }
+            
+            if (bounds.y + bounds.height > maxY) {
+                maxY = bounds.y + bounds.height;
+            }
+        }
+        
+        // Prevent zooming to one singular point if there is only one item which
+        // is a point in the list of drawables.
+        if (MathUtil.equals(minX, maxX)) {
+            minX = DEFAULT_MIN_X;
+            maxX = DEFAULT_MAX_X;
+        }
+        
+        if (MathUtil.equals(minY, maxY)) {
+            minY = DEFAULT_MIN_Y;
+            maxY = DEFAULT_MAX_Y;
+        }
+        
+        double rangeX = maxX - minX, rangeY = maxY - minY;
+        minX -= 0.1 * rangeX;
+        maxX += 0.1 * rangeX;
+        minY -= 0.1 * rangeY;
+        maxY += 0.1 * rangeY;
+        
+        setRange(minX, maxX, minY, maxY);
+        
+        // Point screenMin = transformer.getScreenCoordinates(new
+        // Point2D.Double(
+        // minX, minY));
+        // Point screenMax = transformer.getScreenCoordinates(new
+        // Point2D.Double(
+        // maxX, maxY));
+        //        
+        // Point2D.Double cartMin = transformer
+        // .getCarthesianCoordinates(new Point(screenMin.x - 5,
+        // screenMin.y - 5));
+        // Point2D.Double cartMax = transformer
+        // .getCarthesianCoordinates(new Point(screenMax.x + 5,
+        // screenMax.y + 5));
+        //        
+        // setRange(cartMin.getX(), cartMax.getX(), cartMin.getX(),
+        // cartMax.getY());
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -76,8 +276,28 @@ public class Plot2D extends JPanel {
             throw new IllegalStateException("Fatal drawing error!");
         }
         
+        Font oldFont = g2.getFont();
+        
+        // Enable antialiasing
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        
+        // Draw all the drawables
         for (Drawable drawable : drawables) {
             drawable.draw(g2, transformer);
         }
+        
+        // Draw the title (if any)
+        if (title != null) {
+            g2.setFont(titleFont);
+            float x = (float) (0.5 * getWidth() - 0.5 * g2.getFontMetrics()
+                    .stringWidth(title));
+            float y = (float) (g2.getFontMetrics().getHeight());
+            g2.drawString(title, x, y);
+        }
+        
+        g2.setFont(oldFont);
     }
 }
