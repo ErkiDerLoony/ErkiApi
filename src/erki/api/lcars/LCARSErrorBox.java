@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
  * This file is part of Erki's API.
  * 

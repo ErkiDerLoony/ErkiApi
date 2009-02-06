@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2007-2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
  * This file is part of Erki's API.
  * 
@@ -56,8 +56,8 @@ public class ButtonBarButton {
     private boolean enabled = true;
     
     /**
-     * Creates a new <code>ButtonBarButton</code> with a specific text drawn on
-     * it.
+     * Creates a new <code>ButtonBarButton</code> with a specific text drawn
+     * on it.
      * 
      * @param text
      *        The text of this button.
@@ -67,8 +67,8 @@ public class ButtonBarButton {
     }
     
     /**
-     * Creates a new <code>ButtonBarButton</code> with a specific text drawn on
-     * it and a specific colour.
+     * Creates a new <code>ButtonBarButton</code> with a specific text drawn
+     * on it and a specific colour.
      * 
      * @param text
      *        The text of this button.
@@ -80,8 +80,8 @@ public class ButtonBarButton {
     }
     
     /**
-     * Creates a new <code>ButtonBarButton</code> with a specific text drawn on
-     * it, a specific colour and a specific colour for the rollover effect.
+     * Creates a new <code>ButtonBarButton</code> with a specific text drawn
+     * on it, a specific colour and a specific colour for the rollover effect.
      * 
      * @param text
      *        The text of this button.
@@ -188,8 +188,8 @@ public class ButtonBarButton {
      *        The <code>ActionListener</code> to remove.
      * @return <code>true</code> if the <code>ActionListener</code> was
      *         successfully removed.<br />
-     *         <code>false</code> if the <code>ActionListener</code> specified
-     *         was not found.
+     *         <code>false</code> if the <code>ActionListener</code>
+     *         specified was not found.
      */
     public boolean removeActionListener(ActionListener listener) {
         return actionListeners.remove(listener);
@@ -199,7 +199,8 @@ public class ButtonBarButton {
      * Indicates wether or not this button can currently be clicked on.
      * 
      * @return <code>true</code> if this button can currently be clicked on.<br />
-     *         <code>false</code> if this button cannot currently be clicked on.
+     *         <code>false</code> if this button cannot currently be clicked
+     *         on.
      */
     public boolean isEnabled() {
         return enabled;

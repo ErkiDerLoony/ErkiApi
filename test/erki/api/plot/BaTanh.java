@@ -17,38 +17,32 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package erki.api.lcars;
+package erki.api.plot;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 
-import javax.swing.JButton;
-import javax.swing.JTextArea;
+import javax.swing.JFrame;
 
-/**
- * Tests the LCARS api using a {@link FlowLayout} for lying out the test
- * components.
- * 
- * @author Edgar Kalkowski
- */
-public class FlowLayoutTest {
+import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
+
+public class BaTanh {
     
-    /**
-     * Starts the test.
-     * 
-     * @param args
-     *        Command line arguments. Not used in this case.
-     */
     public static void main(String[] args) {
-        LCARSFrame frame = new LCARSFrame("Testfenster");
-        frame.setDefaultCloseOperation(LCARSFrame.EXIT_ON_CLOSE);
+        JFrame frame = new JFrame("Skalierung der KL2-Divergenz mittels tanh");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Container cp = frame.getContentPane();
-        cp.setLayout(new FlowLayout());
+        cp.setLayout(new BorderLayout());
         
-        cp.add(new JButton("Testbutton 1"));
-        cp.add(new JButton("Testbutton 2"));
-        cp.add(new JTextArea(2, 5));
+        Plot2D plot = new Plot2D();
+        plot.setPreferredSize(new Dimension(500, 500));
+        cp.add(plot, BorderLayout.CENTER);
+        
+        plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.5, 0.1));
+        plot.addDrawable(new TanhScalingFunction());
+        plot.autorange();
         
         frame.pack();
         frame.setLocationRelativeTo(null);

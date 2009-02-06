@@ -1,20 +1,20 @@
 /*
- * (c) Copyright 2007-2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
  * This file is part of Erki's API.
  * 
- * Erki's API is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ * Erki's API is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.lcars;
@@ -160,20 +160,14 @@ public class LCARSButton extends AbstractButton {
         }
         
         g2.fillArc(0, 0, diameter, diameter, 0, 360);
-        g2.fillArc(getWidth() - diameter, 0, diameter,
+        g2.fillArc(getWidth() - diameter, 0, diameter, diameter, 0, 360);
+        g2.fillArc(0, getHeight() - diameter, diameter, diameter, 0, 360);
+        g2.fillArc(getWidth() - diameter, getHeight() - diameter, diameter,
                 diameter, 0, 360);
-        g2.fillArc(0, getHeight() - diameter, diameter,
-                diameter, 0, 360);
-        g2.fillArc(getWidth() - diameter, getHeight() - diameter,
-                diameter, diameter, 0, 360);
         
         // Fill body
-        g2
-                .fillRect(radius, 0, getWidth() - diameter,
-                        getHeight());
-        g2
-                .fillRect(0, radius, getWidth(), getHeight()
-                        - diameter);
+        g2.fillRect(radius, 0, getWidth() - diameter, getHeight());
+        g2.fillRect(0, radius, getWidth(), getHeight() - diameter);
         
         // Draw text
         g2.setColor(Color.BLACK);
