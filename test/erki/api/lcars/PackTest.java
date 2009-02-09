@@ -19,6 +19,8 @@
 
 package erki.api.lcars;
 
+import java.io.IOException;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -28,38 +30,63 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import erki.api.lcars.LCARSErrorBox;
+import erki.api.lcars.LCARSInfoBox;
+
 public class PackTest {
     
     public static void main(String[] args) {
-        LCARSFrame frame = new LCARSFrame("Testframe");
+        final LCARSFrame frame = new LCARSFrame("Testframe");
         frame.setDefaultCloseOperation(LCARSFrame.EXIT_ON_CLOSE);
         
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
         
-        frame.addLCARSButton(new ButtonBarButton("Start"));
-        frame.addLCARSButton(new ButtonBarButton("Pause"));
-        frame.addLCARSButton(new ButtonBarButton("Ende", LCARSUtil.RED,
-                LCARSUtil.RED_BRIGHT));
+        ButtonBarButton butt = new ButtonBarButton("Ende", LCARSUtil.RED,
+                LCARSUtil.RED_BRIGHT);
+        
+        butt.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.dispose();
+                }
+            });
+        
+        frame.addLCARSButton(new ButtonBarButton("Dummy 1"));
+        frame.addLCARSButton(new ButtonBarButton("Dummy 2"));
+        frame.addLCARSButton(butt);
         
         JPanel content = new JPanel();
         content.setLayout(new FlowLayout());
         content.setPreferredSize(new Dimension(150, 150));
         content.setOpaque(false);
         
-        LCARSButton button = new LCARSButton();
-        content.add(button);
-        button = new LCARSButton("Knopf Nr. 2");
-        button.setBackground(LCARSUtil.RED);
+        LCARSButton button = new LCARSButton("Show info box");
         content.add(button);
         
         button.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("MARK!!");
+                new LCARSInfoBox("Information", "Sie haben den richtigen " 
+                        + "Knopf gedrückt! :)", frame).setVisible(true);
             }
         });
+        
+        button = new LCARSButton("Show error box");
+        button.setBackground(LCARSUtil.RED);
+        content.add(button);
+        
+        button.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    IOException ex = new IOException("Sie haben den falschen "
+                            + "Knopf gedrückt! :(");
+                    new LCARSErrorBox("Fatal error!", ex).setVisible(true);
+                }
+            });
         
         cp.add(content, BorderLayout.CENTER);
         

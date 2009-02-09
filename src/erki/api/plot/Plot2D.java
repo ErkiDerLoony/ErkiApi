@@ -43,6 +43,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.filechooser.FileFilter;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -52,6 +53,9 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
+import erki.api.plot.drawables.Drawable;
+import erki.api.plot.style.DefaultStyleProvider;
+import erki.api.plot.style.StyleProvider;
 import erki.api.util.ErrorBox;
 import erki.api.util.MathUtil;
 
@@ -70,9 +74,12 @@ public class Plot2D extends JPanel {
     private final double DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y,
             DEFAULT_MAX_Y;
     
+    private StyleProvider styleProvider;
+    
     public Plot2D(String title, double minX, double maxX, double minY,
-            double maxY) {
+            double maxY, StyleProvider styleProvider) {
         this.title = title;
+        this.styleProvider = styleProvider;
         DEFAULT_MIN_X = minX;
         DEFAULT_MAX_X = maxX;
         DEFAULT_MIN_Y = minY;
@@ -99,15 +106,15 @@ public class Plot2D extends JPanel {
     }
     
     public Plot2D(double minX, double maxX, double minY, double maxY) {
-        this(null, minX, maxX, minY, maxY);
+        this(null, minX, maxX, minY, maxY, new DefaultStyleProvider());
     }
     
     public Plot2D(String title) {
-        this(title, -1.0, 1.0, -1.0, 1.0);
+        this(title, -1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
     }
     
     public Plot2D() {
-        this(null, -1.0, 1.0, -1.0, 1.0);
+        this(null, -1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
     }
     
     private void addContextMenu() {
@@ -133,33 +140,56 @@ public class Plot2D extends JPanel {
                 JFileChooser fileChooser = new JFileChooser(new File("")
                         .getAbsoluteFile());
                 
-                if (fileChooser.showSaveDialog(Plot2D.this) == JFileChooser.APPROVE_OPTION) {
-                    Document doc = new Document(new Rectangle(getWidth(),
-                            getHeight()));
+                fileChooser.setFileFilter(new FileFilter() {
                     
-                    try {
-                        PdfWriter writer = PdfWriter.getInstance(doc,
-                                new FileOutputStream(fileChooser
-                                        .getSelectedFile()));
-                        doc.open();
-                        PdfContentByte cb = writer.getDirectContent();
-                        PdfTemplate tb = cb.createTemplate(getWidth(),
-                                getHeight());
-                        Graphics2D g2 = tb.createGraphics(getWidth(),
-                                getHeight(), new DefaultFontMapper());
-                        Plot2D.this.print(g2);
-                        g2.dispose();
-                        cb.addTemplate(tb, 0, 0);
-                    } catch (FileNotFoundException e1) {
-                        ErrorBox.showExceptionBox(Plot2D.this, e1);
-                    } catch (DocumentException e1) {
-                        ErrorBox.showExceptionBox(Plot2D.this, e1);
+                    @Override
+                    public boolean accept(File f) {
+                        
+                        if (f.isDirectory()
+                                || f.getName().toLowerCase().endsWith(".pdf")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                     
-                    doc.close();
-                    JOptionPane.showMessageDialog(Plot2D.this, "Pdf saved to"
-                            + fileChooser.getSelectedFile().getAbsoluteFile()
-                            + ".", "Ok", JOptionPane.INFORMATION_MESSAGE);
+                    @Override
+                    public String getDescription() {
+                        return "Portable Document Files (PDFs)";
+                    }
+                });
+                
+                if (fileChooser.showSaveDialog(Plot2D.this) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile().getAbsoluteFile();
+                    
+                    if (file.exists() && file.isFile()) {
+                        
+                        Document doc = new Document(new Rectangle(getWidth(),
+                                getHeight()));
+                        
+                        try {
+                            PdfWriter writer = PdfWriter.getInstance(doc,
+                                    new FileOutputStream(file));
+                            doc.open();
+                            PdfContentByte cb = writer.getDirectContent();
+                            PdfTemplate tb = cb.createTemplate(getWidth(),
+                                    getHeight());
+                            Graphics2D g2 = tb.createGraphics(getWidth(),
+                                    getHeight(), new DefaultFontMapper());
+                            Plot2D.this.print(g2);
+                            g2.dispose();
+                            cb.addTemplate(tb, 0, 0);
+                            JOptionPane.showMessageDialog(Plot2D.this,
+                                    "Pdf saved " + "to " + file + ".", "Ok",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } catch (FileNotFoundException e1) {
+                            ErrorBox.showExceptionBox(Plot2D.this, e1);
+                        } catch (DocumentException e1) {
+                            ErrorBox.showExceptionBox(Plot2D.this, e1);
+                        }
+                        
+                        doc.close();
+                    }
                 }
             }
         });
@@ -188,12 +218,25 @@ public class Plot2D extends JPanel {
     
     /** @return See {@link Collection#add(Object)}. */
     public boolean addDrawable(Drawable drawable) {
-        return drawables.add(drawable);
+        styleProvider.checkProperties(drawable);
+        boolean result = drawables.add(drawable);
+        
+        if (result) {
+            repaint();
+        }
+        
+        return result;
     }
     
     /** @return See {@link Collection#remove(Object)}. */
     public boolean removeDrawable(Drawable drawable) {
-        return drawables.remove(drawable);
+        boolean result = drawables.remove(drawable);
+        
+        if (result) {
+            repaint();
+        }
+        
+        return result;
     }
     
     public CoordinateTransformer getCoordinateTransformer() {
@@ -284,6 +327,16 @@ public class Plot2D extends JPanel {
         // cartMax.getY());
     }
     
+    public void setStyleProvider(StyleProvider styleProvider) {
+        this.styleProvider = styleProvider;
+        
+        for (Drawable drawable : drawables) {
+            styleProvider.checkProperties(drawable);
+        }
+        
+        repaint();
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -305,7 +358,7 @@ public class Plot2D extends JPanel {
         
         // Draw all the drawables
         for (Drawable drawable : drawables) {
-            drawable.draw(g2, transformer);
+            drawable.draw(g2, transformer, styleProvider);
         }
         
         // Draw the title (if any)

@@ -19,58 +19,60 @@
 
 package erki.api.plot.drawables;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.Drawable;
+import erki.api.plot.style.StylePropertyKey;
+import erki.api.plot.style.StyleProvider;
 
 public class CirclePoint extends Point2D.Double implements Drawable {
     
     private static final long serialVersionUID = -2994504030381719105L;
     
-    private static final Stroke STROKE = new BasicStroke(1.0f,
-            BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    
-    private static final int WIDTH = 10, HEIGHT = 10;
-    
     private Color colour;
     
-    private Stroke stroke;
-    
-    public CirclePoint(double x, double y, Color colour, Stroke stroke) {
+    public CirclePoint(double x, double y, Color colour) {
         super(x, y);
         this.colour = colour;
-        this.stroke = stroke;
-    }
-    
-    public CirclePoint(double x, double y, Color colour) {
-        this(x, y, colour, STROKE);
     }
     
     public CirclePoint(double x, double y) {
-        this(x, y, Color.BLACK, STROKE);
+        this(x, y, Color.BLACK);
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer,
+            StyleProvider styleProvider) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         
         Point p = transformer.getScreenCoordinates(this);
+        int size = styleProvider.getProperty(
+                new StylePropertyKey<Integer>("POINT_SIZE")).getProperty();
         
-        g2.setStroke(stroke);
+        g2.setStroke(styleProvider.getProperty(
+                new StylePropertyKey<Stroke>("POINT_STROKE")).getProperty());
         g2.setColor(colour);
-        g2.drawArc(p.x - (int) (0.5 * WIDTH), p.y - (int) (0.5 * HEIGHT),
-                WIDTH, HEIGHT, 0, 360);
+        g2.drawArc(p.x - (int) (0.5 * size), p.y - (int) (0.5 * size), size,
+                size, 0, 360);
         
         g2.setColor(oldColour);
         g2.setStroke(oldStroke);
+    }
+    
+    @Override
+    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+        properties.add(new StylePropertyKey<Stroke>("POINT_STROKE"));
+        properties.add(new StylePropertyKey<Integer>("POINT_SIZE"));
+        return properties;
     }
     
     @Override

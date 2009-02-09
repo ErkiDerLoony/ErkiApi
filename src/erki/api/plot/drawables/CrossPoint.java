@@ -24,15 +24,16 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.Drawable;
+import erki.api.plot.style.StylePropertyKey;
+import erki.api.plot.style.StyleProvider;
 
 public class CrossPoint extends Point2D.Double implements Drawable {
     
     private static final long serialVersionUID = -7603800844085258749L;
-    
-    private static final int OFFSET = 5;
     
     private Color colour;
     
@@ -46,15 +47,25 @@ public class CrossPoint extends Point2D.Double implements Drawable {
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer,
+            StyleProvider styleProvider) {
         Color oldColour = g2.getColor();
         
         Point p = transformer.getScreenCoordinates(this);
+        int size = (int) (styleProvider.getProperty(
+                new StylePropertyKey<Integer>("POINT_SIZE")).getProperty() / 2.0);
+        
         g2.setColor(colour);
-        g2.drawLine(p.x - OFFSET, p.y - OFFSET, p.x + OFFSET, p.y + OFFSET);
-        g2.drawLine(p.x - OFFSET, p.y + OFFSET, p.x + OFFSET, p.y - OFFSET);
+        g2.drawLine(p.x - size, p.y - size, p.x + size, p.y + size);
+        g2.drawLine(p.x - size, p.y + size, p.x + size, p.y - size);
         
         g2.setColor(oldColour);
+    }
+    
+    @Override
+    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+        return properties;
     }
     
     @Override

@@ -30,7 +30,9 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
 
+import erki.api.plot.drawables.CirclePoint;
 import erki.api.plot.drawables.CrossPoint;
+import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
 import erki.api.util.Log;
 
@@ -54,19 +56,42 @@ public class SimpleTest {
         
         plot.addMouseListener(new MouseAdapter() {
             
+            private Point2D.Double oldPoint = null;
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 
-                if (e.getButton() == MouseEvent.BUTTON2) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    
+                    if (oldPoint == null) {
+                        oldPoint = plot.getCoordinateTransformer()
+                                .getCarthesianCoordinates(
+                                        new Point(e.getX(), e.getY()));
+                        plot.addDrawable(new CrossPoint(oldPoint.getX(),
+                                oldPoint.getY()));
+                    } else {
+                        Point2D.Double newPoint = plot
+                                .getCoordinateTransformer()
+                                .getCarthesianCoordinates(
+                                        new Point(e.getX(), e.getY()));
+                        plot.addDrawable(new DrawableLine(oldPoint, newPoint));
+                        plot.addDrawable(new CrossPoint(newPoint.x, newPoint.y,
+                                new Color((int) (Math.random() * 256),
+                                        (int) (Math.random() * 256),
+                                        (int) (Math.random() * 256))));
+                        plot.repaint();
+                        oldPoint = newPoint;
+                    }
+                    
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
                     Point2D.Double p = plot.getCoordinateTransformer()
                             .getCarthesianCoordinates(
                                     new Point(e.getX(), e.getY()));
-                    plot.addDrawable(new CrossPoint(p.x, p.y, new Color(
+                    plot.addDrawable(new CirclePoint(p.x, p.y, new Color(
                             (int) (Math.random() * 256),
                             (int) (Math.random() * 256),
                             (int) (Math.random() * 256))));
-                    plot.repaint();
                 }
             }
         });

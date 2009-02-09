@@ -19,7 +19,6 @@
 
 package erki.api.plot.drawables;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -28,38 +27,38 @@ import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.Drawable;
+import erki.api.plot.style.StylePropertyKey;
+import erki.api.plot.style.StyleProvider;
 
 public class FixedTickWidthPositiveAxisWithArrow implements Drawable {
     
     /** Offset in pixels to the border of the plot. */
     private static final int OFFSET = 5;
     
-    private static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
-    
     private double tickWidthX, tickWidthY;
-    
-    private NumberFormat nf;
     
     public FixedTickWidthPositiveAxisWithArrow(double tickWidthX,
             double tickWidthY) {
         this.tickWidthX = tickWidthX;
         this.tickWidthY = tickWidthY;
-        nf = NumberFormat.getNumberInstance();
-        nf.setMaximumFractionDigits(3);
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer,
+            StyleProvider styleProvider) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         Font oldFont = g2.getFont();
         
         g2.setColor(Color.BLACK);
-        g2.setStroke(new BasicStroke(1.25f));
-        g2.setFont(FONT);
+        g2.setStroke(styleProvider.getProperty(
+                new StylePropertyKey<Stroke>("AXES_STROKE")).getProperty());
+        g2.setFont(styleProvider.getProperty(
+                new StylePropertyKey<Font>("AXES_TICK_FONT")).getProperty());
         
         // Draw x axis with arrow
         Point origin = transformer.getScreenCoordinates(new Point2D.Double(0.0,
@@ -71,8 +70,12 @@ public class FixedTickWidthPositiveAxisWithArrow implements Drawable {
         g2.drawLine(transformer.getScreenWidth() - OFFSET, origin.y,
                 transformer.getScreenWidth() - 4 * OFFSET, origin.y + OFFSET);
         
+        NumberFormat nf = styleProvider.getProperty(
+                new StylePropertyKey<NumberFormat>("AXES_TICK_NUMBER_FORMAT"))
+                .getProperty();
+        
         // Draw horizontal ticks and labels
-        for (double i = 0.0; i < transformer.getCartMaxX() - tickWidthX; i += tickWidthX) {
+        for (double i = 0.0; i < transformer.getCartMaxX() - tickWidthX / 2.0; i += tickWidthX) {
             Point p = transformer.getScreenCoordinates(new Point2D.Double(i,
                     0.0));
             g2.drawLine(p.x, p.y, p.x, p.y + OFFSET);
@@ -88,7 +91,7 @@ public class FixedTickWidthPositiveAxisWithArrow implements Drawable {
         g2.drawLine(origin.x, OFFSET, origin.x + OFFSET, 4 * OFFSET);
         
         // Draw vertical ticks and labels
-        for (double i = 0.0; i < transformer.getCartMaxY() - tickWidthY; i += tickWidthY) {
+        for (double i = 0.0; i < transformer.getCartMaxY() - tickWidthY / 2.0; i += tickWidthY) {
             Point p = transformer.getScreenCoordinates(new Point2D.Double(0.0,
                     i));
             g2.drawLine(p.x, p.y, p.x - OFFSET, p.y);
@@ -105,8 +108,18 @@ public class FixedTickWidthPositiveAxisWithArrow implements Drawable {
     }
     
     @Override
+    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+        properties.add(new StylePropertyKey<Stroke>("AXES_STROKE"));
+        properties.add(new StylePropertyKey<Font>("AXES_TICK_FONT"));
+        properties.add(new StylePropertyKey<NumberFormat>(
+                "AXES_TICK_NUMBER_FORMAT"));
+        return properties;
+    }
+    
+    @Override
     public Rectangle2D.Double getBounds() {
-        return new Rectangle2D.Double(0.0, 0.0, 1.5 * tickWidthX,
-                1.5 * tickWidthY);
+        return new Rectangle2D.Double(0.0, 0.0, 2.0 * tickWidthX,
+                2.0 * tickWidthY);
     }
 }

@@ -22,11 +22,15 @@ package erki.api.plot.drawables;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.Drawable;
+import erki.api.plot.style.StylePropertyKey;
+import erki.api.plot.style.StyleProvider;
 
 public class DrawableLine implements Drawable {
     
@@ -34,6 +38,7 @@ public class DrawableLine implements Drawable {
     
     private Point2D.Double start;
     private Point2D.Double end;
+    
     private Color colour;
     
     public DrawableLine(Point2D.Double start, Point2D.Double end, Color colour) {
@@ -47,15 +52,28 @@ public class DrawableLine implements Drawable {
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer,
+            StyleProvider styleProvider) {
         Color oldColour = g2.getColor();
+        Stroke oldStroke = g2.getStroke();
         
         Point p = transformer.getScreenCoordinates(start);
         Point q = transformer.getScreenCoordinates(end);
+        
+        g2.setStroke(styleProvider.getProperty(
+                new StylePropertyKey<Stroke>("LINE_STROKE")).getProperty());
         g2.setColor(colour);
         g2.drawLine(p.x, p.y, q.x, q.y);
         
         g2.setColor(oldColour);
+        g2.setStroke(oldStroke);
+    }
+    
+    @Override
+    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+        properties.add(new StylePropertyKey<Stroke>("LINE_STROKE"));
+        return properties;
     }
     
     @Override

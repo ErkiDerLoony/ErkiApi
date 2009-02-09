@@ -3,18 +3,27 @@
   <property name="version" value="0.0.1" />
 
   <property name="bin.dir" value="bin" />
+  <property name="test.bin" value="bin.test" />
   <property name="src.dir" value="src" />
+  <property name="test.src" value="test" />
+  <property name="lib.dir" value="lib" />
 
   <property name="jar.file" value="${ant.project.name}-${version}.jar" />
+  <property name="test.jar" value="Test.jar" />
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
+  <property name="test.main" value="erki.api.lcars.PackTest" />
+
   <path id="classpath">
-    <fileset dir="lib">
+    <fileset dir="${lib.dir}">
       <include name="*.jar" />
     </fileset>
+    <pathelement location="bin" />
   </path>
 
-  <target name="all" depends="clean, make, jar, tar" />
+  <target name="all" depends="clean, jar, jar test, tar" />
+
+  <target name="test" depends="jar test" />
 
   <target name="tar" depends="jar">
     <delete file="${tar.file}" />
@@ -28,15 +37,36 @@
     <jar destfile="${jar.file}" basedir="${bin.dir}" />
   </target>
 
+  <target name="jar test" depends="make test">
+    <manifestclasspath property="manifest.classpath"
+                       jarfile="${test.jar}">
+      <classpath refid="classpath" />
+    </manifestclasspath>
+    <jar destfile="${test.jar}" basedir="${test.bin}">
+      <manifest>
+        <attribute name="Class-Path" value="${manifest.classpath}" />
+        <attribute name="Main-Class" value="${test.main}" />
+      </manifest>
+    </jar>
+  </target>
+
   <target name="make">
     <mkdir dir="${bin.dir}" />
     <javac destdir="${bin.dir}" srcdir="${src.dir}" debug="on"
            debuglevel="lines,vars,source" classpathref="classpath" />
   </target>
 
+  <target name="make test" depends="make">
+    <mkdir dir="${test.bin}" />
+    <javac destdir="${test.bin}" srcdir="${test.src}" debug="on"
+           debuglevel="lines,vars,source" classpathref="classpath" />
+  </target>
+
   <target name="clean">
     <delete dir="${bin.dir}" />
+    <delete dir="${test.bin}" />
     <delete file="${jar.file}" />
+    <delete file="${test.jar}" />
     <delete file="${tar.file}" />
   </target>
 
