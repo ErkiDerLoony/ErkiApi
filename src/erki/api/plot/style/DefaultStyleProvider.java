@@ -20,15 +20,24 @@
 package erki.api.plot.style;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import erki.api.plot.drawables.Drawable;
 
+/**
+ * Provides style properties for basic points, lines and coordinate axes. The
+ * style mapping is backed by a {@link TreeMap} so any subclass may override
+ * already contained style mappings by simply adding a mapping with the same key
+ * but a different value.
+ * 
+ * @author Edgar Kalkowski
+ */
 public class DefaultStyleProvider implements StyleProvider {
     
     private Map<StylePropertyKey<?>, StyleProperty<?>> mapping = new TreeMap<StylePropertyKey<?>, StyleProperty<?>>();
@@ -46,11 +55,17 @@ public class DefaultStyleProvider implements StyleProvider {
                 new StyleProperty<Stroke>(new BasicStroke(1.25f)));
         
         // Coordinate axes properties
+        addMapping(new StylePropertyKey<Color>("AXES_COLOR"),
+                new StyleProperty<Color>(Color.BLACK));
+        addMapping(new StylePropertyKey<Stroke>("AXES_STROKE"),
+                new StyleProperty<Stroke>(new BasicStroke(1.25f)));
+        addMapping(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"),
+                new StyleProperty<Integer>(10));
+        addMapping(new StylePropertyKey<Integer>("AXES_TICK_OFFSET"),
+                new StyleProperty<Integer>(5));
         addMapping(new StylePropertyKey<Font>("AXES_TICK_FONT"),
                 new StyleProperty<Font>(new Font(Font.SANS_SERIF, Font.PLAIN,
                         16)));
-        addMapping(new StylePropertyKey<Stroke>("AXES_STROKE"),
-                new StyleProperty<Stroke>(new BasicStroke(1.25f)));
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setMaximumFractionDigits(3);
         addMapping(
@@ -58,6 +73,17 @@ public class DefaultStyleProvider implements StyleProvider {
                 new StyleProperty<NumberFormat>(nf));
     }
     
+    /**
+     * Add a new style property mapping. This method asserts that the runtime
+     * type of keys and values match.
+     * 
+     * @param <T>
+     *        The type of a style property.
+     * @param key
+     *        The typed key.
+     * @param value
+     *        The value of the same type.
+     */
     public <T> void addMapping(StylePropertyKey<T> key,
             StyleProperty<? extends T> value) {
         mapping.put(key, value);
@@ -65,6 +91,10 @@ public class DefaultStyleProvider implements StyleProvider {
     
     @Override
     public void checkProperties(Drawable drawable) {
+        
+        if (drawable.getNecessaryStyleProperties() == null) {
+            return;
+        }
         
         for (StylePropertyKey<?> p : drawable.getNecessaryStyleProperties()) {
             
@@ -77,7 +107,7 @@ public class DefaultStyleProvider implements StyleProvider {
     }
     
     /** @return See {@link Map#keySet()}. */
-    public Collection<StylePropertyKey<?>> getPropertyKeys() {
+    public Set<StylePropertyKey<?>> getPropertyKeys() {
         return mapping.keySet();
     }
     

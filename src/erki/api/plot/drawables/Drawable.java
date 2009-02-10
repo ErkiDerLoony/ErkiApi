@@ -21,19 +21,62 @@ package erki.api.plot.drawables;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
+import java.util.Set;
 
 import erki.api.plot.CoordinateTransformer;
+import erki.api.plot.Plot2D;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
+/**
+ * Implemented by every class that can be drawn on a {@link Plot2D}.
+ * 
+ * @author Edgar Kalkowski
+ */
 public interface Drawable {
     
+    /**
+     * This method is called by {@link Plot2D} if this {@code Drawable} shall
+     * redraw itself to the submitted graphics context.
+     * 
+     * @param g2
+     *        The graphics context this drawable shall draw itself on.
+     * @param transformer
+     *        The {@code CoordinateTransformer} that shall be used for
+     *        coordinate transformation from carthesian coordinates to the
+     *        screen's pixel coordinates before drawing.
+     * @param styleProvider
+     *        The {@code StyleProvider} that provides for all needed styles for
+     *        drawing as specified via {@link #getNecessaryStyleProperties()}.
+     */
     void draw(Graphics2D g2, CoordinateTransformer transformer,
             StyleProvider styleProvider);
     
+    /**
+     * @return A {@code Rectangle2D.Double} that specifies the bounds of this
+     *         drawable object in carthesian coordinate space. This method must
+     *         not return {@code null} but a singular rectangle if this drawable
+     *         has no actual bounds.
+     */
     Rectangle2D.Double getBounds();
     
-    Collection<StylePropertyKey<?>> getNecessaryStyleProperties();
+    /**
+     * Used by {@link Plot2D} to check if the current {@link StyleProvider} can
+     * actually provide for all the needed style properties for this drawable
+     * object. No style property that is not contained in the returned
+     * collection may be requested from the {@code StyleProvider} in the
+     * {@link #draw(Graphics2D, CoordinateTransformer, StyleProvider)} method.
+     * <p>
+     * The {@code StylePropertyKey}s contained in the returned {@code Set} are
+     * used for error messages if any necessary style property cannot be
+     * provided by the current {@code StyleProvider} an hence it might be useful
+     * if those {@code StylePropertyKey}s contained a description (see
+     * {@link StylePropertyKey#StylePropertyKey(String, String)}).
+     * 
+     * @return A {@link Set} of {@link StylePropertyKey}s that contains all the
+     *         needed style properties of this drawable object or {@code null}
+     *         if no styles are needed.
+     */
+    Set<StylePropertyKey<?>> getNecessaryStyleProperties();
     
 }

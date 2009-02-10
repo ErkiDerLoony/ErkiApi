@@ -27,8 +27,8 @@ import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
@@ -108,8 +108,8 @@ public class FixedTickWidthPositiveAxisWithArrow implements Drawable {
     }
     
     @Override
-    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
-        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+    public Set<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        Set<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
         properties.add(new StylePropertyKey<Stroke>("AXES_STROKE"));
         properties.add(new StylePropertyKey<Font>("AXES_TICK_FONT"));
         properties.add(new StylePropertyKey<NumberFormat>(

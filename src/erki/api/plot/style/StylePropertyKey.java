@@ -19,15 +19,39 @@
 
 package erki.api.plot.style;
 
+/**
+ * Wraps a {@link String} that is used for internal identification of a style
+ * property and adds type information about the described style property.
+ * 
+ * @author Edgar Kalkowski
+ * @param <T>
+ *        The type of the style property identified by this key.
+ */
 public class StylePropertyKey<T> implements Comparable<StylePropertyKey<?>> {
     
     private String key, description;
     
+    /**
+     * Create a new {@code StylePropertyKey}.
+     * 
+     * @param key
+     *        The {@link String} that is internally used to identify the
+     *        associated style property.
+     * @param description
+     *        A description of where this property is used.
+     */
     public StylePropertyKey(String key, String description) {
         this.key = key;
         this.description = description;
     }
     
+    /**
+     * Create a new {@code StylePropertyKey}.
+     * 
+     * @param key
+     *        The {@link String} that is internally used to identify the
+     *        associated style property.
+     */
     public StylePropertyKey(String key) {
         this(key, null);
     }

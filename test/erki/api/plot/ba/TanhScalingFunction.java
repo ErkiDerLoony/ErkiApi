@@ -26,8 +26,8 @@ import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.drawables.Drawable;
@@ -117,8 +117,8 @@ public class TanhScalingFunction implements Drawable {
     }
     
     @Override
-    public Collection<StylePropertyKey<?>> getNecessaryStyleProperties() {
-        LinkedList<StylePropertyKey<?>> properties = new LinkedList<StylePropertyKey<?>>();
+    public Set<StylePropertyKey<?>> getNecessaryStyleProperties() {
+        Set<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
         properties.add(new StylePropertyKey<Stroke>("LINE_STROKE"));
         properties.add(new StylePropertyKey<Stroke>("ALTERNATE_LINE_STROKE"));
         return properties;

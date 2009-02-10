@@ -59,15 +59,17 @@ import erki.api.plot.style.StyleProvider;
 import erki.api.util.ErrorBox;
 import erki.api.util.MathUtil;
 
+/**
+ * Extends {@link JPanel} to display a 2-dimensional plot of various
+ * {@link Drawable} objects.
+ * 
+ * @author Edgar Kalkowski
+ */
 public class Plot2D extends JPanel {
     
     private static final long serialVersionUID = 7903143787970361747L;
     
     private final Collection<Drawable> drawables = new LinkedList<Drawable>();
-    
-    private String title;
-    
-    private Font titleFont = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
     
     private final CoordinateTransformer transformer;
     
@@ -76,9 +78,25 @@ public class Plot2D extends JPanel {
     
     private StyleProvider styleProvider;
     
-    public Plot2D(String title, double minX, double maxX, double minY,
-            double maxY, StyleProvider styleProvider) {
-        this.title = title;
+    /**
+     * Create a new {@code Plot2D} displaying a specific range of carthesian
+     * coordinates and using a specific {@code StyleProvider} for the drawing of
+     * the contained objects.
+     * 
+     * @param minX
+     *        The minimum displayed value of the horizontal axis.
+     * @param maxX
+     *        The maximum displayed value of the horizontal axis.
+     * @param minY
+     *        The minimum displayed value of the vertical axis.
+     * @param maxY
+     *        The maximum displayed value of the vertical axis.
+     * @param styleProvider
+     *        The {@code StyleProvider} to use for drawing the contained
+     *        objects.
+     */
+    public Plot2D(double minX, double maxX, double minY, double maxY,
+            StyleProvider styleProvider) {
         this.styleProvider = styleProvider;
         DEFAULT_MIN_X = minX;
         DEFAULT_MAX_X = maxX;
@@ -86,7 +104,7 @@ public class Plot2D extends JPanel {
         DEFAULT_MAX_Y = maxY;
         
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(100, 100));
+        setPreferredSize(new Dimension(500, 500));
         
         addContextMenu();
         
@@ -105,16 +123,31 @@ public class Plot2D extends JPanel {
         });
     }
     
+    /**
+     * Create a new {@code Plot2D} that displays a specific range of carthesian
+     * coordinates using a {@link DefaultStyleProvider}.
+     * 
+     * @param minX
+     *        The minimum displayed value of the horizontal axis.
+     * @param maxX
+     *        The maximum displayed value of the horizontal axis.
+     * @param minY
+     *        The minimum displayed value of the vertical axis.
+     * @param maxY
+     *        The maximum displayed value of the vertical axis.
+     */
     public Plot2D(double minX, double maxX, double minY, double maxY) {
-        this(null, minX, maxX, minY, maxY, new DefaultStyleProvider());
+        this(minX, maxX, minY, maxY, new DefaultStyleProvider());
     }
     
-    public Plot2D(String title) {
-        this(title, -1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
-    }
-    
+    /**
+     * Create a new {@code Plot2D} that displays the default range of {@code
+     * [-1.0, 1.0]} on both axes and uses a {@link DefaultStyleProvider}. This
+     * constructor may be used especially when calling {@link #autorange()} is
+     * planned after adding some {@link Drawable}s.
+     */
     public Plot2D() {
-        this(null, -1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
+        this(-1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
     }
     
     private void addContextMenu() {
@@ -239,27 +272,105 @@ public class Plot2D extends JPanel {
         return result;
     }
     
+    /**
+     * @return The {@code CoordinateTransformer} object that is used for
+     *         transforming carthesian coordinates to the screen's pixel
+     *         coordinates.
+     */
     public CoordinateTransformer getCoordinateTransformer() {
         return transformer;
     }
     
+    /**
+     * Change the displayed range of carthesian coordinates and cause a repaint
+     * of the whole plot to make the change actually visible to the user.
+     * 
+     * @param minX
+     *        The minimum displayed value of the horizontal axis.
+     * @param maxX
+     *        The maximum displayed value of the horizontal axis.
+     * @param minY
+     *        The minimum displayed value of the vertical axis.
+     * @param maxY
+     *        The maximum displayed value of the vertical axis.
+     */
     public void setRange(double minX, double maxX, double minY, double maxY) {
         transformer.setCarthesianCoordinates(minX, maxX, minY, maxY);
         repaint();
     }
     
+    /**
+     * Change the displayed range of carthesian coordinates of the horizontal
+     * axis and cause a repaint of the whole plot to make the change actually
+     * visible to the user.
+     * 
+     * @param minX
+     *        The minimum displayed value of the horizontal axis.
+     * @param maxX
+     *        The maximum displayed value of the horizontal axis.
+     */
     public void setXRange(double minX, double maxX) {
         transformer.setCarthesianCoordinates(minX, maxX, transformer
                 .getCartMinY(), transformer.getCartMaxY());
         repaint();
     }
     
+    /**
+     * Change the displayed range of carthesian coordinates of the vertical axis
+     * and cause a repaint of the whole plot to make the change actually visible
+     * to the user.
+     * 
+     * @param minY
+     *        The minimum displayed value of the vertical axis.
+     * @param maxY
+     *        The maximum displayed value of the vertical axis.
+     */
     public void setYRange(double minY, double maxY) {
         transformer.setCarthesianCoordinates(transformer.getCartMinX(),
                 transformer.getCartMaxX(), minY, maxY);
         repaint();
     }
     
+    /**
+     * @return The minimum displayed value of the horizontal axis
+     *         ({@link CoordinateTransformer#getCartMinX()}).
+     */
+    public double getXMin() {
+        return transformer.getCartMinX();
+    }
+    
+    /**
+     * @return The maximum displayed value of the horizontal axis
+     *         ({@link CoordinateTransformer#getCartMaxX()}).
+     */
+    public double getXMax() {
+        return transformer.getCartMaxX();
+    }
+    
+    /**
+     * @return The minimum displayed value of the vertical axis
+     *         ({@link CoordinateTransformer#getCartMinY()}).
+     */
+    public double getYMin() {
+        return transformer.getCartMinY();
+    }
+    
+    /**
+     * @return The maximum displayed value of the vertical axis
+     *         ({@link CoordinateTransformer#getCartMaxY()}).
+     */
+    public double getYMax() {
+        return transformer.getCartMaxY();
+    }
+    
+    /**
+     * Automatically adjust the displayed range of this plot in such way that
+     * all current {@link Drawable}s are displayed and some additional margin.
+     * The bounds of the {@link Drawable}s are determined via the
+     * {@link Drawable#getBounds()} methods. If there currently are no drawables
+     * to display or the only drawable object is a singular point the default
+     * range as specified in the constructor call is displayed.
+     */
     public void autorange() {
         double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
         
@@ -289,8 +400,8 @@ public class Plot2D extends JPanel {
             }
         }
         
-        // Prevent zooming to one singular point if there is only one item which
-        // is a point in the list of drawables.
+        // Prevent zooming to one singular point if there is only one point in
+        // the list of drawables.
         if (MathUtil.equals(minX, maxX)) {
             minX = DEFAULT_MIN_X;
             maxX = DEFAULT_MAX_X;
@@ -308,25 +419,16 @@ public class Plot2D extends JPanel {
         maxY += 0.1 * rangeY;
         
         setRange(minX, maxX, minY, maxY);
-        
-        // Point screenMin = transformer.getScreenCoordinates(new
-        // Point2D.Double(
-        // minX, minY));
-        // Point screenMax = transformer.getScreenCoordinates(new
-        // Point2D.Double(
-        // maxX, maxY));
-        //        
-        // Point2D.Double cartMin = transformer
-        // .getCarthesianCoordinates(new Point(screenMin.x - 5,
-        // screenMin.y - 5));
-        // Point2D.Double cartMax = transformer
-        // .getCarthesianCoordinates(new Point(screenMax.x + 5,
-        // screenMax.y + 5));
-        //        
-        // setRange(cartMin.getX(), cartMax.getX(), cartMin.getX(),
-        // cartMax.getY());
     }
     
+    /**
+     * Change the {@link StyleProvider} that is used to draw the contained
+     * drawable objects. A call to this method also causes a repaint of the
+     * whole component to make the change actually visible.
+     * 
+     * @param styleProvider
+     *        The new {@link StyleProvider} to use.
+     */
     public void setStyleProvider(StyleProvider styleProvider) {
         this.styleProvider = styleProvider;
         
@@ -359,15 +461,6 @@ public class Plot2D extends JPanel {
         // Draw all the drawables
         for (Drawable drawable : drawables) {
             drawable.draw(g2, transformer, styleProvider);
-        }
-        
-        // Draw the title (if any)
-        if (title != null) {
-            g2.setFont(titleFont);
-            float x = (float) (0.5 * getWidth() - 0.5 * g2.getFontMetrics()
-                    .stringWidth(title));
-            float y = (float) (g2.getFontMetrics().getHeight());
-            g2.drawString(title, x, y);
         }
         
         g2.setFont(oldFont);

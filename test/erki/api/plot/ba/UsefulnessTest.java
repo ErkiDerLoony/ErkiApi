@@ -32,7 +32,7 @@ import java.awt.geom.Point2D;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
-import erki.api.plot.drawables.CirclePoint;
+import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
 
@@ -83,7 +83,7 @@ public class UsefulnessTest {
                     evaluation = 0.75 * evaluation + 0.25 * init;
                     Point2D.Double newPoint = new Point2D.Double(time,
                             evaluation);
-                    plot.addDrawable(new CirclePoint(newPoint.getX(), newPoint
+                    plot.addDrawable(new ColouredCirclePoint(newPoint.getX(), newPoint
                             .getY(), Color.RED));
                     
                     if (oldPoint != null) {
