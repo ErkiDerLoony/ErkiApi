@@ -7,6 +7,7 @@
   <property name="src.dir" value="src" />
   <property name="test.src" value="test" />
   <property name="lib.dir" value="lib" />
+  <property name="doc.dir" value="doc" />
 
   <property name="jar.file" value="${ant.project.name}-${version}.jar" />
   <property name="test.jar" value="Test.jar" />
@@ -62,9 +63,16 @@
            debuglevel="lines,vars,source" classpathref="classpath" />
   </target>
 
+  <target name="doc">
+    <mkdir dir="${doc.dir}" />
+    <javadoc sourcepath="${src.dir}" destdir="${doc.dir}"
+             classpathref="classpath" />
+  </target>
+
   <target name="clean">
     <delete dir="${bin.dir}" />
     <delete dir="${test.bin}" />
+    <delete dir="${doc.dir}" />
     <delete file="${jar.file}" />
     <delete file="${test.jar}" />
     <delete file="${tar.file}" />
