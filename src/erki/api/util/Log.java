@@ -26,19 +26,15 @@ import java.util.Date;
 /**
  * This class logs everything that happens about the bot to a
  * {@link PrintStream}. This defaults to be stdout but may be set to a file via
- * the {@link #setHander(PrintStream)} method.
+ * the {@link #setHandler(PrintStream)} method.
  * 
  * @author Edgar Kalkowski
  */
 public class Log {
     
-    private static PrintStream handler;
+    private static PrintStream handler = System.out;
     
     private static boolean debug = false;
-    
-    static {
-        handler = System.out;
-    }
     
     /** Prevent others from instanciating this class. */
     private Log() {
@@ -226,8 +222,8 @@ public class Log {
     
     /**
      * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated via {@link
-     * #setDebug(true)}.
+     * actually printed if debugging was previously activated by calling
+     * {@link #setDebug(boolean)} with {@code true} as parameter.
      * 
      * @param source
      *        The source object that wants to log this message.
@@ -243,8 +239,8 @@ public class Log {
     
     /**
      * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated via {@link
-     * #setDebug(true)}.
+     * actually printed if debugging was previously activated by calling
+     * {@link #setDebug(boolean)} with {@code true} as parameter.
      * 
      * @param source
      *        The souce class that wants to log this message.
