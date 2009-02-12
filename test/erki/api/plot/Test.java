@@ -1,0 +1,74 @@
+package erki.api.plot;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
+import java.util.Random;
+
+import javax.swing.JFrame;
+
+import erki.api.plot.drawables.CirclePoint;
+import erki.api.plot.drawables.DrawableLine;
+import erki.api.plot.drawables.LineAxes;
+
+public class Test {
+    
+    private static boolean killed = false;
+    
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Test");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        Container cp = frame.getContentPane();
+        cp.setLayout(new BorderLayout());
+        
+        final Plot2D plot = new Plot2D();
+        plot.addDrawable(new LineAxes());
+        cp.add(plot, BorderLayout.CENTER);
+        
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        
+        new Thread() {
+            
+            @Override
+            public void run() {
+                super.run();
+                
+                Random random = new Random();
+                int timestamp = 0;
+                Point2D.Double old = new Point2D.Double(timestamp, random
+                        .nextGaussian() + 5.0);
+                plot.addDrawable(new CirclePoint(old));
+                
+                while (!killed) {
+                    timestamp++;
+                    Point2D.Double newPoint = new Point2D.Double(timestamp,
+                            random.nextGaussian() + 5.0);
+                    plot.addDrawable(new DrawableLine(old, newPoint));
+                    plot.addDrawable(new CirclePoint(newPoint));
+                    plot.autorange();
+                    old = newPoint;
+                    
+                    try {
+                        Thread.sleep(3);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+            
+        }.start();
+        
+        frame.addWindowListener(new WindowAdapter() {
+            
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                killed = true;
+            }
+        });
+    }
+}
