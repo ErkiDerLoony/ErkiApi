@@ -54,9 +54,8 @@ public interface Drawable {
     
     /**
      * @return A {@code Rectangle2D.Double} that specifies the bounds of this
-     *         drawable object in carthesian coordinate space. This method must
-     *         not return {@code null} but a singular rectangle if this drawable
-     *         has no actual bounds.
+     *         drawable object in carthesian coordinate space or {@code null} if
+     *         this drawable object has no bounds.
      */
     Rectangle2D.Double getBounds();
     
