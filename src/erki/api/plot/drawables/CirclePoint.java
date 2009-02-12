@@ -32,19 +32,16 @@ import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class ColouredCirclePoint extends Point2D.Double implements Drawable {
+public class CirclePoint extends Point2D.Double implements Drawable {
     
     private static final long serialVersionUID = -2994504030381719105L;
     
-    private Color colour;
-    
-    public ColouredCirclePoint(double x, double y, Color colour) {
+    public CirclePoint(double x, double y) {
         super(x, y);
-        this.colour = colour;
     }
     
-    public ColouredCirclePoint(Point2D.Double point, Color colour) {
-        this(point.getX(), point.getY(), colour);
+    public CirclePoint(Point2D.Double point) {
+        this(point.getX(), point.getY());
     }
     
     @Override
@@ -59,7 +56,8 @@ public class ColouredCirclePoint extends Point2D.Double implements Drawable {
         
         g2.setStroke(styleProvider.getProperty(
                 new StylePropertyKey<Stroke>("POINT_STROKE")).getProperty());
-        g2.setColor(colour);
+        g2.setColor(styleProvider.getProperty(
+                new StylePropertyKey<Color>("POINT_COLOR")).getProperty());
         g2.drawArc(p.x - (int) (0.5 * size), p.y - (int) (0.5 * size), size,
                 size, 0, 360);
         
@@ -69,9 +67,10 @@ public class ColouredCirclePoint extends Point2D.Double implements Drawable {
     
     @Override
     public Set<StylePropertyKey<?>> getNecessaryStyleProperties() {
-        Set<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
+        TreeSet<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
         properties.add(new StylePropertyKey<Stroke>("POINT_STROKE"));
         properties.add(new StylePropertyKey<Integer>("POINT_SIZE"));
+        properties.add(new StylePropertyKey<Color>("POINT_COLOR"));
         return properties;
     }
     

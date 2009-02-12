@@ -26,7 +26,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
-import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
+import erki.api.plot.drawables.LineAxes;
 
 public class BaRewardFactor {
     
@@ -39,7 +39,7 @@ public class BaRewardFactor {
         
         Plot2D plot = new Plot2D();
         plot.setPreferredSize(new Dimension(500, 500));
-        plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.1, 0.01));
+        plot.addDrawable(new LineAxes());
         plot.addDrawable(new RewardFactorFunction(0.3, 0.1, 0.12));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);

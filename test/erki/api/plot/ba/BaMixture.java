@@ -26,7 +26,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
-import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
+import erki.api.plot.drawables.LineAxes;
 
 public class BaMixture {
     
@@ -38,8 +38,9 @@ public class BaMixture {
         cp.setLayout(new BorderLayout());
         
         Plot2D plot = new Plot2D();
+        plot.setStyleProvider(new BaStyleProvider());
         plot.setPreferredSize(new Dimension(500, 500));
-        plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.1, 0.1));
+        plot.addDrawable(new LineAxes());
         plot.addDrawable(new MixtureInfluenceFunction(0.2));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);

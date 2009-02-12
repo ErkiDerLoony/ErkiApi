@@ -32,19 +32,16 @@ import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class ColouredCirclePoint extends Point2D.Double implements Drawable {
+public class CrossPoint extends Point2D.Double implements Drawable {
     
-    private static final long serialVersionUID = -2994504030381719105L;
+    private static final long serialVersionUID = -7603800844085258749L;
     
-    private Color colour;
-    
-    public ColouredCirclePoint(double x, double y, Color colour) {
+    public CrossPoint(double x, double y) {
         super(x, y);
-        this.colour = colour;
     }
     
-    public ColouredCirclePoint(Point2D.Double point, Color colour) {
-        this(point.getX(), point.getY(), colour);
+    public CrossPoint(Point2D.Double point) {
+        this(point.getX(), point.getY());
     }
     
     @Override
@@ -54,14 +51,15 @@ public class ColouredCirclePoint extends Point2D.Double implements Drawable {
         Stroke oldStroke = g2.getStroke();
         
         Point p = transformer.getScreenCoordinates(this);
-        int size = styleProvider.getProperty(
-                new StylePropertyKey<Integer>("POINT_SIZE")).getProperty();
+        int size = (int) (styleProvider.getProperty(
+                new StylePropertyKey<Integer>("POINT_SIZE")).getProperty() / 2.0);
         
+        g2.setColor(styleProvider.getProperty(
+                new StylePropertyKey<Color>("POINT_COLOR")).getProperty());
         g2.setStroke(styleProvider.getProperty(
                 new StylePropertyKey<Stroke>("POINT_STROKE")).getProperty());
-        g2.setColor(colour);
-        g2.drawArc(p.x - (int) (0.5 * size), p.y - (int) (0.5 * size), size,
-                size, 0, 360);
+        g2.drawLine(p.x - size, p.y - size, p.x + size, p.y + size);
+        g2.drawLine(p.x - size, p.y + size, p.x + size, p.y - size);
         
         g2.setColor(oldColour);
         g2.setStroke(oldStroke);
@@ -70,8 +68,9 @@ public class ColouredCirclePoint extends Point2D.Double implements Drawable {
     @Override
     public Set<StylePropertyKey<?>> getNecessaryStyleProperties() {
         Set<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
-        properties.add(new StylePropertyKey<Stroke>("POINT_STROKE"));
         properties.add(new StylePropertyKey<Integer>("POINT_SIZE"));
+        properties.add(new StylePropertyKey<Color>("POINT_COLOR"));
+        properties.add(new StylePropertyKey<Stroke>("POINT_STROKE"));
         return properties;
     }
     

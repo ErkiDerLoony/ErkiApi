@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -361,6 +367,76 @@ public class Plot2D extends JPanel {
      */
     public double getYMax() {
         return transformer.getCartMaxY();
+    }
+    
+    /**
+     * This method adds a {@link MouseWheelListener} to this plot to make it
+     * zoomable via the mouse wheel.
+     */
+    public void addZoom() {
+        
+        addMouseWheelListener(new MouseWheelListener() {
+            
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                
+                if (e.getWheelRotation() > 0) {
+                    setRange(getXMin() * 1.1, getXMax() * 1.1, getYMin() * 1.1,
+                            getYMax() * 1.1);
+                } else {
+                    setRange(getXMin() * 0.9, getXMax() * 0.9, getYMin() * 0.9,
+                            getYMax() * 0.9);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Adds a {@link MouseListener} and a {@link MouseMotionListener} to this
+     * plot to make it movable via dragging the first mouse button.
+     */
+    public void addMove() {
+        
+        MouseAdapter listener = new MouseAdapter() {
+            
+            private Point2D.Double old = null;
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    old = getCoordinateTransformer().getCarthesianCoordinates(
+                            new Point(e.getX(), e.getY()));
+                }
+            }
+            
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                
+                if (old != null) {
+                    Point2D.Double newPoint = getCoordinateTransformer()
+                            .getCarthesianCoordinates(
+                                    new Point(e.getX(), e.getY()));
+                    
+                    double diffX = newPoint.getX() - old.getX();
+                    double diffY = newPoint.getY() - old.getY();
+                    
+                    setRange(getXMin() - diffX, getXMax() - diffX, getYMin()
+                            - diffY, getYMax() - diffY);
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                old = null;
+            }
+        };
+        
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
     }
     
     /**

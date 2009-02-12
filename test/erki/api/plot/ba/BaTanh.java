@@ -26,7 +26,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
-import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
+import erki.api.plot.drawables.LineAxes;
 
 public class BaTanh {
     
@@ -38,11 +38,13 @@ public class BaTanh {
         cp.setLayout(new BorderLayout());
         
         Plot2D plot = new Plot2D();
+        plot.addZoom();
+        plot.addMove();
         plot.setStyleProvider(new BaStyleProvider());
         plot.setPreferredSize(new Dimension(500, 500));
         cp.add(plot, BorderLayout.CENTER);
         
-        plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.5, 0.1));
+        plot.addDrawable(new LineAxes());
         plot.addDrawable(new TanhScalingFunction());
         plot.autorange();
         

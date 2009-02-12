@@ -49,6 +49,8 @@ public class DefaultStyleProvider implements StyleProvider {
                 new StyleProperty<Integer>(10));
         addMapping(new StylePropertyKey<Stroke>("POINT_STROKE"),
                 new StyleProperty<BasicStroke>(new BasicStroke(1.25f)));
+        addMapping(new StylePropertyKey<Color>("POINT_COLOR"),
+                new StyleProperty<Color>(Color.BLACK));
         
         // Line properties
         addMapping(new StylePropertyKey<Stroke>("LINE_STROKE"),
@@ -100,7 +102,7 @@ public class DefaultStyleProvider implements StyleProvider {
             
             if (!mapping.containsKey(p)) {
                 throw new IllegalStateException(drawable
-                        + " need style property " + p
+                        + " needs style property " + p
                         + " but there is no mapping for it!");
             }
         }

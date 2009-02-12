@@ -22,6 +22,7 @@ package erki.api.plot.drawables;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Set;
@@ -42,30 +43,35 @@ public class ColouredCrossPoint extends Point2D.Double implements Drawable {
         this.colour = colour;
     }
     
-    public ColouredCrossPoint(double x, double y) {
-        this(x, y, Color.BLACK);
+    public ColouredCrossPoint(Point2D.Double point, Color colour) {
+        this(point.getX(), point.getY(), colour);
     }
     
     @Override
     public void draw(Graphics2D g2, CoordinateTransformer transformer,
             StyleProvider styleProvider) {
         Color oldColour = g2.getColor();
+        Stroke oldStroke = g2.getStroke();
         
         Point p = transformer.getScreenCoordinates(this);
         int size = (int) (styleProvider.getProperty(
                 new StylePropertyKey<Integer>("POINT_SIZE")).getProperty() / 2.0);
         
         g2.setColor(colour);
+        g2.setStroke(styleProvider.getProperty(
+                new StylePropertyKey<Stroke>("POINT_STROKE")).getProperty());
         g2.drawLine(p.x - size, p.y - size, p.x + size, p.y + size);
         g2.drawLine(p.x - size, p.y + size, p.x + size, p.y - size);
         
         g2.setColor(oldColour);
+        g2.setStroke(oldStroke);
     }
     
     @Override
     public Set<StylePropertyKey<?>> getNecessaryStyleProperties() {
         Set<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
         properties.add(new StylePropertyKey<Integer>("POINT_SIZE"));
+        properties.add(new StylePropertyKey<Stroke>("POINT_STROKE"));
         return properties;
     }
     

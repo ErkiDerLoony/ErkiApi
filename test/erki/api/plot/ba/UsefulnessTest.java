@@ -34,7 +34,7 @@ import javax.swing.JFrame;
 import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.DrawableLine;
-import erki.api.plot.drawables.FixedTickWidthPositiveAxisWithArrow;
+import erki.api.plot.drawables.LineAxes;
 
 public class UsefulnessTest {
     
@@ -53,7 +53,7 @@ public class UsefulnessTest {
         plot.setPreferredSize(new Dimension(500, 500));
         cp.add(plot, BorderLayout.CENTER);
         
-        plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.5, 0.1));
+        plot.addDrawable(new LineAxes());
         
         plot.addMouseListener(new MouseAdapter() {
             
