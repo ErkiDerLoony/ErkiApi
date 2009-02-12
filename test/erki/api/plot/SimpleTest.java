@@ -31,8 +31,8 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
 
-import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.util.Log;
 
 public class SimpleTest {
@@ -48,7 +48,6 @@ public class SimpleTest {
         cp.setLayout(new BorderLayout());
         
         final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
-        // plot.addDrawable(new FixedTickWidthPositiveAxisWithArrow(0.1, 0.1));
         plot.addDrawable(new LineAxes());
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);
