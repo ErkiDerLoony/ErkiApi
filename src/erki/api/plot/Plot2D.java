@@ -169,6 +169,19 @@ public class Plot2D extends JPanel {
             }
         });
         
+        item = new JMenuItem("Center on origin");
+        menu.add(item);
+        
+        item.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double xRange = getXMax() - getXMin();
+                double yRange = getYMax() - getYMin();
+                setRange(-xRange/2.0, xRange/2.0, -yRange/2.0, yRange/2.0);
+            }
+        });
+        
         item = new JMenuItem("Export as pdf");
         menu.add(item);
         
@@ -256,7 +269,7 @@ public class Plot2D extends JPanel {
     }
     
     /** @return See {@link Collection#add(Object)}. */
-    public boolean addDrawable(Drawable drawable) {
+    public synchronized boolean addDrawable(Drawable drawable) {
         styleProvider.checkProperties(drawable);
         boolean result = drawables.add(drawable);
         
@@ -268,7 +281,7 @@ public class Plot2D extends JPanel {
     }
     
     /** @return See {@link Collection#remove(Object)}. */
-    public boolean removeDrawable(Drawable drawable) {
+    public synchronized boolean removeDrawable(Drawable drawable) {
         boolean result = drawables.remove(drawable);
         
         if (result) {
@@ -371,7 +384,8 @@ public class Plot2D extends JPanel {
     
     /**
      * This method adds a {@link MouseWheelListener} to this plot to make it
-     * zoomable via the mouse wheel.
+     * zoomable via the mouse wheel. The zoom is relative to the current mouse
+     * pointer position.
      */
     public void addZoom() {
         
@@ -380,12 +394,19 @@ public class Plot2D extends JPanel {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 
+                Point2D.Double p = getCoordinateTransformer().getCarthesianCoordinates(
+                        new Point(e.getX(), e.getY()));
+                
                 if (e.getWheelRotation() > 0) {
-                    setRange(getXMin() * 1.1, getXMax() * 1.1, getYMin() * 1.1,
-                            getYMax() * 1.1);
+                    setRange((getXMin() - p.getX()) * 1.1 + p.getX(),
+                            (getXMax() - p.getX()) * 1.1 + p.getX(),
+                            (getYMin() - p.getY()) * 1.1 + p.getY(),
+                            (getYMax() - p.getY()) * 1.1 + p.getY());
                 } else {
-                    setRange(getXMin() * 0.9, getXMax() * 0.9, getYMin() * 0.9,
-                            getYMax() * 0.9);
+                    setRange((getXMin() - p.getX()) * 0.9 + p.getX(),
+                            (getXMax() - p.getX()) * 0.9 + p.getX(),
+                            (getYMin() - p.getY()) * 0.9 + p.getY(),
+                            (getYMax() - p.getY()) * 0.9 + p.getY());
                 }
             }
         });
@@ -446,6 +467,8 @@ public class Plot2D extends JPanel {
      * {@link Drawable#getBounds()} methods. If there currently are no drawables
      * to display or the only drawable object is a singular point the default
      * range as specified in the constructor call is displayed.
+     * <p>
+     * This method calls a complete repaint of the plot.
      */
     public void autorange() {
         double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
@@ -458,6 +481,10 @@ public class Plot2D extends JPanel {
         
         for (Drawable d : drawables) {
             Rectangle2D.Double bounds = d.getBounds();
+            
+            if (bounds == null) {
+                continue;
+            }
             
             if (bounds.x < minX) {
                 minX = bounds.x;
@@ -474,6 +501,22 @@ public class Plot2D extends JPanel {
             if (bounds.y + bounds.height > maxY) {
                 maxY = bounds.y + bounds.height;
             }
+        }
+        
+        if (MathUtil.equals(minX, Double.MAX_VALUE)) {
+            minX = DEFAULT_MIN_X;
+        }
+        
+        if (MathUtil.equals(maxX, Double.MIN_VALUE)) {
+            maxX = DEFAULT_MAX_X;
+        }
+        
+        if (MathUtil.equals(minY, Double.MAX_VALUE)) {
+            minY = DEFAULT_MIN_Y;
+        }
+        
+        if (MathUtil.equals(maxY, Double.MIN_VALUE)) {
+            maxY = DEFAULT_MAX_Y;
         }
         
         // Prevent zooming to one singular point if there is only one point in
@@ -535,8 +578,11 @@ public class Plot2D extends JPanel {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         
         // Draw all the drawables
-        for (Drawable drawable : drawables) {
-            drawable.draw(g2, transformer, styleProvider);
+        synchronized (this) {
+            
+            for (Drawable drawable : drawables) {
+                drawable.draw(g2, transformer, styleProvider);
+            }
         }
         
         g2.setFont(oldFont);
