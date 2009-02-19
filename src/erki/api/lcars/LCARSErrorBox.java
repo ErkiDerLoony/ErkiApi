@@ -297,6 +297,10 @@ public class LCARSErrorBox extends LCARSFrame {
             result += "<br>";
             result += "Caused by: " + cause.toString();
             
+            if (cause.getStackTrace().length > 0) {
+                result += "<br>";
+            }
+            
             for (int i = 0; i < cause.getStackTrace().length; i++) {
                 
                 if (i < cause.getStackTrace().length - 1) {
@@ -304,7 +308,7 @@ public class LCARSErrorBox extends LCARSFrame {
                             + cause.getStackTrace()[i].toString() + "<br>";
                 } else {
                     result += "&nbsp;&nbsp;&nbsp;&nbsp;at "
-                            + cause.getStackTrace();
+                            + cause.getStackTrace()[i].toString();
                 }
             }
             
