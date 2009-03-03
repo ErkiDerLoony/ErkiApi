@@ -34,6 +34,7 @@ import erki.api.plot.drawables.CrossPoint;
 import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.LineAxes;
 import erki.api.util.Log;
+import erki.api.util.Log.Level;
 
 public class SimpleTest {
     
@@ -42,7 +43,7 @@ public class SimpleTest {
         frame.setTitle("A simple test of the plot api");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        Log.setDebug(true);
+        Log.setLevel(Level.DEBUG);
         
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());

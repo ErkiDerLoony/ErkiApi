@@ -3,309 +3,257 @@
  * 
  * This file is part of Erki's API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.util;
 
 import java.io.PrintStream;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
- * This class logs everything that happens about the bot to a
- * {@link PrintStream}. This defaults to be stdout but may be set to a file via
- * the {@link #setHandler(PrintStream)} method.
+ * A simple log for a program that allows for class specific log levels.
  * 
  * @author Edgar Kalkowski
  */
 public class Log {
     
+    /**
+     * This enum is used to specify which messages shall be logged and which not. For example if the
+     * log level is {@link #WARNING} all info, default or debug messages will be discarded and not
+     * actually printed to the log.
+     * 
+     * @author Edgar Kalkowski
+     */
+    public static enum Level {
+        NOTHING, ERROR, WARNING, INFO, DEFAULT, DEBUG;
+    }
+    
+    /**
+     * This is the handler to which all log output is printed. It defaults to be System.out but may
+     * be changed by the user via {@link #setHandler(PrintStream)} (for example to log to a file).
+     */
     private static PrintStream handler = System.out;
     
-    private static boolean debug = false;
+    /**
+     * Maps classes to special log levels. This allows to override the default log level for certain
+     * classes for example to only get debug output for some classes and not for all.
+     */
+    private static Map<String, Level> mapping = new TreeMap<String, Level>();
     
-    /** Prevent others from instanciating this class. */
+    /** The default log level for all classes for which no special log level is specified. */
+    private static Level level = Level.DEFAULT;
+    
+    /** Prevent others from instanciating this static class. */
     private Log() {
     }
     
     /**
-     * Logs a message that is classified as an information.
+     * Compute whether or not a message of a given level is loggable for a specific class.
      * 
-     * @param source
-     *        The source object that wants to log this message.
-     * @param line
-     *        The line of text to log.
+     * @param classname
+     *        The fully qualified class name of the class that wants to print something to the log.
+     * @param level
+     *        The log level of the information to be printed.
+     * @return {@code true} if the class is allowed to print the message, {@code false} otherwise.
      */
-    public static void info(Object source, String line) {
-        log(source, line, "INFO: ");
-    }
-    
-    /**
-     * Logs a message that is classified as an information.
-     * 
-     * @param source
-     *        The source class that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void info(Class<?> source, String line) {
-        log(source, line, "INFO: ");
-    }
-    
-    /**
-     * Logs an exception represented by an instance of {@link Throwable} or any
-     * subclass of it including the stacktrace.
-     * 
-     * @param source
-     *        The source class that wants to log this error.
-     * @param error
-     *        The {@link Throwable} object that describes the exception and the
-     *        stacktrace. Must not be {@code null}.
-     */
-    public static void error(Class<?> source, Throwable error) {
-        log(source, error.toString(), "ERROR: ");
+    private static boolean isLoggable(String classname, Level level) {
         
-        for (StackTraceElement s : error.getStackTrace()) {
-            log(source, "\tat " + s.toString(), "ERROR: ");
+        if (mapping.containsKey(classname)) {
+            Level bound = mapping.get(classname);
+            
+            if (level.compareTo(bound) <= 0) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } else {
+            
+            if (level.compareTo(Log.level) <= 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
+    }
+    
+    /**
+     * Print debug information to the log file. The message is only actually printed to the current
+     * handler if the log level is {@link Level#DEBUG}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void debug(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        logCause(source, error.getCause());
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEBUG)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "DEBUG: ");
+        }
+    }
+    
+    /**
+     * Logs a message. The message is only actually printed to the current handler if the log level
+     * is at least {@link Level#DEFAULT}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void print(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEFAULT)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "");
+        }
+    }
+    
+    /**
+     * Logs a message that is classified as an information. The message is only actually printed to
+     * the current handler if the log level is at least {@link Level#INFO}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void info(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.INFO)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "INFO: ");
+        }
+    }
+    
+    /**
+     * Logs a message that is classified as a warning. The message is only actually printed to the
+     * current handler if the log level for the logging class is at least {@link Level#WARNING}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void warning(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.WARNING)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "WARNING: ");
+        }
+    }
+    
+    /**
+     * Logs an exception represented by an instance of {@link Throwable} or any subclass of it
+     * including the stacktrace. The message is only actually printed to the current handler if the
+     * log level for the logging class is at least {@link Level#ERROR}.
+     * 
+     * @param error
+     *        The {@link Throwable} object that describes the exception and the stacktrace. Must not
+     *        be {@code null}.
+     */
+    public static void error(Throwable error) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.ERROR)) {
+            log(e.getClassName() + "." + e.getMethodName(), error.toString(), "ERROR: ");
+            
+            for (StackTraceElement s : error.getStackTrace()) {
+                log(e.getClassName() + "." + e.getMethodName(), "\tat " + s.toString(), "ERROR: ");
+            }
+            
+            logCause(error.getCause(), e);
+        }
     }
     
     /**
      * Recursively log the causes of a throwable.
      * 
-     * @param source
-     *        The source object that wants to log this.
      * @param cause
-     *        The cause of an error that is the starting point for the recursive
-     *        traversal of the causes.
+     *        The cause of an error that is the starting point for the recursive traversal of the
+     *        causes.
+     * @param source
+     *        The {@code StackTraceElement} from which information about the source of the error is
+     *        taken.
      */
-    private static void logCause(Class<?> source, Throwable cause) {
+    private static void logCause(Throwable cause, StackTraceElement source) {
         
         if (cause != null) {
-            log(source, "Caused by: " + cause.toString(), "ERROR: ");
+            log(source.getClassName() + "." + source.getMethodName(), "Caused by: "
+                    + cause.toString(), "ERROR: ");
             
             for (StackTraceElement s : cause.getStackTrace()) {
-                log(source, "\tat " + s.toString(), "ERROR: ");
+                log(source.getClassName() + "." + source.getMethodName(), "\tat " + s.toString(),
+                        "ERROR: ");
             }
             
-            logCause(source, cause.getCause());
-        }
-    }
-    
-    /**
-     * Logs an exception represented by an instance of {@link Throwable} or any
-     * subclass of it including the stacktrace.
-     * 
-     * @param source
-     *        The source object that wants to log this error.
-     * @param error
-     *        The {@link Throwable} object that describes the exception and the
-     *        stacktrace. Must not be {@code null}.
-     */
-    public static void error(Object source, Throwable error) {
-        log(source, error.toString(), "ERROR: ");
-        
-        for (StackTraceElement s : error.getStackTrace()) {
-            log(source, "\tat " + s.toString(), "ERROR: ");
-        }
-        
-        logCause(source, error.getCause());
-    }
-    
-    /**
-     * Recursively log the causes of a throwable.
-     * 
-     * @param source
-     *        The source object that wants to log this.
-     * @param cause
-     *        The cause of an error that is the starting point for the recursive
-     *        traversal of the causes.
-     */
-    private static void logCause(Object source, Throwable cause) {
-        
-        if (cause != null) {
-            log(source, "Caused by: " + cause.toString(), "ERROR: ");
-            
-            for (StackTraceElement s : cause.getStackTrace()) {
-                log(source, "\tat " + s.toString(), "ERROR: ");
-            }
-            
-            logCause(source, cause.getCause());
+            logCause(cause.getCause(), source);
         }
     }
     
     /**
      * Logs a message that is classified as an error.
      * 
-     * @param source
-     *        The source object that wants to log this message.
      * @param line
      *        The line of text to log.
      */
-    public static void error(Object source, String line) {
-        log(source, line, "ERROR: ");
-    }
-    
-    /**
-     * Logs a message that is classified as an error.
-     * 
-     * @param source
-     *        The source class that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void error(Class<?> source, String line) {
-        log(source, line, "ERROR: ");
-    }
-    
-    /**
-     * Logs a message that is classified as a warning.
-     * 
-     * @param source
-     *        The source object that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void warning(Object source, String line) {
-        log(source, line, "WARNING: ");
-    }
-    
-    /**
-     * Logs a message that is classified as a warning.
-     * 
-     * @param source
-     *        The source class that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void warning(Class<?> source, String line) {
-        log(source, line, "WARNING: ");
-    }
-    
-    /**
-     * Logs a message.
-     * 
-     * @param source
-     *        The source object that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void print(Object source, String line) {
-        log(source, line, "");
-    }
-    
-    /**
-     * Logs a message.
-     * 
-     * @param source
-     *        The source class that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void print(Class<?> source, String line) {
-        log(source, line, "");
-    }
-    
-    /**
-     * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated by calling
-     * {@link #setDebug(boolean)} with {@code true} as parameter.
-     * 
-     * @param source
-     *        The source object that wants to log this message.
-     * @param line
-     *        The line of text to log.
-     */
-    public static void debug(Object source, String line) {
+    public static void error(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (debug) {
-            log(source, line, "DEBUG: ");
+        if (isLoggable(e.getClassName(), Level.ERROR)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "ERROR: ");
         }
     }
     
     /**
-     * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated by calling
-     * {@link #setDebug(boolean)} with {@code true} as parameter.
+     * Change the handler to which all log output is actually printed.
      * 
-     * @param source
-     *        The souce class that wants to log this message.
-     * @param line
-     *        The line of text to log.
+     * @param handler
+     *        The new handler of log messages.
      */
-    public static void debug(Class<?> source, String line) {
+    public static void setHandler(PrintStream handler) {
+        Log.handler = handler;
+    }
+    
+    /**
+     * Change the log level to be more or less verbose.
+     * 
+     * @param level
+     *        The new log level.
+     */
+    public static void setLevel(Level level) {
+        Log.level = level;
+    }
+    
+    /**
+     * Change the log level for specific classes to be more or less verbose.
+     * 
+     * @param level
+     *        The new log level for the given classes.
+     * @param classes
+     *        The classes whose log level shall be changed.
+     */
+    public static void setLevelForClasses(Level level, Class<?>... classes) {
         
-        if (debug) {
-            log(source, line, "DEBUG: ");
+        for (Class<?> clazz : classes) {
+            mapping.put(clazz.getCanonicalName(), level);
         }
     }
     
-    private static void log(Object source, String line, String modifier) {
-        String src = source == null ? "<unknown.source>" : source.getClass()
-                .getCanonicalName() == null ? "<anonymous.class>" : source
-                .getClass().getCanonicalName();
-        src += source == null ? "" : "@"
-                + Integer.toHexString(source.hashCode());
+    private static void log(String src, String line, String modifier) {
         String ln = line == null ? "" : line;
-        log(formatDate(), src, modifier, ln);
-    }
-    
-    private static void log(Class<?> source, String line, String modifier) {
-        String src = source == null ? "<unknown.source>" : source
-                .getCanonicalName() == null ? "<anonymous.class>" : source
-                .getCanonicalName();
-        String ln = line == null ? "" : line;
-        log(formatDate(), src, modifier, ln);
-    }
-    
-    /**
-     * Activate or deactivate the debug mode. Debugging is deactivated by
-     * default. Lines printed via {@link #debug(Object, String)} are ignored and
-     * not printed to the log file if debugging is deactivated.
-     * 
-     * @param debug
-     *        If {@code true} all a bunch of debug info is printed to the log
-     *        file. If {@code false} all debug output will be ignored.
-     */
-    public static void setDebug(boolean debug) {
-        Log.debug = debug;
-    }
-    
-    /**
-     * @return {@code true} if debugging is currently enabled, {@code false}
-     *         otherwise.
-     */
-    public static boolean isDebug() {
-        return debug;
-    }
-    
-    private static void log(String date, String source, String modifier,
-            String line) {
-        handler.println("[" + date + ", " + source + "] " + modifier + line);
+        handler.println("[" + getDate() + ", " + src + "] " + modifier + ln);
         handler.flush();
     }
     
-    private static String formatDate() {
-        return formatDate(new Date());
-    }
-    
-    private static String formatDate(Date date) {
+    private static String getDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
         
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1;
@@ -319,19 +267,6 @@ public class Log {
         String mins = min < 10 ? "0" + min + ":" : min + ":";
         String secs = sec < 10 ? "0" + sec : "" + sec;
         
-        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins
-                + secs;
-    }
-    
-    /**
-     * Change the handler i.d. the receiver of the log messages. The handler
-     * defaults to be stdout but this way one can redirect the log output e.g.
-     * to a file.
-     * 
-     * @param handler
-     *        The new handler of log messages.
-     */
-    public static void setHandler(PrintStream handler) {
-        Log.handler = handler;
+        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins + secs;
     }
 }
