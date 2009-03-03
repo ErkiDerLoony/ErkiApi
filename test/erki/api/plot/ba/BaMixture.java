@@ -38,6 +38,8 @@ public class BaMixture {
         cp.setLayout(new BorderLayout());
         
         Plot2D plot = new Plot2D();
+        plot.addZoom();
+        plot.addMove();
         plot.setStyleProvider(new BaStyleProvider());
         plot.setPreferredSize(new Dimension(500, 500));
         plot.addDrawable(new LineAxes());
