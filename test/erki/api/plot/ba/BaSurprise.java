@@ -28,10 +28,10 @@ import javax.swing.JFrame;
 import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.LineAxes;
 
-public class BaTanh {
+public class BaSurprise {
     
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Skalierung der KL2-Divergenz mittels tanh");
+        JFrame frame = new JFrame("Skalierung der KL2-Divergenz auf [0,1]");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Container cp = frame.getContentPane();
@@ -45,7 +45,7 @@ public class BaTanh {
         cp.add(plot, BorderLayout.CENTER);
         
         plot.addDrawable(new LineAxes());
-        plot.addDrawable(new TanhScalingFunction());
+        plot.addDrawable(new SurpriseFunction(0.5, 5.0));
         plot.autorange();
         
         frame.pack();

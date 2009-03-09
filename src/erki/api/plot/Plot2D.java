@@ -214,34 +214,27 @@ public class Plot2D extends JPanel {
                 if (fileChooser.showSaveDialog(Plot2D.this) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile().getAbsoluteFile();
                     
-                    if (file.exists() && file.isFile()) {
-                        
-                        Document doc = new Document(new Rectangle(getWidth(),
-                                getHeight()));
-                        
-                        try {
-                            PdfWriter writer = PdfWriter.getInstance(doc,
-                                    new FileOutputStream(file));
-                            doc.open();
-                            PdfContentByte cb = writer.getDirectContent();
-                            PdfTemplate tb = cb.createTemplate(getWidth(),
-                                    getHeight());
-                            Graphics2D g2 = tb.createGraphics(getWidth(),
-                                    getHeight(), new DefaultFontMapper());
-                            Plot2D.this.print(g2);
-                            g2.dispose();
-                            cb.addTemplate(tb, 0, 0);
-                            JOptionPane.showMessageDialog(Plot2D.this,
-                                    "Pdf saved " + "to " + file + ".", "Ok",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                        } catch (FileNotFoundException e1) {
-                            ErrorBox.showExceptionBox(Plot2D.this, e1);
-                        } catch (DocumentException e1) {
-                            ErrorBox.showExceptionBox(Plot2D.this, e1);
-                        }
-                        
-                        doc.close();
+                    Document doc = new Document(new Rectangle(getWidth(), getHeight()));
+                    
+                    try {
+                        PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
+                        doc.open();
+                        PdfContentByte cb = writer.getDirectContent();
+                        PdfTemplate tb = cb.createTemplate(getWidth(), getHeight());
+                        Graphics2D g2 = tb.createGraphics(getWidth(), getHeight(),
+                                new DefaultFontMapper());
+                        Plot2D.this.print(g2);
+                        g2.dispose();
+                        cb.addTemplate(tb, 0, 0);
+                        JOptionPane.showMessageDialog(Plot2D.this, "Pdf saved to " + file + ".",
+                                "Ok", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (FileNotFoundException e1) {
+                        ErrorBox.showExceptionBox(Plot2D.this, e1);
+                    } catch (DocumentException e1) {
+                        ErrorBox.showExceptionBox(Plot2D.this, e1);
                     }
+                    
+                    doc.close();
                 }
             }
         });
