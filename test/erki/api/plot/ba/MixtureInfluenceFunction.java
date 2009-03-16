@@ -30,21 +30,21 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.drawables.Drawable;
+import erki.api.plot.drawables.StyledDrawable;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class MixtureInfluenceFunction implements Drawable {
+public class MixtureInfluenceFunction extends StyledDrawable {
     
     private double o;
     
-    public MixtureInfluenceFunction(double o) {
+    public MixtureInfluenceFunction(double o, StyleProvider styleProvider) {
+        super(styleProvider);
         this.o = o;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         
@@ -81,9 +81,9 @@ public class MixtureInfluenceFunction implements Drawable {
     private double f(double x) {
         
         if (x <= o) {
-            return x / (2.0 * o);
+            return 0.5 * (x / o);
         } else {
-            return x / (2.0 * (1.0 - o)) + 0.5 - o / (2 * (1 - o));
+            return 0.5 * (x / (1 - o) - o / (1 - o) + 1);
         }
     }
     

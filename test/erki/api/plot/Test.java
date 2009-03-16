@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import erki.api.plot.drawables.CirclePoint;
 import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.style.StyleProvider;
 
 public class Test {
     
@@ -25,7 +27,8 @@ public class Test {
         cp.setLayout(new BorderLayout());
         
         final Plot2D plot = new Plot2D();
-        plot.addDrawable(new LineAxes());
+        final StyleProvider styleProvider = new BasicStyleProvider();
+        plot.addDrawable(new LineAxes(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         frame.pack();
@@ -42,14 +45,14 @@ public class Test {
                 int timestamp = 0;
                 Point2D.Double old = new Point2D.Double(timestamp, random
                         .nextGaussian() + 5.0);
-                plot.addDrawable(new CirclePoint(old));
+                plot.addDrawable(new CirclePoint(old, styleProvider));
                 
                 while (!killed) {
                     timestamp++;
                     Point2D.Double newPoint = new Point2D.Double(timestamp,
                             random.nextGaussian() + 5.0);
-                    plot.addDrawable(new DrawableLine(old, newPoint));
-                    plot.addDrawable(new CirclePoint(newPoint));
+                    plot.addDrawable(new DrawableLine(old, newPoint, styleProvider));
+                    plot.addDrawable(new CirclePoint(newPoint, styleProvider));
                     plot.autorange();
                     old = newPoint;
                     

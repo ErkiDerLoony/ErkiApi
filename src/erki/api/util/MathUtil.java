@@ -40,7 +40,7 @@ public class MathUtil {
      * @return {@code Math.round(value * Math.pow(10, significantDigits)) /
      *         Math.pow(10, significantDigits)}.
      */
-    public static double round(double value, double significantDigits) {
+    public static double round(double value, int significantDigits) {
         return Math.round(value * Math.pow(10, significantDigits))
                 / Math.pow(10, significantDigits);
     }

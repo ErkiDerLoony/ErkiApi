@@ -35,6 +35,8 @@ import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.style.StyleProvider;
 
 public class UsefulnessTest {
     
@@ -50,10 +52,11 @@ public class UsefulnessTest {
         cp.setLayout(new BorderLayout());
         
         final Plot2D plot = new Plot2D();
+        final StyleProvider styleProvider = new BasicStyleProvider();
         plot.setPreferredSize(new Dimension(500, 500));
         cp.add(plot, BorderLayout.CENTER);
         
-        plot.addDrawable(new LineAxes());
+        plot.addDrawable(new LineAxes(styleProvider));
         
         plot.addMouseListener(new MouseAdapter() {
             
@@ -84,11 +87,11 @@ public class UsefulnessTest {
                     Point2D.Double newPoint = new Point2D.Double(time,
                             evaluation);
                     plot.addDrawable(new ColouredCirclePoint(newPoint.getX(), newPoint
-                            .getY(), Color.RED));
+                            .getY(), Color.RED, styleProvider));
                     
                     if (oldPoint != null) {
                         plot.addDrawable(new DrawableLine(oldPoint, newPoint,
-                                Color.RED));
+                                Color.RED, styleProvider));
                     }
                     
                     oldPoint = newPoint;

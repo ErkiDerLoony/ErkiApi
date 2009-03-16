@@ -15,16 +15,19 @@ import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.MathUtil;
 
-public class LineAxes implements Drawable {
+public class LineAxes extends StyledDrawable {
     
+    public LineAxes(StyleProvider styleProvider) {
+        super(styleProvider);
+    }
+
     private double[] steps = { 0.00001, 0.000025, 0.00005, 0.0001, 0.00025,
             0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5,
             1.0, 2.5, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0,
             2500.0, 5000.0, 10000.0 };
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Stroke oldStroke = g2.getStroke();
         Color oldColour = g2.getColor();
         Font oldFont = g2.getFont();
@@ -70,7 +73,11 @@ public class LineAxes implements Drawable {
                         i, 0.0));
                 String tick = MathUtil.round(i, 7) + "";
                 
-                if (p.x - 0.5 * g2.getFontMetrics().stringWidth(tick) < oldX) {
+                if (tick.endsWith(".0")) {
+                    tick = tick.substring(0, tick.length() - 2);
+                }
+                
+                if (p.x - 0 * g2.getFontMetrics().stringWidth(tick) < oldX) {
                     ticksFit = false;
                     xStep++;
                     break;
@@ -93,6 +100,10 @@ public class LineAxes implements Drawable {
                 Point p = transformer.getScreenCoordinates(new Point2D.Double(
                         0.0, i));
                 String tick = MathUtil.round(i, 7) + "";
+                
+                if (tick.endsWith(".0")) {
+                    tick = tick.substring(0, tick.length() - 2);
+                }
                 
                 if (g2.getFontMetrics().stringWidth(tick) > maxWidth) {
                     maxWidth = g2.getFontMetrics().stringWidth(tick);
@@ -120,6 +131,10 @@ public class LineAxes implements Drawable {
                     0.0));
             String tick = MathUtil.round(i, 7) + "";
             
+            if (tick.endsWith(".0")) {
+                tick = tick.substring(0, tick.length() - 2);
+            }
+            
             if (p.x + 0.5 * g2.getFontMetrics().stringWidth(tick) < transformer
                     .getScreenWidth()
                     - 2 * arrowOffset
@@ -132,6 +147,10 @@ public class LineAxes implements Drawable {
             
             p = transformer.getScreenCoordinates(new Point2D.Double(-i, 0.0));
             tick = MathUtil.round(-i, 7) + "";
+            
+            if (tick.endsWith(".0")) {
+                tick = tick.substring(0, tick.length() - 2);
+            }
             
             if (p.x + 0.5 * g2.getFontMetrics().stringWidth(tick) < transformer
                     .getScreenWidth()
@@ -154,6 +173,11 @@ public class LineAxes implements Drawable {
                             .getScreenHeight()
                             - arrowOffset) {
                 String tick = MathUtil.round(i, 7) + "";
+                
+//                if (tick.endsWith(".0")) {
+//                    tick = tick.substring(0, tick.length() - 2);
+//                }
+                
                 g2.drawLine(p.x - tickOffset, p.y, p.x + tickOffset, p.y);
                 g2.drawString(tick, p.x - tickOffset - 2 - maxWidth, (int) (p.y
                         + 0.5 * g2.getFontMetrics().getHeight() - g2
@@ -167,6 +191,11 @@ public class LineAxes implements Drawable {
                             .getScreenHeight()
                             - arrowOffset) {
                 String tick = MathUtil.round(-i, 7) + "";
+                
+//                if (tick.endsWith(".0")) {
+//                    tick = tick.substring(0, tick.length() - 2);
+//                }
+                
                 g2.drawLine(p.x - tickOffset, p.y, p.x + tickOffset, p.y);
                 g2.drawString(tick, p.x - tickOffset - 2 - maxWidth
                         - g2.getFontMetrics().stringWidth("-"), (int) (p.y

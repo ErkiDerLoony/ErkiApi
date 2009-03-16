@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.StyleProvider;
 
 public class BaMixture {
     
@@ -40,10 +41,10 @@ public class BaMixture {
         Plot2D plot = new Plot2D();
         plot.addZoom();
         plot.addMove();
-        plot.setStyleProvider(new BaStyleProvider());
+        StyleProvider styleProvider = new BaStyleProvider();
         plot.setPreferredSize(new Dimension(500, 500));
-        plot.addDrawable(new LineAxes());
-        plot.addDrawable(new MixtureInfluenceFunction(0.2));
+        plot.addDrawable(new LineAxes(styleProvider));
+        plot.addDrawable(new MixtureInfluenceFunction(0.2, styleProvider));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);
         

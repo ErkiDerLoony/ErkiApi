@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.StyleProvider;
 
 public class BaRewardFactor {
     
@@ -36,12 +37,12 @@ public class BaRewardFactor {
         cp.setLayout(new BorderLayout());
         
         Plot2D plot = new Plot2D();
+        StyleProvider styleProvider = new BaStyleProvider();
         plot.setPreferredSize(new Dimension(500, 500));
         plot.addMove();
         plot.addZoom();
-        plot.setStyleProvider(new BaStyleProvider());
-        plot.addDrawable(new LineAxes());
-        plot.addDrawable(new RewardFactorFunction(0.3, 0.1, 0.4));
+        plot.addDrawable(new LineAxes(styleProvider));
+        plot.addDrawable(new RewardFactorFunction(0.25, 0.01, 0.05, styleProvider));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);
         

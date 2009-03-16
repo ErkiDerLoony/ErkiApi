@@ -27,21 +27,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.drawables.Drawable;
+import erki.api.plot.drawables.StyledDrawable;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class SurpriseFunction implements Drawable {
+public class SurpriseFunction extends StyledDrawable {
     
     private final double umin, umax;
     
-    public SurpriseFunction(double umin, double umax) {
+    public SurpriseFunction(double umin, double umax, StyleProvider styleProvider) {
+        super(styleProvider);
         this.umin = umin;
         this.umax = umax;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer, StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         

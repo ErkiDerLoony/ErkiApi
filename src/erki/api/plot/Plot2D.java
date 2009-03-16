@@ -60,8 +60,7 @@ import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
 import erki.api.plot.drawables.Drawable;
-import erki.api.plot.style.DefaultStyleProvider;
-import erki.api.plot.style.StyleProvider;
+import erki.api.plot.style.BasicStyleProvider;
 import erki.api.util.ErrorBox;
 import erki.api.util.MathUtil;
 
@@ -82,8 +81,6 @@ public class Plot2D extends JPanel {
     private final double DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y,
             DEFAULT_MAX_Y;
     
-    private StyleProvider styleProvider;
-    
     /**
      * Create a new {@code Plot2D} displaying a specific range of carthesian
      * coordinates and using a specific {@code StyleProvider} for the drawing of
@@ -97,13 +94,8 @@ public class Plot2D extends JPanel {
      *        The minimum displayed value of the vertical axis.
      * @param maxY
      *        The maximum displayed value of the vertical axis.
-     * @param styleProvider
-     *        The {@code StyleProvider} to use for drawing the contained
-     *        objects.
      */
-    public Plot2D(double minX, double maxX, double minY, double maxY,
-            StyleProvider styleProvider) {
-        this.styleProvider = styleProvider;
+    public Plot2D(double minX, double maxX, double minY, double maxY) {
         DEFAULT_MIN_X = minX;
         DEFAULT_MAX_X = maxX;
         DEFAULT_MIN_Y = minY;
@@ -130,30 +122,13 @@ public class Plot2D extends JPanel {
     }
     
     /**
-     * Create a new {@code Plot2D} that displays a specific range of carthesian
-     * coordinates using a {@link DefaultStyleProvider}.
-     * 
-     * @param minX
-     *        The minimum displayed value of the horizontal axis.
-     * @param maxX
-     *        The maximum displayed value of the horizontal axis.
-     * @param minY
-     *        The minimum displayed value of the vertical axis.
-     * @param maxY
-     *        The maximum displayed value of the vertical axis.
-     */
-    public Plot2D(double minX, double maxX, double minY, double maxY) {
-        this(minX, maxX, minY, maxY, new DefaultStyleProvider());
-    }
-    
-    /**
      * Create a new {@code Plot2D} that displays the default range of {@code
-     * [-1.0, 1.0]} on both axes and uses a {@link DefaultStyleProvider}. This
+     * [-1.0, 1.0]} on both axes and uses a {@link BasicStyleProvider}. This
      * constructor may be used especially when calling {@link #autorange()} is
      * planned after adding some {@link Drawable}s.
      */
     public Plot2D() {
-        this(-1.0, 1.0, -1.0, 1.0, new DefaultStyleProvider());
+        this(-1.0, 1.0, -1.0, 1.0);
     }
     
     private void addContextMenu() {
@@ -263,7 +238,6 @@ public class Plot2D extends JPanel {
     
     /** @return See {@link Collection#add(Object)}. */
     public synchronized boolean addDrawable(Drawable drawable) {
-        styleProvider.checkProperties(drawable);
         boolean result = drawables.add(drawable);
         
         if (result) {
@@ -533,24 +507,6 @@ public class Plot2D extends JPanel {
         setRange(minX, maxX, minY, maxY);
     }
     
-    /**
-     * Change the {@link StyleProvider} that is used to draw the contained
-     * drawable objects. A call to this method also causes a repaint of the
-     * whole component to make the change actually visible.
-     * 
-     * @param styleProvider
-     *        The new {@link StyleProvider} to use.
-     */
-    public void setStyleProvider(StyleProvider styleProvider) {
-        this.styleProvider = styleProvider;
-        
-        for (Drawable drawable : drawables) {
-            styleProvider.checkProperties(drawable);
-        }
-        
-        repaint();
-    }
-    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -574,7 +530,7 @@ public class Plot2D extends JPanel {
         synchronized (this) {
             
             for (Drawable drawable : drawables) {
-                drawable.draw(g2, transformer, styleProvider);
+                drawable.draw(g2, transformer);
             }
         }
         

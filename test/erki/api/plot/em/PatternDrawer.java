@@ -10,23 +10,23 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.drawables.Drawable;
+import erki.api.plot.drawables.StyledDrawable;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class PatternDrawer implements Drawable {
+public class PatternDrawer extends StyledDrawable {
     
     private Color[] colours = { Color.RED, Color.GREEN, Color.BLUE };
     
     private final SlidingWindow<LabeledPattern> window;
     
-    public PatternDrawer(SlidingWindow<LabeledPattern> window) {
+    public PatternDrawer(SlidingWindow<LabeledPattern> window, StyleProvider styleProvider) {
+        super(styleProvider);
         this.window = window;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         

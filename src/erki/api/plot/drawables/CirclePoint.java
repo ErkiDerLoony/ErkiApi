@@ -32,25 +32,53 @@ import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class CirclePoint extends Point2D.Double implements Drawable {
+public class CirclePoint extends StyledDrawable {
     
     private static final long serialVersionUID = -2994504030381719105L;
     
-    public CirclePoint(double x, double y) {
-        super(x, y);
+    private double x, y;
+    
+    public CirclePoint(double x, double y, StyleProvider styleProvider) {
+        super(styleProvider);
+        this.x = x;
+        this.y = y;
     }
     
-    public CirclePoint(Point2D.Double point) {
-        this(point.getX(), point.getY());
+    public CirclePoint(Point2D.Double point, StyleProvider styleProvider) {
+        this(point.getX(), point.getY(), styleProvider);
+    }
+    
+    public Point2D.Double get() {
+        return new Point2D.Double(x, y);
+    }
+    
+    public void set(Point2D.Double p) {
+        x = p.x;
+        y = p.y;
+    }
+    
+    public double getX() {
+        return x;
+    }
+    
+    public void setX(double x) {
+        this.x = x;
+    }
+    
+    public double getY() {
+        return y;
+    }
+    
+    public void setY(double y) {
+        this.y = y;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         
-        Point p = transformer.getScreenCoordinates(this);
+        Point p = transformer.getScreenCoordinates(get());
         int size = styleProvider.getProperty(
                 new StylePropertyKey<Integer>("POINT_SIZE")).getProperty();
         

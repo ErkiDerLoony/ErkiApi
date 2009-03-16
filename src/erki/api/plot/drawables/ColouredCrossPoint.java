@@ -32,28 +32,56 @@ import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class ColouredCrossPoint extends Point2D.Double implements Drawable {
+public class ColouredCrossPoint extends StyledDrawable {
     
     private static final long serialVersionUID = -7603800844085258749L;
     
     private Color colour;
     
-    public ColouredCrossPoint(double x, double y, Color colour) {
-        super(x, y);
+    private double x, y;
+    
+    public ColouredCrossPoint(double x, double y, Color colour, StyleProvider styleProvider) {
+        super(styleProvider);
         this.colour = colour;
+        this.x = x;
+        this.y = y;
     }
     
-    public ColouredCrossPoint(Point2D.Double point, Color colour) {
-        this(point.getX(), point.getY(), colour);
+    public ColouredCrossPoint(Point2D.Double point, Color colour, StyleProvider styleProvider) {
+        this(point.getX(), point.getY(), colour, styleProvider);
+    }
+    
+    public Point2D.Double get() {
+        return new Point2D.Double(x, y);
+    }
+    
+    public void set(Point2D.Double p) {
+        x = p.x;
+        y = p.y;
+    }
+    
+    public double getX() {
+        return x;
+    }
+    
+    public void setX(double x) {
+        this.x = x;
+    }
+    
+    public double getY() {
+        return y;
+    }
+    
+    public void setY(double y) {
+        this.y = y;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         
-        Point p = transformer.getScreenCoordinates(this);
+        Point p = transformer.getScreenCoordinates(get());
         int size = (int) (styleProvider.getProperty(
                 new StylePropertyKey<Integer>("POINT_SIZE")).getProperty() / 2.0);
         

@@ -66,9 +66,9 @@ public class CommandLineParser {
                 
             } else {
                 
-                if (s == '-') {
+                if (s == ' ') {
                     results.put(key.trim(), value.trim());
-                    key = "-";
+                    key = "";
                     value = "";
                     parseKey = true;
                     continue;

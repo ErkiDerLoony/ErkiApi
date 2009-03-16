@@ -32,7 +32,7 @@ import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class DrawableLine implements Drawable {
+public class DrawableLine extends StyledDrawable {
     
     private static final long serialVersionUID = 6844062407525196699L;
     
@@ -41,19 +41,19 @@ public class DrawableLine implements Drawable {
     
     private Color colour;
     
-    public DrawableLine(Point2D.Double start, Point2D.Double end, Color colour) {
+    public DrawableLine(Point2D.Double start, Point2D.Double end, Color colour, StyleProvider styleProvider) {
+        super(styleProvider);
         this.start = start;
         this.end = end;
         this.colour = colour;
     }
     
-    public DrawableLine(Point2D.Double start, Point2D.Double end) {
-        this(start, end, Color.BLACK);
+    public DrawableLine(Point2D.Double start, Point2D.Double end, StyleProvider styleProvider) {
+        this(start, end, Color.BLACK, styleProvider);
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer,
-            StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         

@@ -27,24 +27,25 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import erki.api.plot.CoordinateTransformer;
-import erki.api.plot.drawables.Drawable;
+import erki.api.plot.drawables.StyledDrawable;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
 
-public class RewardFactorFunction implements Drawable {
+public class RewardFactorFunction extends StyledDrawable {
     
     private double o;
     private double rmin;
     private double rmax;
     
-    public RewardFactorFunction(double o, double rmin, double rmax) {
+    public RewardFactorFunction(double o, double rmin, double rmax, StyleProvider styleProvider) {
+        super(styleProvider);
         this.o = o;
         this.rmin = rmin;
         this.rmax = rmax;
     }
     
     @Override
-    public void draw(Graphics2D g2, CoordinateTransformer transformer, StyleProvider styleProvider) {
+    public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         Color oldColour = g2.getColor();
         Stroke oldStroke = g2.getStroke();
         

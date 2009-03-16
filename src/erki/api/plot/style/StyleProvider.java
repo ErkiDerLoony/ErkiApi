@@ -19,20 +19,20 @@
 
 package erki.api.plot.style;
 
-import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.Drawable;
+import erki.api.plot.drawables.StyledDrawable;
 
 /**
  * Implemented by all style providing classes.
  * <p>
- * Known subclasses: {@link DefaultStyleProvider}.
+ * Known subclasses: {@link BasicStyleProvider}.
  * 
  * @author Edgar Kalkowski
  */
 public interface StyleProvider {
     
     /**
-     * {@link Drawable}s may request style properties via this method.
+     * {@link StyledDrawable}s may request style properties via this method.
      * 
      * @param <T>
      *        The type of the property.
@@ -44,13 +44,13 @@ public interface StyleProvider {
     <T> StyleProperty<? extends T> getProperty(StylePropertyKey<T> key);
     
     /**
-     * This method is used by {@link Plot2D} to check if the current style
-     * provider can actually provide all the needed style properties for a newly
-     * added {@link Drawable}.
+     * This method is used by {@link StyledDrawable#StyledDrawable(StyleProvider)}
+     * to check if the current style provider can actually provide all the needed
+     * style properties for the new {@link Drawable}.
      * 
      * @param drawable
-     *        The {@link Drawable} whose necessities shall be checked.
+     *        The {@link StyledDrawable} whose necessities shall be checked.
      */
-    void checkProperties(Drawable drawable);
+    void checkProperties(StyledDrawable drawable);
     
 }

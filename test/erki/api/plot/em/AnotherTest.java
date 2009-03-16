@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 
 import erki.api.plot.Plot2D;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.style.StyleProvider;
 
 public class AnotherTest extends JFrame {
     
@@ -33,10 +35,11 @@ public class AnotherTest extends JFrame {
         cp.setLayout(new BorderLayout());
         
         final Plot2D plot = new Plot2D();
+        StyleProvider styleProvider = new BasicStyleProvider();
         plot.addZoom();
         plot.addMove();
-        plot.addDrawable(new LineAxes());
-        plot.addDrawable(new PatternDrawer(window));
+        plot.addDrawable(new LineAxes(styleProvider));
+        plot.addDrawable(new PatternDrawer(window, styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         JPanel controlPanel = new JPanel();

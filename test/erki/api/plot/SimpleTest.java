@@ -33,6 +33,8 @@ import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.CrossPoint;
 import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
 import erki.api.util.Log.Level;
 
@@ -49,7 +51,8 @@ public class SimpleTest {
         cp.setLayout(new BorderLayout());
         
         final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
-        plot.addDrawable(new LineAxes());
+        final StyleProvider styleProvider = new BasicStyleProvider();
+        plot.addDrawable(new LineAxes(styleProvider));
         plot.addZoom();
         plot.addMove();
         plot.autorange();
@@ -69,14 +72,14 @@ public class SimpleTest {
                         old = plot.getCoordinateTransformer()
                                 .getCarthesianCoordinates(
                                         new Point(e.getX(), e.getY()));
-                        plot.addDrawable(new CrossPoint(old));
+                        plot.addDrawable(new CrossPoint(old, styleProvider));
                     } else {
                         Point newPoint = new Point(e.getX(), e.getY());
                         Point2D.Double newCart = plot
                                 .getCoordinateTransformer()
                                 .getCarthesianCoordinates(newPoint);
-                        plot.addDrawable(new CrossPoint(newCart));
-                        plot.addDrawable(new DrawableLine(old, newCart));
+                        plot.addDrawable(new CrossPoint(newCart, styleProvider));
+                        plot.addDrawable(new DrawableLine(old, newCart, styleProvider));
                     }
                     
                 } else if (e.getButton() == MouseEvent.BUTTON2) {
@@ -86,7 +89,7 @@ public class SimpleTest {
                                     new Point(e.getX(), e.getY())), new Color(
                             (int) (Math.random() * 256),
                             (int) (Math.random() * 256),
-                            (int) (Math.random() * 256))));
+                            (int) (Math.random() * 256)), styleProvider));
                 }
             }
             

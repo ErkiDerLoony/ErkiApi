@@ -13,7 +13,7 @@
   <property name="test.jar" value="Test.jar" />
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
-  <property name="test.main" value="erki.api.lcars.PackTest" />
+  <property name="test.main" value="erki.api.plot.ba.TimeSeriesPlot" />
 
   <path id="classpath">
     <fileset dir="${lib.dir}">
