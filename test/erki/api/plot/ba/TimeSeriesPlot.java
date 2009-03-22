@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,7 +14,9 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
-import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.action.Move;
+import erki.api.plot.action.Zoom;
+import erki.api.plot.drawables.LineAxesAtZero;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.CommandLineParser;
@@ -37,9 +40,9 @@ public class TimeSeriesPlot {
         
         Plot2D plot = new Plot2D();
         plot.setPreferredSize(new Dimension(700, 450));
-        plot.addMove();
-        plot.addZoom();
-        plot.add(new LineAxes(styleProvider));
+        plot.add(new Move(MouseEvent.BUTTON1));
+        plot.add(new Zoom());
+        plot.add(new LineAxesAtZero(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         if (!args.keySet().contains("--files")) {

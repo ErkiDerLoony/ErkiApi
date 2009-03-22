@@ -3,25 +3,24 @@
  * 
  * This file is part of Erki's API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.util;
 
+import java.util.Iterator;
+
 /**
- * This class provides some useful mathematical methods not found in
- * {@link Math}.
+ * This class provides some useful mathematical methods not found in {@link Math}.
  * 
  * @author Edgar Kalkowski
  */
@@ -37,8 +36,8 @@ public class MathUtil {
      *        The value to round.
      * @param significantDigits
      *        The number of significant digits after the comma.
-     * @return {@code Math.round(value * Math.pow(10, significantDigits)) /
-     *         Math.pow(10, significantDigits)}.
+     * @return {@code Math.round(value * Math.pow(10, significantDigits)) / Math.pow(10,
+     *         significantDigits)}.
      */
     public static double round(double value, int significantDigits) {
         return Math.round(value * Math.pow(10, significantDigits))
@@ -52,27 +51,24 @@ public class MathUtil {
      *        The first double value to compare.
      * @param d2
      *        The second double value to compare.
-     * @return {@code true} if {@code d1 <= d2 + EPSILON && d1 >= d2 - EPSILON}
-     *         and {@code false} otherwise where {@code EPSILON} is
-     *         {@link #EPSILON}.
+     * @return {@code true} if {@code d1 <= d2 + EPSILON && d1 >= d2 - EPSILON} and {@code false}
+     *         otherwise where {@code EPSILON} is {@link #EPSILON}.
      */
     public static boolean equals(double d1, double d2) {
         return equals(d1, d2, EPSILON);
     }
     
     /**
-     * Checks if two double values are equal using a specific epsilon
-     * environment.
+     * Checks if two double values are equal using a specific epsilon environment.
      * 
      * @param d1
      *        The first double value to compare.
      * @param d2
      *        The second double value to compare.
      * @param epsilon
-     *        The epsilon environment of {@code d1} in which {@code d2} must
-     *        lie.
-     * @return {@code true} if {@code d1 <= d2 + epsilon && d1 >= d2 - epsilon}
-     *         and {@code false} otherwise.
+     *        The epsilon environment of {@code d1} in which {@code d2} must lie.
+     * @return {@code true} if {@code d1 <= d2 + epsilon && d1 >= d2 - epsilon} and {@code false}
+     *         otherwise.
      */
     public static boolean equals(double d1, double d2, double epsilon) {
         
@@ -81,5 +77,63 @@ public class MathUtil {
         } else {
             return false;
         }
+    }
+    
+    /**
+     * Computes the minimum value of an {@link Iterable} of {@link Comparable} {@link Number}s.
+     * 
+     * @param <T>
+     *        The actual type of the numbers to compare.
+     * @param values
+     *        The values to compare.
+     * @return The minimum of all {@code values}.
+     */
+    public static <T extends Number & Comparable<T>> T getMin(Iterable<T> values) {
+        
+        if (values == null || !values.iterator().hasNext()) {
+            return null;
+        }
+        
+        Iterator<T> it = values.iterator();
+        T min = it.next();
+        
+        while (it.hasNext()) {
+            T next = it.next();
+            
+            if (next.compareTo(min) < 0) {
+                min = next;
+            }
+        }
+        
+        return min;
+    }
+    
+    /**
+     * Computes the maximum value of an {@link Iterable} of {@link Comparable} {@link Number}s.
+     * 
+     * @param <T>
+     *        The actual type of the numbers to compare.
+     * @param values
+     *        The values to compare.
+     * @return The maximum of all {@code values}.
+     */
+    public static <T extends Number & Comparable<T>> T getMax(Iterable<T> values) {
+        
+        if (values == null || !values.iterator().hasNext()) {
+            return null;
+        }
+        
+        Iterator<T> it = values.iterator();
+        T max = it.next();
+        
+        while (it.hasNext()) {
+            T next = it.next();
+            
+            if (next.compareTo(max) > 0) {
+                max = next;
+            }
+        }
+        
+        return max;
     }
 }
