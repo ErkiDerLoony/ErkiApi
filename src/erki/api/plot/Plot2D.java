@@ -237,7 +237,7 @@ public class Plot2D extends JPanel {
     }
     
     /** @return See {@link Collection#add(Object)}. */
-    public synchronized boolean addDrawable(Drawable drawable) {
+    public synchronized boolean add(Drawable drawable) {
         boolean result = drawables.add(drawable);
         
         if (result) {
@@ -248,7 +248,7 @@ public class Plot2D extends JPanel {
     }
     
     /** @return See {@link Collection#remove(Object)}. */
-    public synchronized boolean removeDrawable(Drawable drawable) {
+    public synchronized boolean remove(Drawable drawable) {
         boolean result = drawables.remove(drawable);
         
         if (result) {
