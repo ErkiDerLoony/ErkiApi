@@ -45,8 +45,8 @@ public class BaSurprise {
         plot.setPreferredSize(new Dimension(500, 500));
         cp.add(plot, BorderLayout.CENTER);
         
-        plot.addDrawable(new LineAxes(styleProvider));
-        plot.addDrawable(new SurpriseFunction(0.5, 5.0, styleProvider));
+        plot.add(new LineAxes(styleProvider));
+        plot.add(new SurpriseFunction(0.5, 5.0, styleProvider));
         plot.autorange();
         
         frame.pack();

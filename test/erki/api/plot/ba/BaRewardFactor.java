@@ -41,8 +41,8 @@ public class BaRewardFactor {
         plot.setPreferredSize(new Dimension(500, 500));
         plot.addMove();
         plot.addZoom();
-        plot.addDrawable(new LineAxes(styleProvider));
-        plot.addDrawable(new RewardFactorFunction(0.25, 0.01, 0.05, styleProvider));
+        plot.add(new LineAxes(styleProvider));
+        plot.add(new RewardFactorFunction(0.25, 0.01, 0.05, styleProvider));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);
         

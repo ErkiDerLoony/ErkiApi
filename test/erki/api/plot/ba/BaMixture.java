@@ -43,8 +43,8 @@ public class BaMixture {
         plot.addMove();
         StyleProvider styleProvider = new BaStyleProvider();
         plot.setPreferredSize(new Dimension(500, 500));
-        plot.addDrawable(new LineAxes(styleProvider));
-        plot.addDrawable(new MixtureInfluenceFunction(0.2, styleProvider));
+        plot.add(new LineAxes(styleProvider));
+        plot.add(new MixtureInfluenceFunction(0.2, styleProvider));
         plot.autorange();
         cp.add(plot, BorderLayout.CENTER);
         

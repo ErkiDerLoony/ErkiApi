@@ -52,7 +52,7 @@ public class SimpleTest {
         
         final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
         final StyleProvider styleProvider = new BasicStyleProvider();
-        plot.addDrawable(new LineAxes(styleProvider));
+        plot.add(new LineAxes(styleProvider));
         plot.addZoom();
         plot.addMove();
         plot.autorange();
@@ -72,18 +72,18 @@ public class SimpleTest {
                         old = plot.getCoordinateTransformer()
                                 .getCarthesianCoordinates(
                                         new Point(e.getX(), e.getY()));
-                        plot.addDrawable(new CrossPoint(old, styleProvider));
+                        plot.add(new CrossPoint(old, styleProvider));
                     } else {
                         Point newPoint = new Point(e.getX(), e.getY());
                         Point2D.Double newCart = plot
                                 .getCoordinateTransformer()
                                 .getCarthesianCoordinates(newPoint);
-                        plot.addDrawable(new CrossPoint(newCart, styleProvider));
-                        plot.addDrawable(new DrawableLine(old, newCart, styleProvider));
+                        plot.add(new CrossPoint(newCart, styleProvider));
+                        plot.add(new DrawableLine(old, newCart, styleProvider));
                     }
                     
                 } else if (e.getButton() == MouseEvent.BUTTON2) {
-                    plot.addDrawable(new ColouredCirclePoint(plot
+                    plot.add(new ColouredCirclePoint(plot
                             .getCoordinateTransformer()
                             .getCarthesianCoordinates(
                                     new Point(e.getX(), e.getY())), new Color(

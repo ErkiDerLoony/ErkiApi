@@ -56,7 +56,7 @@ public class UsefulnessTest {
         plot.setPreferredSize(new Dimension(500, 500));
         cp.add(plot, BorderLayout.CENTER);
         
-        plot.addDrawable(new LineAxes(styleProvider));
+        plot.add(new LineAxes(styleProvider));
         
         plot.addMouseListener(new MouseAdapter() {
             
@@ -86,11 +86,11 @@ public class UsefulnessTest {
                     evaluation = 0.75 * evaluation + 0.25 * init;
                     Point2D.Double newPoint = new Point2D.Double(time,
                             evaluation);
-                    plot.addDrawable(new ColouredCirclePoint(newPoint.getX(), newPoint
+                    plot.add(new ColouredCirclePoint(newPoint.getX(), newPoint
                             .getY(), Color.RED, styleProvider));
                     
                     if (oldPoint != null) {
-                        plot.addDrawable(new DrawableLine(oldPoint, newPoint,
+                        plot.add(new DrawableLine(oldPoint, newPoint,
                                 Color.RED, styleProvider));
                     }
                     

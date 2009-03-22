@@ -38,8 +38,8 @@ public class AnotherTest extends JFrame {
         StyleProvider styleProvider = new BasicStyleProvider();
         plot.addZoom();
         plot.addMove();
-        plot.addDrawable(new LineAxes(styleProvider));
-        plot.addDrawable(new PatternDrawer(window, styleProvider));
+        plot.add(new LineAxes(styleProvider));
+        plot.add(new PatternDrawer(window, styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         JPanel controlPanel = new JPanel();
