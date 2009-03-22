@@ -31,7 +31,7 @@ import erki.api.plot.action.Move;
 import erki.api.plot.action.PopupMenu;
 import erki.api.plot.action.Zoom;
 import erki.api.plot.drawables.ColouredCirclePoint;
-import erki.api.plot.drawables.LineAxesAtBorder;
+import erki.api.plot.drawables.LineAxes;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
@@ -51,7 +51,7 @@ public class SimpleTest {
         
         final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
         final StyleProvider styleProvider = new BasicStyleProvider();
-        plot.add(new LineAxesAtBorder(styleProvider));
+        plot.add(new LineAxes(styleProvider));
         plot.add(new Move(MouseEvent.BUTTON1));
         plot.add(new Zoom());
         PopupMenu menu = new PopupMenu();

@@ -10,7 +10,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import erki.api.plot.drawables.CirclePoint;
-import erki.api.plot.drawables.LineAxesAtBorder;
+import erki.api.plot.drawables.LineAxes;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 
@@ -29,7 +29,7 @@ public class AdvancedTest {
         final StyleProvider styleProvider = new BasicStyleProvider();
         final SlidingWindow window = new SlidingWindow(50, styleProvider);
         plot.add(window);
-        plot.add(new LineAxesAtBorder(styleProvider));
+        plot.add(new LineAxes(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         frame.pack();

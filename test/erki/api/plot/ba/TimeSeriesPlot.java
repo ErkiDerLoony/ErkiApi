@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import erki.api.plot.Plot2D;
 import erki.api.plot.action.Move;
 import erki.api.plot.action.Zoom;
-import erki.api.plot.drawables.LineAxesAtZero;
+import erki.api.plot.drawables.LineAxes;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.CommandLineParser;
@@ -42,7 +42,7 @@ public class TimeSeriesPlot {
         plot.setPreferredSize(new Dimension(700, 450));
         plot.add(new Move(MouseEvent.BUTTON1));
         plot.add(new Zoom());
-        plot.add(new LineAxesAtZero(styleProvider));
+        plot.add(new LineAxes(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         if (!args.keySet().contains("--files")) {
