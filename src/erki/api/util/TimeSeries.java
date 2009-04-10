@@ -1,4 +1,4 @@
-package erki.api.plot.ba;
+package erki.api.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -28,7 +28,7 @@ public class TimeSeries implements Drawable {
     public void add(double x, double y) {
         
         if (mapping.containsKey(x)) {
-            System.err.println("Warning: Mapping already contains key " + x + " (overwriting)!");
+            Log.warning("Mapping already contains key " + x + " (overwriting)!");
         }
         
         mapping.put(x, y);

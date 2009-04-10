@@ -1,81 +1,92 @@
 <project name="ErkiAPI" default="jar">
 
-  <property name="version" value="0.0.1" />
+  <property name="version" value="0.0.1"/>
 
-  <property name="bin.dir" value="bin" />
-  <property name="test.bin" value="bin.test" />
-  <property name="src.dir" value="src" />
-  <property name="test.src" value="test" />
-  <property name="lib.dir" value="lib" />
-  <property name="doc.dir" value="doc" />
+  <property name="bin.dir" value="bin"/>
+  <property name="test.bin" value="bin.test"/>
+  <property name="src.dir" value="src"/>
+  <property name="test.src" value="test"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="doc.dir" value="doc"/>
 
-  <property name="jar.file" value="${lib.dir}/${ant.project.name}-${version}.jar" />
-  <property name="test.jar" value="Test.jar" />
-  <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
+  <property name="jar.file" value="${ant.project.name}-${version}.jar"/>
+  <property name="csv.jar" value="CsvPlot.jar"/>
+  <property name="test.jar" value="Test.jar"/>
+  <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2"/>
 
-  <property name="test.main" value="erki.api.plot.ba.TimeSeriesPlot" />
+  <property name="test.main" value="erki.api.plot.ba.TimeSeriesPlot"/>
+  <property name="csv.main" value="erki.api.util.CsvPlot"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}">
-      <include name="*.jar" />
+      <include name="*.jar"/>
     </fileset>
-    <pathelement location="bin" />
   </path>
 
-  <target name="all" depends="clean, jar, jar test, tar" />
+  <target name="all" depends="clean, jar, jar test, tar"/>
 
-  <target name="test" depends="jar test" />
+  <target name="test" depends="jar, jar test"/>
 
   <target name="tar" depends="jar">
-    <delete file="${tar.file}" />
+    <delete file="${tar.file}"/>
     <tar destfile="${tar.file}" compression="bzip2">
       <tarfileset prefix="${ant.project.name}-${version}" dir="."
-                  excludes="**/.git **/.git/**" />
+                  excludes="**/.git **/.git/**"/>
     </tar>
   </target>
 
   <target name="jar" depends="make">
-    <jar destfile="${jar.file}" basedir="${bin.dir}" />
+    <jar destfile="${jar.file}" basedir="${bin.dir}"/>
+    <manifestclasspath property="csv.classpath" jarfile="${csv.jar}">
+      <classpath refid="classpath"/>
+    </manifestclasspath>
+    <jar destfile="${csv.jar}" basedir="${bin.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${csv.main}"/>
+        <attribute name="Classpath" value="${csv.classpath}"/>
+      </manifest>
+    </jar>
   </target>
 
   <target name="jar test" depends="make test">
     <manifestclasspath property="manifest.classpath"
                        jarfile="${test.jar}">
-      <classpath refid="classpath" />
+      <classpath refid="classpath"/>
     </manifestclasspath>
     <jar destfile="${test.jar}" basedir="${test.bin}">
       <manifest>
-        <attribute name="Class-Path" value="${manifest.classpath}" />
-        <attribute name="Main-Class" value="${test.main}" />
+        <attribute name="Class-Path" value="${manifest.classpath}"/>
+        <attribute name="Main-Class" value="${test.main}"/>
       </manifest>
     </jar>
   </target>
 
   <target name="make">
-    <mkdir dir="${bin.dir}" />
+    <mkdir dir="${bin.dir}"/>
     <javac destdir="${bin.dir}" srcdir="${src.dir}" debug="on"
-           debuglevel="lines,vars,source" classpathref="classpath" />
+           debuglevel="lines,vars,source" classpathref="classpath"/>
   </target>
 
   <target name="make test" depends="make">
-    <mkdir dir="${test.bin}" />
+    <mkdir dir="${test.bin}"/>
     <javac destdir="${test.bin}" srcdir="${test.src}" debug="on"
-           debuglevel="lines,vars,source" classpathref="classpath" />
+           debuglevel="lines,vars,source" classpathref="classpath"/>
   </target>
 
   <target name="doc">
-    <mkdir dir="${doc.dir}" />
+    <mkdir dir="${doc.dir}"/>
     <javadoc sourcepath="${src.dir}" destdir="${doc.dir}"
-             classpathref="classpath" />
+             classpathref="classpath"/>
   </target>
 
   <target name="clean">
-    <delete dir="${bin.dir}" />
-    <delete dir="${test.bin}" />
-    <delete dir="${doc.dir}" />
-    <delete file="${jar.file}" />
-    <delete file="${test.jar}" />
-    <delete file="${tar.file}" />
+    <delete dir="${bin.dir}"/>
+    <delete dir="${test.bin}"/>
+    <delete dir="${doc.dir}"/>
+    <delete file="${jar.file}"/>
+    <delete file="${test.jar}"/>
+    <delete file="${csv.jar}"/>
+    <delete file="${tar.file}"/>
   </target>
 
 </project>
