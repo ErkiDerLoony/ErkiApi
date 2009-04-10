@@ -1,0 +1,10 @@
+To build all class files and the library jar execute
+  $ ant 
+in this directory.
+
+To use the library in your own program add every jar file in the lib directory
+(including the ErkiAPI*.jar which is created by ant) to your projects libraries.
+
+Send bugs or questions to eMail@edgar-kalkowski.de!
+
+Have fun! :)
