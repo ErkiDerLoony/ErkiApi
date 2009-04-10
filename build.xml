@@ -9,7 +9,7 @@
   <property name="lib.dir" value="lib" />
   <property name="doc.dir" value="doc" />
 
-  <property name="jar.file" value="${ant.project.name}-${version}.jar" />
+  <property name="jar.file" value="${lib.dir}/${ant.project.name}-${version}.jar" />
   <property name="test.jar" value="Test.jar" />
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2" />
 
