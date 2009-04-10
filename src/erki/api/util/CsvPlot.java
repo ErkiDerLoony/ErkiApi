@@ -13,6 +13,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import erki.api.plot.Plot2D;
+import erki.api.plot.action.AutoRange;
 import erki.api.plot.action.Move;
 import erki.api.plot.action.PdfExport;
 import erki.api.plot.action.PopupMenu;
@@ -48,10 +49,17 @@ public class CsvPlot {
         plot.add(new LineAxes(styleProvider));
         PopupMenu menu = new PopupMenu();
         plot.add(menu);
+        plot.add(new AutoRange(menu.getPopupMenu()));
         plot.add(new PdfExport(menu.getPopupMenu()));
         cp.add(plot, BorderLayout.CENTER);
         
         int counter = 0;
+        
+        if (arguments.length == 1) {
+            frame.setTitle(arguments[0]);
+        } else {
+            frame.setTitle("Plot");
+        }
         
         for (String arg : arguments) {
             
@@ -85,11 +93,11 @@ public class CsvPlot {
                     }
                 }
                 
-                Log.info("Characteristics of data in “" + arg + "”:");
-                Log.info("\tMinimum: " + MathUtil.round(timeSeries.getMin(), 3));
-                Log.info("\tMaximum: " + MathUtil.round(timeSeries.getMax(), 3));
-                Log.info("\tMean: " + MathUtil.round(timeSeries.getMean(), 3));
-                Log.info("\tStd: " + MathUtil.round(timeSeries.getStd(), 3));
+                Log.info("Characteristics of “" + arg + "”:");
+                Log.info("\tMinimum: " + MathUtil.round(timeSeries.getMin(), 7));
+                Log.info("\tMaximum: " + MathUtil.round(timeSeries.getMax(), 7));
+                Log.info("\tMean: " + MathUtil.round(timeSeries.getMean(), 7));
+                Log.info("\tStd: " + MathUtil.round(timeSeries.getStd(), 7));
                 
             } catch (FileNotFoundException e) {
                 Log.error(e);
