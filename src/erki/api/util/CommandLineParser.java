@@ -66,7 +66,7 @@ public class CommandLineParser {
                     map.put(k, v);
                 } else {
                     
-                    if (args[i + 1].startsWith("-")) {
+                    if (args.length == i + 1 || args[i + 1].startsWith("-")) {
                         map.put(arg, null);
                     } else {
                         map.put(arg, args[i + 1]);
@@ -82,7 +82,7 @@ public class CommandLineParser {
                     map.put(k, v);
                 } else {
                     
-                    if (args[i + 1].startsWith("-")) {
+                    if (args.length == i + 1 || args[i + 1].startsWith("-")) {
                         map.put(arg, null);
                     } else {
                         map.put(arg, args[i + 1]);

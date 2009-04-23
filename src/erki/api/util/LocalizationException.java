@@ -23,7 +23,7 @@ package erki.api.util;
  * 
  * @author Edgar Kalkowski
  */
-public class LocaleException extends RuntimeException {
+public class LocalizationException extends RuntimeException {
     
     /** In tribute to the api. */
     private static final long serialVersionUID = 7472689261506022430L;
@@ -31,7 +31,7 @@ public class LocaleException extends RuntimeException {
     /**
      * Creates a new {@code LocaleNotFoundException} with no detailed message.
      */
-    public LocaleException() {
+    public LocalizationException() {
         super();
     }
     
@@ -41,7 +41,7 @@ public class LocaleException extends RuntimeException {
      * @param message
      *        The detailed message of this exception.
      */
-    public LocaleException(String message) {
+    public LocalizationException(String message) {
         super(message);
     }
     
@@ -52,7 +52,7 @@ public class LocaleException extends RuntimeException {
      * @param cause
      *        The cause of this exception.
      */
-    public LocaleException(Throwable cause) {
+    public LocalizationException(Throwable cause) {
         super(cause);
     }
     
@@ -65,7 +65,7 @@ public class LocaleException extends RuntimeException {
      * @param cause
      *        The cause of this exception.
      */
-    public LocaleException(String message, Throwable cause) {
+    public LocalizationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

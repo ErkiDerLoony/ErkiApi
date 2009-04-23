@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.TreeMap;
 
@@ -41,10 +40,10 @@ import java.util.TreeMap;
  * contained in the specific folder.
  * <p>
  * Every line in a file that has been detected to contain localized strings as described above that
- * does not start with the character “#” is considered a definition. A definition consists of a
- * unique keyword that is used in source code to identify the string, the character “=” and the
- * localized version of the string. As the character “=” is used as a separator of keys and values
- * here it must not be contained in any key.
+ * does not start with the character “#” and that contains the character “=“ is considered a
+ * definition. A definition consists of a unique keyword that is used in source code to identify the
+ * string, the character “=” and the localized version of the string. As the character “=” is used
+ * as a separator of keys and values here it must not be contained in any key.
  * <p>
  * The strings in the localization file are not trimmed when read from the file as it may happen
  * that some string needs a prepended or appended whitespace. Thus the “=” character should be
@@ -68,17 +67,17 @@ public class Localizor {
      * 
      * @param locale
      *        The locale to load.
-     * @throws LocaleException
+     * @throws LocalizationException
      *         if no mapping file or folder for the requested locale could be found.
      */
-    private Localizor(Locale locale) throws LocaleException {
+    private Localizor(Locale locale) throws LocalizationException {
         File file = new File(localeRoot.toString() + System.getProperty("file.separator")
                 + locale.toString());
         
         if (file.exists()) {
             readFile(file);
         } else {
-            throw new LocaleException("The locale “" + locale.toString()
+            throw new LocalizationException("The locale “" + locale.toString()
                     + "” is not defined for this program!");
         }
     }
@@ -103,15 +102,19 @@ public class Localizor {
                 while ((line = fileIn.readLine()) != null) {
                     
                     if (!line.startsWith("#") && line.contains("=")) {
-                        map.put(new String(line.substring(0, line.indexOf('=')).getBytes(), Charset
-                                .defaultCharset()), new String(line
-                                .substring(line.indexOf('=') + 1).getBytes(), Charset
-                                .defaultCharset()));
+                        
+                        if (map.containsKey(line.substring(0, line.indexOf('=')))) {
+                            throw new LocalizationException("Duplicate mapping for key “"
+                                    + line.substring(0, line.indexOf('=')) + "”!");
+                        } else {
+                            map.put(line.substring(0, line.indexOf('=')), line.substring(line
+                                    .indexOf('=') + 1));
+                        }
                     }
                 }
                 
             } catch (IOException e) {
-                throw new LocaleException("Error while parsing localization file " + file + "!", e);
+                throw new LocalizationException("Error while parsing localization file " + file + "!", e);
             }
             
         } else if (file.isDirectory()) {
@@ -121,7 +124,7 @@ public class Localizor {
             }
             
         } else {
-            throw new LocaleException("The locale file to parse is neither a file nor a directory!");
+            throw new LocalizationException("The locale file to parse is neither a file nor a directory!");
         }
     }
     
@@ -209,7 +212,7 @@ public class Localizor {
     public String get(String id, String... params) {
         String string = map.get(id);
         
-        for (int i = 0; i < params.length && id != null; i++) {
+        for (int i = 0; i < params.length && id != null && string != null; i++) {
             string = string.replaceAll("\\{\\$" + i + "\\}", params[i]);
         }
         
@@ -250,12 +253,12 @@ public class Localizor {
      * @param locale
      *        The new locale to load.
      * @return A reference to the new {@code Localizor} object representing the new locale.
-     * @throws LocaleException
+     * @throws LocalizationException
      *         If no mapping file could be found for the requested locale. Please make sure before
      *         calling this method with a locale as parameter that a mapping file exists via the
      *         {@link Localizor#isValidLocale(Locale)} method.
      */
-    public static Localizor newInstance(Locale locale) throws LocaleException {
+    public static Localizor newInstance(Locale locale) throws LocalizationException {
         instance = new Localizor(locale);
         return instance;
     }
@@ -264,13 +267,13 @@ public class Localizor {
      * Loads the default locale as returned by {@link Locale#getDefault()}.
      * 
      * @return A reference to the new {@code Localizor} object representing the default locale.
-     * @throws LocaleException
+     * @throws LocalizationException
      *         If no mapping file or folder for the default locale could be found. Please make sure
      *         such a file exists by asserting that {@code
      *         isValidLocale(java.util.Locale.getDefault())} returns {@code true} before calling
      *         this method.
      */
-    public static Localizor newInstance() throws LocaleException {
+    public static Localizor newInstance() throws LocalizationException {
         instance = new Localizor(Locale.getDefault());
         return instance;
     }
@@ -281,14 +284,14 @@ public class Localizor {
      * {@link Locale#getDefault()} is used.
      * 
      * @return A reference to the new {@code Localizor} object representing the current locale.
-     * @throws LocaleException
+     * @throws LocalizationException
      *         if no mapping file or folder for the default locale could be found and no other
      *         locale was loaded so far. Please make sure that the default locale is valid by
      *         asserting that {@link #isValidLocale(Locale)} returns {@code true} for the parameter
      *         {@link Locale#getDefault()} or load a different locale via
      *         {@link #newInstance(Locale)} before calling this method.
      */
-    public static Localizor getInstance() throws LocaleException {
+    public static Localizor getInstance() throws LocalizationException {
         
         if (instance == null) {
             instance = new Localizor(Locale.getDefault());
