@@ -10,12 +10,11 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import erki.api.plot.drawables.CirclePoint;
-import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.drawables.LineAxes;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 
-public class Test {
+public class AdvancedTest {
     
     private static boolean killed = false;
     
@@ -28,7 +27,9 @@ public class Test {
         
         final Plot2D plot = new Plot2D();
         final StyleProvider styleProvider = new BasicStyleProvider();
-        plot.addDrawable(new LineAxes(styleProvider));
+        final SlidingWindow window = new SlidingWindow(50, styleProvider);
+        plot.add(window);
+        plot.add(new LineAxes(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         frame.pack();
@@ -43,21 +44,17 @@ public class Test {
                 
                 Random random = new Random();
                 int timestamp = 0;
-                Point2D.Double old = new Point2D.Double(timestamp, random
-                        .nextGaussian() + 5.0);
-                plot.addDrawable(new CirclePoint(old, styleProvider));
                 
                 while (!killed) {
-                    timestamp++;
                     Point2D.Double newPoint = new Point2D.Double(timestamp,
                             random.nextGaussian() + 5.0);
-                    plot.addDrawable(new DrawableLine(old, newPoint, styleProvider));
-                    plot.addDrawable(new CirclePoint(newPoint, styleProvider));
+                    window.add(new CirclePoint(newPoint, styleProvider));
                     plot.autorange();
-                    old = newPoint;
+                    plot.repaint();
+                    timestamp++;
                     
                     try {
-                        Thread.sleep(3);
+                        Thread.sleep(333);
                     } catch (InterruptedException e) {
                     }
                 }
