@@ -11,11 +11,13 @@
 
   <property name="jar.file" value="${ant.project.name}-${version}.jar"/>
   <property name="csv.jar" value="CsvPlot.jar"/>
+  <property name="online.csv.jar" value="OnlineCsvPlot.jar"/>
   <property name="test.jar" value="Test.jar"/>
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2"/>
 
   <property name="test.main" value="erki.api.plot.ba.TimeSeriesPlot"/>
   <property name="csv.main" value="erki.api.util.CsvPlot"/>
+  <property name="online.csv.main" value="erki.api.util.OnlineCsvPlot"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}">
@@ -43,6 +45,12 @@
     <jar destfile="${csv.jar}" basedir="${bin.dir}">
       <manifest>
         <attribute name="Main-Class" value="${csv.main}"/>
+        <attribute name="Class-Path" value="${csv.classpath}"/>
+      </manifest>
+    </jar>
+    <jar destfile="${online.csv.jar}" basedir="${bin.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${online.csv.main}"/>
         <attribute name="Class-Path" value="${csv.classpath}"/>
       </manifest>
     </jar>
@@ -86,6 +94,7 @@
     <delete file="${jar.file}"/>
     <delete file="${test.jar}"/>
     <delete file="${csv.jar}"/>
+    <delete file="${online.csv.jar}"/>
     <delete file="${tar.file}"/>
   </target>
 
