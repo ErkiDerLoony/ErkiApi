@@ -72,13 +72,15 @@
   <target name="make">
     <mkdir dir="${bin.dir}"/>
     <javac destdir="${bin.dir}" srcdir="${src.dir}" debug="on"
-           debuglevel="lines,vars,source" classpathref="classpath"/>
+           encoding="UTF-8"
+           debuglevel="lines,vars,source" classpathref="classpath" />
   </target>
 
   <target name="make test" depends="make">
     <mkdir dir="${test.bin}"/>
     <javac destdir="${test.bin}" srcdir="${test.src}" debug="on"
-           debuglevel="lines,vars,source" classpathref="classpath"/>
+           encoding="UTF-8"
+           debuglevel="lines,vars,source" classpathref="classpath" />
   </target>
 
   <target name="doc">
