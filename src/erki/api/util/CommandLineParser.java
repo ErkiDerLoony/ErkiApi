@@ -17,6 +17,7 @@
 
 package erki.api.util;
 
+import java.util.Comparator;
 import java.util.TreeMap;
 
 /**
@@ -43,22 +44,56 @@ public class CommandLineParser {
      * All values are returned as strings regardless if the actual command line options is a number.
      * If an options is a simple switch without a value the corresponding key is mapped to {@code
      * null} in the returned mapping.
+     * <p>
+     * All keys in the returned mapping are <emph>not</emph> stripped of their leading one or two
+     * dashes.
+     * <p>
+     * After all options a list of e.g. filenames may follow. So if a command line argument does not
+     * start with a dash (“-”) where a key is expected the algorithm assumes that the list of
+     * options is over a a final list of strings (e.g. filenames) follows. These final list of
+     * strings is returned as the value of the special key {@code null} as one string with null
+     * bytes separating the list entries. Thus the list can easily be obtained e.g. via {@code
+     * map.get(null).split("\0")}. If the last option shall be without a value then “--” may be
+     * specified to explicitely end the options and parse everything into the final list from there
+     * on.
      * 
      * @param args
      *        The command line arguments taken directly from the main method.
-     * @throws ParseException
-     *         If an error occurs while parsing the command line arguments, e.g. the list of
-     *         arguments contains a string that does not begin with a dash (“-”) at a position where
-     *         a key is expected.
      * @return A {@link TreeMap} containing parameters and their values.
      */
     public static TreeMap<String, String> parse(String[] args) {
-        TreeMap<String, String> map = new TreeMap<String, String>();
+        
+        // Create a mapping that allows for null keys.
+        TreeMap<String, String> map = new TreeMap<String, String>(new Comparator<String>() {
+            
+            @Override
+            public int compare(String o1, String o2) {
+                
+                if (o1 == null && o2 == null) {
+                    return 0;
+                }
+                
+                if (o1 == null) {
+                    return Integer.MIN_VALUE;
+                }
+                
+                if (o2 == null) {
+                    return Integer.MAX_VALUE;
+                }
+                
+                return o1.compareTo(o2);
+            }
+        });
         
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             
+            if (arg.equals("--")) {
+                continue;
+            }
+            
             if (arg.startsWith("--")) {
+                // Parse long options.
                 
                 if (arg.contains("=")) {
                     String k = arg.substring(0, arg.indexOf('='));
@@ -66,7 +101,8 @@ public class CommandLineParser {
                     map.put(k, v);
                 } else {
                     
-                    if (args.length == i + 1 || args[i + 1].startsWith("-")) {
+                    if (args.length == i + 1 || args[i + 1].startsWith("-")
+                            || args[i + 1].equals("--")) {
                         map.put(arg, null);
                     } else {
                         map.put(arg, args[i + 1]);
@@ -75,6 +111,7 @@ public class CommandLineParser {
                 }
                 
             } else if (arg.startsWith("-")) {
+                // Parse short options.
                 
                 if (arg.length() > 2) {
                     String k = arg.substring(0, 2);
@@ -82,7 +119,8 @@ public class CommandLineParser {
                     map.put(k, v);
                 } else {
                     
-                    if (args.length == i + 1 || args[i + 1].startsWith("-")) {
+                    if (args.length == i + 1 || args[i + 1].startsWith("-")
+                            || args[i + 1].equals("--")) {
                         map.put(arg, null);
                     } else {
                         map.put(arg, args[i + 1]);
@@ -91,7 +129,17 @@ public class CommandLineParser {
                 }
                 
             } else {
-                throw new ParseException("I expected a key but got " + arg + "!");
+                // Parse final list of strings (e.g. filenames).
+                
+                String list = "";
+                
+                for (int j = i; j < args.length; j++) {
+                    list += args[j] + "\0";
+                }
+                
+                list = list.substring(0, list.length() - 1);
+                map.put(null, list);
+                break;
             }
         }
         
