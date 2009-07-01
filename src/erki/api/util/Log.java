@@ -18,27 +18,50 @@
 package erki.api.util;
 
 import java.io.PrintStream;
-import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 /**
- * A simple log for a program that allows for class specific log levels.
+ * This static class provides a highly dynamic log. One can specify a global log level and also
+ * class specific log levels. If a class wants to log an event with a specific level it is first
+ * checked if a class specific level was defined for that class. If that is not the case the global
+ * log level is considered.
+ * <p>
+ * The log levels are priorized in such way that events of a certain level are only logged if the
+ * considered log level for the logging class is lower or equal to the level of the message to be
+ * logged. The priority is (in descending order)
+ * <ul>
+ * <li>SEVERE (highest value)
+ * <li>WARNING
+ * <li>INFO
+ * <li>CONFIG
+ * <li>FINE
+ * <li>FINER
+ * <li>FINEST (lowest value)
+ * </ul>
+ * The special value {@link Level#OFF} turns off all log output so nothing will be printed at all.
+ * <p>
+ * The translation of the log levels into prefixes for the lines in the log output is not totally
+ * consistent with the naming of the enum constants. For example messages of the type
+ * {@link Level#FINE} are logged with prefix “DEBUG: ” (note that {@link #debug(String)} redirects
+ * to {@link #fine(String)}). Java exceptions logged either via {@link #error(Throwable)} or
+ * {@link #severe(Throwable)} are prefixed with “ERROR: ” while other errors logged either via
+ * {@link #error(String)} or {@link #severe(String)} are prefixed with “SEVERE: ”. This behaviour is
+ * intended to be able to distinguish between these two conditions but this may change in future
+ * versions of this class.
+ * <p>
+ * An example: If the global log level is {@link Level#INFO} and no class specific log levels have
+ * been defined all messages with log levels CONFIG, FINE, FINER and FINEST will be discarded and
+ * not actually printed to the log. All SEVERE, WARNING and INFO messages are printed.
+ * <p>
+ * The log is a simple {@link PrintStream} that defaults to be {@link System#out} and may be changed
+ * at runtime e.g. to some log file via {@link #setHandler(PrintStream)}. Be careful to change the
+ * log handler before printing anything to the log or otherwise that information may be lost.
  * 
  * @author Edgar Kalkowski
  */
 public class Log {
-    
-    /**
-     * This enum is used to specify which messages shall be logged and which not. For example if the
-     * log level is {@link #WARNING} all info, default or debug messages will be discarded and not
-     * actually printed to the log.
-     * 
-     * @author Edgar Kalkowski
-     */
-    public static enum Level {
-        NOTHING, ERROR, WARNING, INFO, DEFAULT, DEBUG;
-    }
     
     /**
      * This is the handler to which all log output is printed. It defaults to be System.out but may
@@ -53,7 +76,14 @@ public class Log {
     private static Map<String, Level> mapping = new TreeMap<String, Level>();
     
     /** The default log level for all classes for which no special log level is specified. */
-    private static Level level = Level.DEFAULT;
+    private static Level level = Level.INFO;
+    
+    /**
+     * Used for calculating the timestamps for the log messages. Problem is that this is only
+     * initialized if the log is used for the first time in the program. But as this will normally
+     * be somewhere at the beginning I see no problem in that at the moment.
+     */
+    private static long startTime = System.currentTimeMillis();
     
     /** Prevent others from instanciating this static class. */
     private Log() {
@@ -73,55 +103,91 @@ public class Log {
         if (mapping.containsKey(classname)) {
             Level bound = mapping.get(classname);
             
-            if (level.compareTo(bound) <= 0) {
-                return true;
-            } else {
+            if (level.intValue() < bound.intValue() || level.intValue() == Level.OFF.intValue()) {
                 return false;
+            } else {
+                return true;
             }
             
         } else {
             
-            if (level.compareTo(Log.level) <= 0) {
-                return true;
-            } else {
+            if (level.intValue() < Log.level.intValue() || level.intValue() == Level.OFF.intValue()) {
                 return false;
+            } else {
+                return true;
             }
         }
     }
     
     /**
      * Print debug information to the log file. The message is only actually printed to the current
-     * handler if the log level is {@link Level#DEBUG}.
+     * handler if the log level is at most {@link Level#FINE}.
      * 
      * @param line
      *        The line of text to log.
      */
-    public static void debug(String line) {
+    public static void fine(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEBUG)) {
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINE)) {
             log(e.getClassName() + "." + e.getMethodName(), line, "DEBUG: ");
+        }
+    }
+    
+    /** See {@link #fine(String)}. */
+    public static void debug(String line) {
+        fine(line);
+    }
+    
+    /**
+     * Print debug information to the log file. The message is only actually printed to the current
+     * handler if the log level is at most {@link Level#FINER}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void finer(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "FINER: ");
+        }
+    }
+    
+    /**
+     * Print debug information to the log file. The message is only actually printed to the current
+     * handler if the log level is at most {@link Level#FINEST}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void finest(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "FINEST: ");
         }
     }
     
     /**
      * Logs a message. The message is only actually printed to the current handler if the log level
-     * is at least {@link Level#DEFAULT}.
+     * is at most {@link Level#CONFIG}. It has no prefix (like FINE, INFO etc.) in the resulting log
+     * output.
      * 
      * @param line
      *        The line of text to log.
      */
-    public static void print(String line) {
+    public static void config(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEFAULT)) {
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.CONFIG)) {
             log(e.getClassName() + "." + e.getMethodName(), line, "");
         }
     }
     
     /**
      * Logs a message that is classified as an information. The message is only actually printed to
-     * the current handler if the log level is at least {@link Level#INFO}.
+     * the current handler if the log level is at most {@link Level#INFO}.
      * 
      * @param line
      *        The line of text to log.
@@ -136,7 +202,7 @@ public class Log {
     
     /**
      * Logs a message that is classified as a warning. The message is only actually printed to the
-     * current handler if the log level for the logging class is at least {@link Level#WARNING}.
+     * current handler if the log level for the logging class is at most {@link Level#WARNING}.
      * 
      * @param line
      *        The line of text to log.
@@ -152,7 +218,7 @@ public class Log {
     /**
      * Logs an exception represented by an instance of {@link Throwable} or any subclass of it
      * including the stacktrace. The message is only actually printed to the current handler if the
-     * log level for the logging class is at least {@link Level#ERROR}.
+     * log level for the logging class is at most {@link Level#SEVERE}.
      * 
      * @param error
      *        The {@link Throwable} object that describes the exception and the stacktrace. Must not
@@ -161,7 +227,7 @@ public class Log {
     public static void error(Throwable error) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.ERROR)) {
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.SEVERE)) {
             log(e.getClassName() + "." + e.getMethodName(), error.toString(), "ERROR: ");
             
             for (StackTraceElement s : error.getStackTrace()) {
@@ -170,6 +236,11 @@ public class Log {
             
             logCause(error.getCause(), e);
         }
+    }
+    
+    /** See {@link #error(Throwable)}. */
+    public static void severe(Throwable error) {
+        error(error);
     }
     
     /**
@@ -198,7 +269,8 @@ public class Log {
     }
     
     /**
-     * Logs a message that is classified as an error.
+     * Logs a message that is classified as an error. Messages of this type are always printed to
+     * the log handler except if the log level for the logging class is {@link Level#OFF}.
      * 
      * @param line
      *        The line of text to log.
@@ -206,9 +278,14 @@ public class Log {
     public static void error(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName(), Level.ERROR)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "ERROR: ");
+        if (isLoggable(e.getClassName(), Level.SEVERE)) {
+            log(e.getClassName() + "." + e.getMethodName(), line, "SEVERE: ");
         }
+    }
+    
+    /** See {@link #error(String)}. */
+    public static void severe(String line) {
+        error(line);
     }
     
     /**
@@ -222,7 +299,8 @@ public class Log {
     }
     
     /**
-     * Change the log level to be more or less verbose.
+     * Change the global log level to be more or less verbose. The global log level is used for
+     * classes for which no class specific log level has been defined.
      * 
      * @param level
      *        The new log level.
@@ -253,20 +331,35 @@ public class Log {
     }
     
     private static String getDate() {
-        Calendar calendar = Calendar.getInstance();
+        long ms = System.currentTimeMillis() - startTime;
+        long s = ms / 1000;
+        ms %= 1000;
+        long m = s / 60;
+        s %= 60;
+        long h = m / 60;
+        m %= 60;
+        long d = h / 24;
+        h %= 24;
         
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        int sec = calendar.get(Calendar.SECOND);
+        String millis;
         
-        String days = day < 10 ? "0" + day + "." : day + ".";
-        String months = month < 10 ? "0" + month + "." : month + ".";
-        String hours = hour < 10 ? "0" + hour + ":" : hour + ":";
-        String mins = min < 10 ? "0" + min + ":" : min + ":";
-        String secs = sec < 10 ? "0" + sec : "" + sec;
+        if (ms < 10) {
+            millis = "00" + ms;
+        } else if (ms < 100) {
+            millis = "0" + ms;
+        } else {
+            millis = ms + "";
+        }
         
-        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins + secs;
+        if (d == 0 && h == 0 && m == 0) {
+            return s + "." + millis;
+        } else if (d == 0 && h == 0) {
+            return m + ":" + (s < 10 ? "0" + s : s) + "." + millis;
+        } else if (d == 0) {
+            return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + "." + millis;
+        } else {
+            return d + "d " + h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + "."
+                    + millis;
+        }
     }
 }
