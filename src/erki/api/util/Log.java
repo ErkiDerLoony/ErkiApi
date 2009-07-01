@@ -18,6 +18,7 @@
 package erki.api.util;
 
 import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -77,13 +78,6 @@ public class Log {
     
     /** The default log level for all classes for which no special log level is specified. */
     private static Level level = Level.INFO;
-    
-    /**
-     * Used for calculating the timestamps for the log messages. Problem is that this is only
-     * initialized if the log is used for the first time in the program. But as this will normally
-     * be somewhere at the beginning I see no problem in that at the moment.
-     */
-    private static long startTime = System.currentTimeMillis();
     
     /** Prevent others from instanciating this static class. */
     private Log() {
@@ -331,35 +325,30 @@ public class Log {
     }
     
     private static String getDate() {
-        long ms = System.currentTimeMillis() - startTime;
-        long s = ms / 1000;
-        ms %= 1000;
-        long m = s / 60;
-        s %= 60;
-        long h = m / 60;
-        m %= 60;
-        long d = h / 24;
-        h %= 24;
+        Calendar calendar = Calendar.getInstance();
         
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+        int sec = calendar.get(Calendar.SECOND);
+        int ms = calendar.get(Calendar.MILLISECOND);
+        
+        String days = day < 10 ? "0" + day + "." : day + ".";
+        String months = month < 10 ? "0" + month + "." : month + ".";
+        String hours = hour < 10 ? "0" + hour + ":" : hour + ":";
+        String mins = min < 10 ? "0" + min + ":" : min + ":";
+        String secs = sec < 10 ? "0" + sec : "" + sec;
         String millis;
         
         if (ms < 10) {
-            millis = "00" + ms;
+            millis = ".00" + ms;
         } else if (ms < 100) {
-            millis = "0" + ms;
+            millis = ".0" + ms;
         } else {
-            millis = ms + "";
+            millis = "." + ms;
         }
         
-        if (d == 0 && h == 0 && m == 0) {
-            return s + "." + millis;
-        } else if (d == 0 && h == 0) {
-            return m + ":" + (s < 10 ? "0" + s : s) + "." + millis;
-        } else if (d == 0) {
-            return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + "." + millis;
-        } else {
-            return d + "d " + h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + "."
-                    + millis;
-        }
+        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins + secs + millis;
     }
 }
