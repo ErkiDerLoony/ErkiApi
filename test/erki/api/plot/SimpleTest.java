@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
 
 import javax.swing.JFrame;
 
@@ -35,7 +36,6 @@ import erki.api.plot.drawables.LineAxes;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
-import erki.api.util.Log.Level;
 
 public class SimpleTest {
     
@@ -44,7 +44,7 @@ public class SimpleTest {
         frame.setTitle("A simple test of the plot api");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        Log.setLevel(Level.DEBUG);
+        Log.setLevel(Level.FINE);
         
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
