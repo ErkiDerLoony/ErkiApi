@@ -1,20 +1,18 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.plot.drawables;
@@ -82,12 +80,12 @@ public class ColouredCrossPoint extends StyledDrawable {
         Stroke oldStroke = g2.getStroke();
         
         Point p = transformer.getScreenCoordinates(get());
-        int size = (int) (styleProvider.getProperty(
-                new StylePropertyKey<Integer>("POINT_SIZE")).getProperty() / 2.0);
+        int size = (int) (styleProvider.getProperty(new StylePropertyKey<Integer>("POINT_SIZE"))
+                .getProperty() / 2.0);
         
         g2.setColor(colour);
-        g2.setStroke(styleProvider.getProperty(
-                new StylePropertyKey<Stroke>("POINT_STROKE")).getProperty());
+        g2.setStroke(styleProvider.getProperty(new StylePropertyKey<Stroke>("POINT_STROKE"))
+                .getProperty());
         g2.drawLine(p.x - size, p.y - size, p.x + size, p.y + size);
         g2.drawLine(p.x - size, p.y + size, p.x + size, p.y - size);
         
