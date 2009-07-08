@@ -29,6 +29,10 @@ public class MathUtil {
     /** Used to compare two double values. */
     private static final double EPSILON = 1e-5;
     
+    /** As this is a static helper class it must not be instanciated. */
+    private MathUtil() {
+    }
+    
     /**
      * Round double values to a specified number of significant digits.
      * 
