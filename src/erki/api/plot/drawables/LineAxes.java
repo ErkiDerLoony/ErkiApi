@@ -41,9 +41,13 @@ import erki.api.util.MathUtil;
  */
 public class LineAxes extends StyledDrawable {
     
-    private double[] steps = { 0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005, 0.001, 0.0025,
-            0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0, 25.0, 50.0, 100.0,
-            250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0 };
+    // Step size of the axes’ ticks.
+    private static final double[] steps = { 0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005,
+            0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0, 25.0,
+            50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0 };
+    
+    // Minimal distance of everything drawn by this instance to the edge of the plot.
+    private static final int BORDER = 3;
     
     public LineAxes(StyleProvider styleProvider) {
         super(styleProvider);
@@ -62,32 +66,19 @@ public class LineAxes extends StyledDrawable {
         g2.setFont(styleProvider.getProperty(new StylePropertyKey<Font>("AXES_TICK_FONT"))
                 .getProperty());
         
-        Point origin = transformer.getScreenCoordinates(new Point2D.Double(0.0, 0.0));
-        
-        // Draw axes
-        int arrowOffset = styleProvider.getProperty(
-                new StylePropertyKey<Integer>("AXES_ARROW_OFFSET")).getProperty();
-        g2.drawLine(0, origin.y, transformer.getScreenWidth(), origin.y);
-        g2.drawLine(origin.x, 0, origin.x, transformer.getScreenHeight());
-        
-        // Draw arrows
-        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
-                * arrowOffset, origin.y - arrowOffset);
-        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
-                * arrowOffset, origin.y + arrowOffset);
-        g2.drawLine(origin.x, 0, origin.x - arrowOffset, 2 * arrowOffset);
-        g2.drawLine(origin.x, 0, origin.x + arrowOffset, 2 * arrowOffset);
-        
         // Estimate tick steps
         int xStep = 0, yStep = 0;
         boolean ticksFit = true;
         
         do {
-            int oldX = origin.x;
+            int oldX = transformer.getScreenCoordinates(new Point2D.Double(MathUtil.round(
+                    transformer.getCarthesianCoordinates(new Point(BORDER, BORDER)).getX(),
+                    steps[xStep]), 0.0)).x;
             ticksFit = true;
             
-            for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()), Math
-                    .abs(transformer.getCartMinX())); i += steps[xStep]) {
+            for (double i = MathUtil.round(transformer.getCarthesianCoordinates(
+                    new Point(BORDER, BORDER)).getX(), steps[xStep])
+                    + steps[xStep]; i < transformer.getCartMaxX(); i += steps[xStep]) {
                 Point p = transformer.getScreenCoordinates(new Point2D.Double(i, 0.0));
                 String tick = MathUtil.round(i, 7) + "";
                 
@@ -109,7 +100,7 @@ public class LineAxes extends StyledDrawable {
         int maxWidth = 0;
         
         do {
-            int oldY = origin.y;
+            int oldY = BORDER;
             ticksFit = true;
             maxWidth = 0;
             
@@ -137,13 +128,34 @@ public class LineAxes extends StyledDrawable {
             
         } while (yStep < steps.length - 1 && !ticksFit);
         
-        // Actually draw the ticks
         int tickOffset = styleProvider.getProperty(
                 new StylePropertyKey<Integer>("AXES_TICK_OFFSET")).getProperty();
+        Point origin = new Point(BORDER
+                + g2.getFontMetrics().stringWidth("" + MathUtil.round(steps[yStep], 7)),
+                transformer.getScreenHeight() - BORDER - tickOffset
+                        - g2.getFontMetrics().getHeight());
         
-        for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()), Math
+        // Draw axes
+        int arrowOffset = styleProvider.getProperty(
+                new StylePropertyKey<Integer>("AXES_ARROW_OFFSET")).getProperty();
+        g2.drawLine(origin.x, origin.y, transformer.getScreenWidth(), origin.y);
+        g2.drawLine(origin.x, 0, origin.x, origin.y);
+        
+        // Draw arrows
+        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
+                * arrowOffset, origin.y - arrowOffset);
+        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
+                * arrowOffset, origin.y + arrowOffset);
+        g2.drawLine(origin.x, 0, origin.x - arrowOffset, 2 * arrowOffset);
+        g2.drawLine(origin.x, 0, origin.x + arrowOffset, 2 * arrowOffset);
+        
+        // Actually draw the ticks
+        for (double i = Math.floor(transformer.getCarthesianCoordinates(
+                new Point(origin.x, origin.y)).getX()
+                + steps[xStep]); i < Math.max(Math.abs(transformer.getCartMaxX()), Math
                 .abs(transformer.getCartMinX())); i += steps[xStep]) {
-            Point p = transformer.getScreenCoordinates(new Point2D.Double(i, 0.0));
+            Point p = transformer.getScreenCoordinates(new Point2D.Double(i, transformer
+                    .getCarthesianCoordinates(new Point(origin.x, origin.y)).getY()));
             String tick = MathUtil.round(i, 7) + "";
             
             if (tick.endsWith(".0")) {
@@ -155,22 +167,7 @@ public class LineAxes extends StyledDrawable {
                     && p.x - 0.5 * g2.getFontMetrics().stringWidth(tick) > arrowOffset) {
                 g2.drawLine(p.x, p.y - tickOffset, p.x, p.y + tickOffset);
                 g2.drawString(tick, (int) (p.x - 0.5 * g2.getFontMetrics().stringWidth(tick)), p.y
-                        + g2.getFontMetrics().getHeight() + tickOffset + 3);
-            }
-            
-            p = transformer.getScreenCoordinates(new Point2D.Double(-i, 0.0));
-            tick = MathUtil.round(-i, 7) + "";
-            
-            if (tick.endsWith(".0")) {
-                tick = tick.substring(0, tick.length() - 2);
-            }
-            
-            if (p.x + 0.5 * g2.getFontMetrics().stringWidth(tick) < transformer.getScreenWidth()
-                    - 2 * arrowOffset
-                    && p.x - 0.5 * g2.getFontMetrics().stringWidth(tick) > arrowOffset) {
-                g2.drawLine(p.x, p.y - tickOffset, p.x, p.y + tickOffset);
-                g2.drawString(tick, (int) (p.x - 0.5 * g2.getFontMetrics().stringWidth(tick)), p.y
-                        + g2.getFontMetrics().getHeight() + tickOffset + 3);
+                        + g2.getFontMetrics().getHeight() + tickOffset);
             }
         }
         

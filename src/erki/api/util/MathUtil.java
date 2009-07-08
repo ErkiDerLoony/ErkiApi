@@ -44,6 +44,10 @@ public class MathUtil {
                 / Math.pow(10, significantDigits);
     }
     
+    public static double round(double value, double a) {
+        return Math.floor(value + a);
+    }
+    
     /**
      * Checks if two double values are equal using an epsilon environment.
      * 
