@@ -1,6 +1,6 @@
 <project name="ErkiAPI" default="jar">
 
-  <property name="version" value="0.0.2"/>
+  <property name="version" value="0.0.3"/>
 
   <property name="bin.dir" value="bin"/>
   <property name="test.bin" value="bin.test"/>
@@ -10,17 +10,16 @@
   <property name="doc.dir" value="doc"/>
 
   <property name="jar.file" value="${ant.project.name}-${version}.jar"/>
-  <property name="csv.jar" value="CsvPlot.jar"/>
-  <property name="online.csv.jar" value="OnlineCsvPlot.jar"/>
   <property name="test.jar" value="Test.jar"/>
   <property name="tar.file" value="${ant.project.name}-${version}.tar.bz2"/>
 
-  <property name="test.main" value="erki.api.plot.ba.TimeSeriesPlot"/>
-  <property name="csv.main" value="erki.api.util.CsvPlot"/>
-  <property name="online.csv.main" value="erki.api.util.OnlineCsvPlot"/>
+  <property name="test.main" value="erki.api.plot.SimpleTest"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir=".">
       <include name="*.jar"/>
     </fileset>
   </path>
@@ -39,21 +38,6 @@
 
   <target name="jar" depends="make">
     <jar destfile="${jar.file}" basedir="${bin.dir}"/>
-    <manifestclasspath property="csv.classpath" jarfile="${csv.jar}">
-      <classpath refid="classpath"/>
-    </manifestclasspath>
-    <jar destfile="${csv.jar}" basedir="${bin.dir}">
-      <manifest>
-        <attribute name="Main-Class" value="${csv.main}"/>
-        <attribute name="Class-Path" value="${csv.classpath}"/>
-      </manifest>
-    </jar>
-    <jar destfile="${online.csv.jar}" basedir="${bin.dir}">
-      <manifest>
-        <attribute name="Main-Class" value="${online.csv.main}"/>
-        <attribute name="Class-Path" value="${csv.classpath}"/>
-      </manifest>
-    </jar>
   </target>
 
   <target name="jar test" depends="make test">
@@ -76,7 +60,7 @@
            debuglevel="lines,vars,source" classpathref="classpath" />
   </target>
 
-  <target name="make test" depends="make">
+  <target name="make test" depends="jar">
     <mkdir dir="${test.bin}"/>
     <javac destdir="${test.bin}" srcdir="${test.src}" debug="on"
            encoding="UTF-8"
@@ -95,8 +79,6 @@
     <delete dir="${doc.dir}"/>
     <delete file="${jar.file}"/>
     <delete file="${test.jar}"/>
-    <delete file="${csv.jar}"/>
-    <delete file="${online.csv.jar}"/>
     <delete file="${tar.file}"/>
   </target>
 
