@@ -48,8 +48,18 @@ public class MathUtil {
                 / Math.pow(10, significantDigits);
     }
     
-    public static double round(double value, double a) {
-        return Math.floor(value + a);
+    /**
+     * Round a {@code value} to the next occurrance of {@code step}. For example if {@code step ==
+     * 0.5} then {@code 1.2} is rounded to {@code 1.0} and {@code 1.3} is rounded to {@code 1.5}.
+     * 
+     * @param value
+     *        The value to round.
+     * @param step
+     *        The stepping to which the value is to be rounded.
+     * @return {@code ((int) (value / step)) * step}.
+     */
+    public static double round(double value, double step) {
+        return ((int) (value / step)) * step;
     }
     
     /**
