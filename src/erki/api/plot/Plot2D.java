@@ -297,14 +297,74 @@ public class Plot2D extends JPanel {
             maxY = DEFAULT_MAX_Y;
         }
         
-        // Zoom out an additional 10% to make things near the border better visible.
+        setRange(minX, maxX, minY, maxY);
+        
+        // Respect the offset for coordinate axes (if any).
+        int left = 0, right = 0, top = 0, bottom = 0;
+        
+        for (Drawable d : drawables) {
+            
+            if (d instanceof CoordinateAxis) {
+                CoordinateAxis c = (CoordinateAxis) d;
+                
+                if (c.getLeftOffset() > left) {
+                    left = c.getLeftOffset();
+                }
+                
+                if (c.getRightOffset() > right) {
+                    right = c.getRightOffset();
+                }
+                
+                if (c.getTopOffset() > top) {
+                    top = c.getTopOffset();
+                }
+                
+                if (c.getBottomOffset() > bottom) {
+                    bottom = c.getBottomOffset();
+                }
+            }
+        }
+        
+        // TODO: Remove this if the TODO below is implemented!
         double rangeX = maxX - minX, rangeY = maxY - minY;
         minX -= 0.1 * rangeX;
         maxX += 0.1 * rangeX;
         minY -= 0.1 * rangeY;
         maxY += 0.1 * rangeY;
         
+        // TODO: Implement this!
+        // if (left != 0) {
+        // System.out.println("Old minX = " + minX);
+        // System.out.println("Transform in pixels = " + left);
+        // System.out.println("Transform in cc = "
+        // + transformer.getCarthesianCoordinates(new Point(left, 0)).getX());
+        // System.out.println("Retranslated = "
+        // + transformer.getScreenCoordinates(transformer
+        // .getCarthesianCoordinates(new Point(left, 0))).x);
+        // minX -= transformer.getCarthesianCoordinates(new Point(left, 0)).getX();
+        // maxX -= transformer.getCarthesianCoordinates(new Point(left, 0)).getX();
+        // System.out.println("New minX = " + minX);
+        // }
+        
+        // if (right != 0) {
+        // maxX += 0.5*transformer.getCarthesianCoordinates(new Point(right, 0)).getX();
+        // }
+        //        
+        // if (top != 0) {
+        // maxY += 0.5*transformer.getCarthesianCoordinates(new Point(0, top)).getY();
+        // }
+        //        
+        // if (bottom != 0) {
+        // minY -= 0.5*transformer.getCarthesianCoordinates(new Point(0, bottom)).getY();
+        // }
+        
+        // System.out.println("Before origin is "
+        // + transformer.getScreenCoordinates(new Point2D.Double(0.0, 0.0)));
+        //        
         setRange(minX, maxX, minY, maxY);
+        //        
+        // System.out.println("After origin is "
+        // + transformer.getScreenCoordinates(new Point2D.Double(0.0, 0.0)));
     }
     
     @Override

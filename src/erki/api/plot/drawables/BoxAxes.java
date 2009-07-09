@@ -27,6 +27,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Set;
 import java.util.TreeSet;
 
+import erki.api.plot.CoordinateAxis;
 import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.style.StylePropertyKey;
 import erki.api.plot.style.StyleProvider;
@@ -37,7 +38,7 @@ import erki.api.util.MathUtil;
  * 
  * @author Edgar Kalkowski
  */
-public class BoxAxes extends StyledDrawable {
+public class BoxAxes extends StyledDrawable implements CoordinateAxis {
     
     // Step size of the axes’ ticks.
     private static final double[] steps = { 0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005,
@@ -46,6 +47,8 @@ public class BoxAxes extends StyledDrawable {
     
     // Border between axes’ tick labels and the edge of the plot.
     private static final int BORDER = 3;
+    
+    private int leftOffset = 0, bottomOffset = 0;
     
     public BoxAxes(StyleProvider styleProvider) {
         super(styleProvider);
@@ -99,21 +102,21 @@ public class BoxAxes extends StyledDrawable {
         
         int tickOffset = styleProvider.getProperty(
                 new StylePropertyKey<Integer>("AXES_TICK_OFFSET")).getProperty();
-        int arrowOffset = styleProvider.getProperty(
+        int boxOffset = styleProvider.getProperty(
                 new StylePropertyKey<Integer>("AXES_ARROW_OFFSET")).getProperty();
         
         do {
             Point2D.Double j = new Point2D.Double(0.0, MathUtil.round(transformer
-                    .getCarthesianCoordinates(new Point(BORDER, 2 * arrowOffset)).getY(),
+                    .getCarthesianCoordinates(new Point(BORDER, 2 * boxOffset)).getY(),
                     steps[yStep]));
             int oldY = transformer.getScreenCoordinates(j).y;
             
             // Do not consider the tick if it’s not actually draw later because it is hidden by the
             // toparrow of the y-axis.
             int counter = 1;
-            while (oldY + 0.5 * g2.getFontMetrics().getHeight() < 2 * arrowOffset) {
+            while (oldY + 0.5 * g2.getFontMetrics().getHeight() < 2 * boxOffset) {
                 oldY = transformer.getScreenCoordinates(new Point2D.Double(0.0, MathUtil.round(
-                        transformer.getCarthesianCoordinates(new Point(BORDER, 2 * arrowOffset))
+                        transformer.getCarthesianCoordinates(new Point(BORDER, 2 * boxOffset))
                                 .getY(), steps[yStep])
                         - counter++ * steps[yStep])).y;
             }
@@ -128,7 +131,7 @@ public class BoxAxes extends StyledDrawable {
             maxWidth = g2.getFontMetrics().stringWidth(tick);
             
             for (double i = MathUtil.round(transformer.getCarthesianCoordinates(
-                    new Point(BORDER, 2 * arrowOffset)).getY(), steps[yStep])
+                    new Point(BORDER, 2 * boxOffset)).getY(), steps[yStep])
                     - steps[yStep]; i > transformer.getCartMinY(); i -= steps[yStep]) {
                 Point p = transformer.getScreenCoordinates(new Point2D.Double(0.0, i));
                 
@@ -167,18 +170,17 @@ public class BoxAxes extends StyledDrawable {
         
         Point origin = new Point(BORDER + 2 * tickOffset + maxWidth, transformer.getScreenHeight()
                 - BORDER - tickOffset - g2.getFontMetrics().getHeight());
+        leftOffset = BORDER + 2 * tickOffset + maxWidth;
+        bottomOffset = BORDER + tickOffset + g2.getFontMetrics().getHeight();
         
         // Draw axes
-        g2.drawLine(origin.x, origin.y, transformer.getScreenWidth(), origin.y);
-        g2.drawLine(origin.x, 0, origin.x, origin.y);
-        
-        // Draw arrows
-        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
-                * arrowOffset, origin.y - arrowOffset);
-        g2.drawLine(transformer.getScreenWidth(), origin.y, transformer.getScreenWidth() - 2
-                * arrowOffset, origin.y + arrowOffset);
-        g2.drawLine(origin.x, 0, origin.x - arrowOffset, 2 * arrowOffset);
-        g2.drawLine(origin.x, 0, origin.x + arrowOffset, 2 * arrowOffset);
+        g2.drawLine(origin.x, origin.y, transformer.getScreenWidth() - 2 * boxOffset, origin.y);
+        g2.drawLine(origin.x, 2 * boxOffset, origin.x, origin.y);
+        g2.drawLine(transformer.getScreenWidth() - 2 * boxOffset, origin.y, transformer
+                .getScreenWidth()
+                - 2 * boxOffset, 2 * boxOffset);
+        g2.drawLine(origin.x, 2 * boxOffset, transformer.getScreenWidth() - 2 * boxOffset,
+                2 * boxOffset);
         
         // Actually draw the ticks
         for (double i = MathUtil.round(transformer.getCarthesianCoordinates(origin).getX(),
@@ -192,9 +194,17 @@ public class BoxAxes extends StyledDrawable {
             }
             
             if (p.x + 0.5 * g2.getFontMetrics().stringWidth(tick) < transformer.getScreenWidth()
-                    - 2 * arrowOffset
-                    && p.x > origin.x && p.x - 0.5 * g2.getFontMetrics().stringWidth(tick) > BORDER) {
+                    - BORDER
+                    && p.x < transformer.getScreenWidth() - 2 * boxOffset
+                    && p.x > origin.x
+                    && p.x - 0.5 * g2.getFontMetrics().stringWidth(tick) > BORDER) {
+                g2.setColor(styleProvider.getProperty(
+                        new StylePropertyKey<Color>("AXES_FAINT_COLOR")).getProperty());
+                g2.drawLine(p.x, p.y, p.x, 2 * boxOffset);
+                g2.setColor(styleProvider.getProperty(new StylePropertyKey<Color>("AXES_COLOR"))
+                        .getProperty());
                 g2.drawLine(p.x, p.y - tickOffset, p.x, p.y + tickOffset);
+                g2.drawLine(p.x, 2 * boxOffset - tickOffset, p.x, 2 * boxOffset + tickOffset);
                 g2.drawString(tick, (int) (p.x - 0.5 * g2.getFontMetrics().stringWidth(tick)), p.y
                         + g2.getFontMetrics().getHeight() + tickOffset);
             }
@@ -210,8 +220,16 @@ public class BoxAxes extends StyledDrawable {
                 tick = tick.substring(0, tick.length() - 2);
             }
             
-            if (p.y - 0.5 * g2.getFontMetrics().getHeight() > 2 * arrowOffset && p.y < origin.y) {
+            if (p.y - 0.5 * g2.getFontMetrics().getHeight() > BORDER && p.y > 2 * boxOffset
+                    && p.y < origin.y) {
+                g2.setColor(styleProvider.getProperty(
+                        new StylePropertyKey<Color>("AXES_FAINT_COLOR")).getProperty());
+                g2.drawLine(p.x, p.y, transformer.getScreenWidth() - 2 * boxOffset, p.y);
+                g2.setColor(styleProvider.getProperty(new StylePropertyKey<Color>("AXES_COLOR"))
+                        .getProperty());
                 g2.drawLine(p.x - tickOffset, p.y, p.x + tickOffset, p.y);
+                g2.drawLine(transformer.getScreenWidth() - 2 * boxOffset - tickOffset, p.y,
+                        transformer.getScreenWidth() - 2 * boxOffset + tickOffset, p.y);
                 g2.drawString(tick, p.x - 2 * tickOffset - maxWidth, (int) (p.y + 0.5
                         * g2.getFontMetrics().getHeight() - g2.getFontMetrics().getDescent()));
             }
@@ -232,8 +250,32 @@ public class BoxAxes extends StyledDrawable {
         TreeSet<StylePropertyKey<?>> properties = new TreeSet<StylePropertyKey<?>>();
         properties.add(new StylePropertyKey<Stroke>("AXES_STROKE"));
         properties.add(new StylePropertyKey<Color>("AXES_COLOR"));
+        properties.add(new StylePropertyKey<Color>("AXES_FAINT_COLOR"));
         properties.add(new StylePropertyKey<Integer>("AXES_TICK_OFFSET"));
+        properties.add(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"));
         properties.add(new StylePropertyKey<Font>("AXES_TICK_FONT"));
         return properties;
+    }
+    
+    @Override
+    public int getBottomOffset() {
+        return bottomOffset;
+    }
+    
+    @Override
+    public int getLeftOffset() {
+        return leftOffset;
+    }
+    
+    @Override
+    public int getRightOffset() {
+        return 2 * styleProvider.getProperty(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"))
+                .getProperty();
+    }
+    
+    @Override
+    public int getTopOffset() {
+        return 2 * styleProvider.getProperty(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"))
+                .getProperty();
     }
 }

@@ -54,6 +54,8 @@ public class BasicStyleProvider implements StyleProvider {
         
         // Coordinate axes properties
         addMapping(new StylePropertyKey<Color>("AXES_COLOR"), new StyleProperty<Color>(Color.BLACK));
+        addMapping(new StylePropertyKey<Color>("AXES_FAINT_COLOR"), new StyleProperty<Color>(
+                Color.LIGHT_GRAY));
         addMapping(new StylePropertyKey<Stroke>("AXES_STROKE"), new StyleProperty<Stroke>(
                 new BasicStroke(1.25f)));
         addMapping(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"), new StyleProperty<Integer>(
