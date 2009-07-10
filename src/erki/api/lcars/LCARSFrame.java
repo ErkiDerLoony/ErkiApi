@@ -1,20 +1,18 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.lcars;
@@ -74,8 +72,7 @@ public class LCARSFrame extends JFrame {
     // #setLCARSColour(Color)
     private Color lcarsColour = LCARSUtil.BLUE;
     
-    private static final Font TITLE_FONT = new Font(Font.SANS_SERIF,
-            Font.PLAIN, 20);
+    private static final Font TITLE_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
     
     /** Creates a new <code>LCARSFrame</code>. */
     public LCARSFrame() {
@@ -84,8 +81,7 @@ public class LCARSFrame extends JFrame {
     }
     
     /**
-     * Creates a new <code>LCARSFrame</code> using a specific
-     * {@link GraphicsConfiguration}.
+     * Creates a new <code>LCARSFrame</code> using a specific {@link GraphicsConfiguration}.
      * 
      * @param gc
      *        The <code>GraphicsConfiguration</code> to use.
@@ -107,14 +103,12 @@ public class LCARSFrame extends JFrame {
     }
     
     /**
-     * Creates a new <code>LCARSFrame</code> with a specific title an
-     * {@link GraphicsConfiguration}.
+     * Creates a new <code>LCARSFrame</code> with a specific title an {@link GraphicsConfiguration}.
      * 
      * @param title
      *        The title of the new <code>LCARSFrame</code>.
      * @param gc
-     *        The <code>GraphicsConfiguration</code> to use for the new
-     *        <code>LCARSFrame</code>.
+     *        The <code>GraphicsConfiguration</code> to use for the new <code>LCARSFrame</code>.
      */
     public LCARSFrame(String title, GraphicsConfiguration gc) {
         super(title, gc);
@@ -122,8 +116,7 @@ public class LCARSFrame extends JFrame {
     }
     
     /**
-     * Called from each constructor to initialize LCARS specific design
-     * features.
+     * Called from each constructor to initialize LCARS specific design features.
      */
     private void initLCARS() {
         setBackground(Color.BLACK);
@@ -141,27 +134,20 @@ public class LCARSFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
                 Dimension size = contentPane.getSize();
-                childContent.setLocation(2 * BORDER + BUTTON_BAR_WIDTH, 2
-                        * BORDER + TITLE_BAR_HEIGHT);
-                childContent.setSize(
-                        size.width - 3 * BORDER - BUTTON_BAR_WIDTH, size.height
-                                - 3 * BORDER - TITLE_BAR_HEIGHT);
+                childContent.setLocation(2 * BORDER + BUTTON_BAR_WIDTH, 2 * BORDER
+                        + TITLE_BAR_HEIGHT);
+                childContent.setSize(size.width - 3 * BORDER - BUTTON_BAR_WIDTH, size.height - 3
+                        * BORDER - TITLE_BAR_HEIGHT);
                 contentPane.setSize(size.width, size.height);
                 contentPane.setLocation(0, 0);
                 validate();
                 
                 if (getGraphics() != null) {
-                    LCARSFrame.this.setMinimumSize(new Dimension(2
-                            * BORDER
-                            + BUTTON_BAR_WIDTH
-                            + CIRCLE_DIAMETER
-                            + getInsets().left
-                            + getInsets().right
-                            + getGraphics().getFontMetrics(TITLE_FONT)
-                                    .stringWidth(getTitle()), 2 * BORDER
-                            + TITLE_BAR_HEIGHT + CIRCLE_DIAMETER
-                            + getInsets().top + getInsets().bottom
-                            + contentPane.getButtonCount()
+                    LCARSFrame.this.setMinimumSize(new Dimension(2 * BORDER + BUTTON_BAR_WIDTH
+                            + CIRCLE_DIAMETER + getInsets().left + getInsets().right
+                            + getGraphics().getFontMetrics(TITLE_FONT).stringWidth(getTitle()), 2
+                            * BORDER + TITLE_BAR_HEIGHT + CIRCLE_DIAMETER + getInsets().top
+                            + getInsets().bottom + contentPane.getButtonCount()
                             * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER));
                 }
             }
@@ -176,16 +162,14 @@ public class LCARSFrame extends JFrame {
                 for (ButtonBarButton button : contentPane.buttons) {
                     
                     if (button.isEnabled() && e.getX() > button.getMinX()
-                            && e.getX() < button.getMaxX()
-                            && e.getY() > button.getMinY()
+                            && e.getX() < button.getMaxX() && e.getY() > button.getMinY()
                             && e.getY() < button.getMaxY()) {
                         
-                        for (ActionListener listener : button
-                                .getActionListeners()) {
-                            listener.actionPerformed(new ActionEvent(e
-                                    .getSource(), e.getID(), button.getText(),
-                                    System.currentTimeMillis(), e
-                                            .getModifiers()));
+                        for (ActionListener listener : button.getActionListeners()) {
+                            listener
+                                    .actionPerformed(new ActionEvent(e.getSource(), e.getID(),
+                                            button.getText(), System.currentTimeMillis(), e
+                                                    .getModifiers()));
                         }
                     }
                 }
@@ -194,53 +178,50 @@ public class LCARSFrame extends JFrame {
     }
     
     /**
-     * @return The colour of the title of this {@code LCARSFrame}. The returned
-     *         {@link Color} object is a copy of the actual colour to prevent
-     *         external changes.
+     * @return The colour of the title of this {@code LCARSFrame}. The returned {@link Color} object
+     *         is a copy of the actual colour to prevent external changes.
      */
     public Color getTitleColour() {
-        return new Color(titleColour.getRed(), titleColour.getGreen(),
-                titleColour.getBlue(), titleColour.getAlpha());
+        return new Color(titleColour.getRed(), titleColour.getGreen(), titleColour.getBlue(),
+                titleColour.getAlpha());
     }
     
     /**
-     * Changes the colour of the title of this {@code LCARSFrame}. The title
-     * colour defaults to black.
+     * Changes the colour of the title of this {@code LCARSFrame}. The title colour defaults to
+     * black.
      * 
      * @param colour
-     *        The new colour of the title. The {@link Color} object is copied to
-     *        prevent sideeffects.
+     *        The new colour of the title. The {@link Color} object is copied to prevent
+     *        sideeffects.
      */
     public void setTitleColour(Color colour) {
-        titleColour = new Color(colour.getRed(), colour.getGreen(), colour
-                .getBlue(), colour.getAlpha());
+        titleColour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), colour
+                .getAlpha());
     }
     
     /**
-     * @return The colour of the LCARS components of this {@code LCARSFrame}.
-     *         The returned {@link Color} object is a copy of the actual colour
-     *         to prevent sideeffects.
+     * @return The colour of the LCARS components of this {@code LCARSFrame}. The returned
+     *         {@link Color} object is a copy of the actual colour to prevent sideeffects.
      */
     public Color getLCARSColour() {
-        return new Color(lcarsColour.getRed(), lcarsColour.getGreen(),
-                lcarsColour.getBlue(), lcarsColour.getAlpha());
+        return new Color(lcarsColour.getRed(), lcarsColour.getGreen(), lcarsColour.getBlue(),
+                lcarsColour.getAlpha());
     }
     
     /**
      * Change the default colour of the LCARS components.
      * 
      * @param colour
-     *        The new colour to be used instead of {@link LCARSUtil#BLUE}. The
-     *        {@link Color} object is copied to prevent external changes.
+     *        The new colour to be used instead of {@link LCARSUtil#BLUE}. The {@link Color} object
+     *        is copied to prevent external changes.
      */
     public void setLCARSColour(Color colour) {
-        lcarsColour = new Color(colour.getRed(), colour.getGreen(), colour
-                .getBlue(), colour.getAlpha());
+        lcarsColour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), colour
+                .getAlpha());
     }
     
     /**
-     * Adds a button to this frame. The buttons are displayed in the order they
-     * are added.
+     * Adds a button to this frame. The buttons are displayed in the order they are added.
      * 
      * @param button
      *        The {@link ButtonBarButton} to add.
@@ -323,9 +304,8 @@ public class LCARSFrame extends JFrame {
     public Dimension getPreferredSize() {
         // Adds the size of the button and title bars to the preferred size.
         Dimension superSize = super.getPreferredSize();
-        Dimension preferredSize = new Dimension(superSize.width + 3 * BORDER
-                + BUTTON_BAR_WIDTH, superSize.height + 3 * BORDER
-                + TITLE_BAR_HEIGHT);
+        Dimension preferredSize = new Dimension(superSize.width + 3 * BORDER + BUTTON_BAR_WIDTH,
+                superSize.height + 3 * BORDER + TITLE_BAR_HEIGHT);
         return preferredSize;
     }
     
@@ -333,18 +313,16 @@ public class LCARSFrame extends JFrame {
     public void pack() {
         super.pack();
         Dimension size = getPreferredSize();
-        Dimension childSize = childContent.getLayout() == null ? childContent
-                .getPreferredSize() : childContent.getLayout()
-                .preferredLayoutSize(contentPane);
-        Dimension newSize = new Dimension(size.width + childSize.width,
-                size.height + childSize.height);
+        Dimension childSize = childContent.getLayout() == null ? childContent.getPreferredSize()
+                : childContent.getLayout().preferredLayoutSize(contentPane);
+        Dimension newSize = new Dimension(size.width + childSize.width, size.height
+                + childSize.height);
         setSize(newSize.width, newSize.height);
     }
     
     /**
-     * The {@link JPanel} on which the LCARS button and title bars are plotted
-     * and that later contains the content pane for child components added by
-     * the user.
+     * The {@link JPanel} on which the LCARS button and title bars are plotted and that later
+     * contains the content pane for child components added by the user.
      * 
      * @author Edgar Kalkowski
      */
@@ -363,9 +341,8 @@ public class LCARSFrame extends JFrame {
         private List<ButtonBarButton> buttons = new LinkedList<ButtonBarButton>();
         
         /**
-         * Creates a new <code>ContentPanel</code>. Initializes the
-         * {@link MouseMotionListener} that is responsible for the buttons'
-         * rollover effects.
+         * Creates a new <code>ContentPanel</code>. Initializes the {@link MouseMotionListener} that
+         * is responsible for the buttons' rollover effects.
          */
         public ContentPanel() {
             
@@ -405,8 +382,7 @@ public class LCARSFrame extends JFrame {
                         hover = -1;
                         Rectangle first = getButtonShape(0);
                         Rectangle last = getButtonShape(getButtonCount() - 1);
-                        repaint(first.x, first.y, first.width, last.y
-                                + last.height);
+                        repaint(first.x, first.y, first.width, last.y + last.height);
                     }
                 }
             });
@@ -445,25 +421,22 @@ public class LCARSFrame extends JFrame {
             
             // Change to LCARS color and enable antialiasing.
             g2.setColor(lcarsColour);
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
             // Plot the button bar.
-            g2.fillArc(BORDER, getHeight() - BORDER - CIRCLE_DIAMETER,
-                    CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 360);
-            g2.fillArc(BORDER + BUTTON_BAR_WIDTH - CIRCLE_DIAMETER, getHeight()
-                    - BORDER - CIRCLE_DIAMETER, CIRCLE_DIAMETER,
+            g2.fillArc(BORDER, getHeight() - BORDER - CIRCLE_DIAMETER, CIRCLE_DIAMETER,
                     CIRCLE_DIAMETER, 0, 360);
-            g2.fillRect(BORDER + CIRCLE_RADIUS, getHeight() - BORDER
-                    - CIRCLE_DIAMETER, BUTTON_BAR_WIDTH - CIRCLE_DIAMETER,
-                    CIRCLE_DIAMETER);
-            g2.fillRect(BORDER, BORDER + CIRCLE_RADIUS, BUTTON_BAR_WIDTH,
-                    getHeight() - 2 * BORDER - CIRCLE_DIAMETER);
-            g2.fillRect(BORDER + BUTTON_BAR_WIDTH, BORDER + TITLE_BAR_HEIGHT,
-                    CIRCLE_RADIUS, CIRCLE_RADIUS);
+            g2.fillArc(BORDER + BUTTON_BAR_WIDTH - CIRCLE_DIAMETER, getHeight() - BORDER
+                    - CIRCLE_DIAMETER, CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 360);
+            g2.fillRect(BORDER + CIRCLE_RADIUS, getHeight() - BORDER - CIRCLE_DIAMETER,
+                    BUTTON_BAR_WIDTH - CIRCLE_DIAMETER, CIRCLE_DIAMETER);
+            g2.fillRect(BORDER, BORDER + CIRCLE_RADIUS, BUTTON_BAR_WIDTH, getHeight() - 2 * BORDER
+                    - CIRCLE_DIAMETER);
+            g2.fillRect(BORDER + BUTTON_BAR_WIDTH, BORDER + TITLE_BAR_HEIGHT, CIRCLE_RADIUS,
+                    CIRCLE_RADIUS);
             g2.setColor(Color.BLACK);
-            g2.fillArc(BORDER + BUTTON_BAR_WIDTH, BORDER + TITLE_BAR_HEIGHT,
-                    CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 360);
+            g2.fillArc(BORDER + BUTTON_BAR_WIDTH, BORDER + TITLE_BAR_HEIGHT, CIRCLE_DIAMETER,
+                    CIRCLE_DIAMETER, 0, 360);
             g2.setColor(lcarsColour);
             
             // Plot the buttons
@@ -489,10 +462,8 @@ public class LCARSFrame extends JFrame {
                     buttons.get(i).setPosition(
                             BORDER,
                             BORDER + BUTTON_BAR_WIDTH,
-                            BUTTONS_START + i * (BUTTON_HEIGHT + BUTTON_BORDER)
-                                    + BUTTON_BORDER,
-                            BUTTONS_START + (i + 1)
-                                    * (BUTTON_HEIGHT + BUTTON_BORDER)
+                            BUTTONS_START + i * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER,
+                            BUTTONS_START + (i + 1) * (BUTTON_HEIGHT + BUTTON_BORDER)
                                     + BUTTON_BORDER);
                 }
                 
@@ -500,26 +471,20 @@ public class LCARSFrame extends JFrame {
                 g2.setColor(Color.BLACK);
                 g2.setStroke(new BasicStroke(BUTTON_BORDER));
                 g2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
-                g2.drawLine(BORDER, BUTTONS_START + BUTTON_BORDER, BORDER
-                        + BUTTON_BAR_WIDTH, BUTTONS_START + BUTTON_BORDER);
+                g2.drawLine(BORDER, BUTTONS_START + BUTTON_BORDER, BORDER + BUTTON_BAR_WIDTH,
+                        BUTTONS_START + BUTTON_BORDER);
                 
                 for (int i = 0; i < getButtonCount(); i++) {
                     g2.setColor(buttons.get(i).getTextColour());
-                    g2.drawString(buttons.get(i).getText(), BORDER
-                            + BUTTON_BAR_WIDTH
-                            / 2
-                            - g2.getFontMetrics().stringWidth(
-                                    buttons.get(i).getText()) / 2,
-                            BUTTONS_START + i * BUTTON_HEIGHT + i
-                                    * BUTTON_BORDER + BUTTON_HEIGHT / 2
-                                    + g2.getFontMetrics().getHeight() / 2
+                    g2.drawString(buttons.get(i).getText(), BORDER + BUTTON_BAR_WIDTH / 2
+                            - g2.getFontMetrics().stringWidth(buttons.get(i).getText()) / 2,
+                            BUTTONS_START + i * BUTTON_HEIGHT + i * BUTTON_BORDER + BUTTON_HEIGHT
+                                    / 2 + g2.getFontMetrics().getHeight() / 2
                                     + g2.getFontMetrics().getDescent() / 2);
                     g2.setColor(Color.BLACK);
-                    g2.drawLine(BORDER, BUTTONS_START + (i + 1)
-                            * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER,
-                            BORDER + BUTTON_BAR_WIDTH, BUTTONS_START + (i + 1)
-                                    * (BUTTON_HEIGHT + BUTTON_BORDER)
-                                    + BUTTON_BORDER);
+                    g2.drawLine(BORDER, BUTTONS_START + (i + 1) * (BUTTON_HEIGHT + BUTTON_BORDER)
+                            + BUTTON_BORDER, BORDER + BUTTON_BAR_WIDTH, BUTTONS_START + (i + 1)
+                            * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER);
                 }
                 
                 g2.setColor(lcarsColour);
@@ -527,29 +492,21 @@ public class LCARSFrame extends JFrame {
             }
             
             // Plot the title bar and print the title.
-            g2
-                    .fillArc(BORDER, BORDER, CIRCLE_DIAMETER, CIRCLE_DIAMETER,
-                            0, 360);
-            g2.fillRect(BORDER + CIRCLE_RADIUS, BORDER, getWidth() - 2 * BORDER
-                    - CIRCLE_DIAMETER, TITLE_BAR_HEIGHT);
-            g2.fillArc(getWidth() - BORDER - CIRCLE_DIAMETER, BORDER,
-                    CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 360);
+            g2.fillArc(BORDER, BORDER, CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 360);
+            g2.fillRect(BORDER + CIRCLE_RADIUS, BORDER, getWidth() - 2 * BORDER - CIRCLE_DIAMETER,
+                    TITLE_BAR_HEIGHT);
+            g2.fillArc(getWidth() - BORDER - CIRCLE_DIAMETER, BORDER, CIRCLE_DIAMETER,
+                    CIRCLE_DIAMETER, 0, 360);
             g2.setColor(titleColour);
             g2.setFont(TITLE_FONT);
-            g2.drawString(LCARSFrame.this.getTitle(), BORDER
-                    + BUTTON_BAR_WIDTH
-                    + CIRCLE_RADIUS
-                    + (getWidth() - CIRCLE_RADIUS - 2 * BORDER
-                            - BUTTON_BAR_WIDTH - CIRCLE_RADIUS)
-                    / 2
-                    - g2.getFontMetrics().stringWidth(
-                            LCARSFrame.this.getTitle()) / 2, BORDER
+            g2.drawString(LCARSFrame.this.getTitle(), BORDER + BUTTON_BAR_WIDTH + CIRCLE_RADIUS
+                    + (getWidth() - CIRCLE_RADIUS - 2 * BORDER - BUTTON_BAR_WIDTH - CIRCLE_RADIUS)
+                    / 2 - g2.getFontMetrics().stringWidth(LCARSFrame.this.getTitle()) / 2, BORDER
                     + g2.getFontMetrics().getHeight()
                     - 2
                     * g2.getFontMetrics().getDescent()
                     + Math.abs(g2.getFontMetrics().getHeight() - 2
-                            * g2.getFontMetrics().getDescent()
-                            - TITLE_BAR_HEIGHT) / 2);
+                            * g2.getFontMetrics().getDescent() - TITLE_BAR_HEIGHT) / 2);
             g2.setColor(lcarsColour);
             
             // Reset colour and font to original values.
@@ -559,26 +516,24 @@ public class LCARSFrame extends JFrame {
         
         private Rectangle getButtonShape(int index) {
             Rectangle rect = new Rectangle(BORDER, getButtonsStart() + index
-                    * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER,
-                    BUTTON_BAR_WIDTH, BUTTON_HEIGHT + BUTTON_BORDER);
+                    * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER, BUTTON_BAR_WIDTH,
+                    BUTTON_HEIGHT + BUTTON_BORDER);
             return rect;
         }
         
         private int getButtonsStart() {
-            return CIRCLE_RADIUS
-                    + (getHeight() / 2)
-                    - (getButtonCount() * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER)
-                    / 2;
+            return CIRCLE_RADIUS + (getHeight() / 2)
+                    - (getButtonCount() * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER) / 2;
         }
         
         private boolean isHover(int buttonsStart, int index) {
             
             if (mouseX > BORDER
                     && mouseX < BORDER + BUTTON_BAR_WIDTH
-                    && mouseY > buttonsStart + index
-                            * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER
-                    && mouseY < buttonsStart + (index + 1)
-                            * (BUTTON_HEIGHT + BUTTON_BORDER) + BUTTON_BORDER) {
+                    && mouseY > buttonsStart + index * (BUTTON_HEIGHT + BUTTON_BORDER)
+                            + BUTTON_BORDER
+                    && mouseY < buttonsStart + (index + 1) * (BUTTON_HEIGHT + BUTTON_BORDER)
+                            + BUTTON_BORDER) {
                 return true;
             } else {
                 return false;

@@ -1,9 +1,9 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -235,6 +235,11 @@ public class Plot2D extends JPanel {
      * {@link Drawable}s are determined via the {@link Drawable#getBounds()} methods. If there
      * currently are no drawables to display or the only drawable object is a singular point the
      * default range as specified in the constructor call is displayed.
+     * <p>
+     * If the used coordinate axes use a border at the edge of the plot where nothing is painted if
+     * the plot is autoranged one call to this method may not achieve this totally because after an
+     * autorange the positions of the axes may change. This can at the moment only be curcumvented
+     * by another subsequent call to autorange <emph>after</emph> the plot has been repainted.
      */
     public void autorange() {
         double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
@@ -297,12 +302,48 @@ public class Plot2D extends JPanel {
             maxY = DEFAULT_MAX_Y;
         }
         
-        // Zoom out an additional 10% to make things near the border better visible.
-        double rangeX = maxX - minX, rangeY = maxY - minY;
-        minX -= 0.1 * rangeX;
-        maxX += 0.1 * rangeX;
-        minY -= 0.1 * rangeY;
-        maxY += 0.1 * rangeY;
+        setRange(minX, maxX, minY, maxY);
+        
+        // Respect the offset for coordinate axes (if any).
+        int left = 0, right = 0, top = 0, bottom = 0;
+        
+        for (Drawable d : drawables) {
+            
+            if (d instanceof CoordinateAxis) {
+                CoordinateAxis c = (CoordinateAxis) d;
+                
+                if (c.getLeftOffset() > left) {
+                    left = c.getLeftOffset();
+                }
+                
+                if (c.getRightOffset() > right) {
+                    right = c.getRightOffset();
+                }
+                
+                if (c.getTopOffset() > top) {
+                    top = c.getTopOffset();
+                }
+                
+                if (c.getBottomOffset() > bottom) {
+                    bottom = c.getBottomOffset();
+                }
+            }
+        }
+        
+        if (left != 0 || right != 0) {
+            double factor = (left + right) / (double) (transformer.getScreenWidth() - left - right);
+            double range = maxX - minX;
+            maxX += factor * (right / (double) (left + right)) * range;
+            minX -= factor * (left / (double) (left + right)) * range;
+        }
+        
+        if (top != 0 || bottom != 0) {
+            double factor = (top + bottom)
+                    / (double) (transformer.getScreenHeight() - top - bottom);
+            double range = maxY - minY;
+            maxY += factor * (top / (double) (top + bottom)) * range;
+            minY -= factor * (bottom / (double) (top + bottom)) * range;
+        }
         
         setRange(minX, maxX, minY, maxY);
     }

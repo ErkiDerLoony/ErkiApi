@@ -1,9 +1,9 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -29,6 +29,10 @@ public class MathUtil {
     /** Used to compare two double values. */
     private static final double EPSILON = 1e-5;
     
+    /** As this is a static helper class it must not be instanciated. */
+    private MathUtil() {
+    }
+    
     /**
      * Round double values to a specified number of significant digits.
      * 
@@ -42,6 +46,20 @@ public class MathUtil {
     public static double round(double value, int significantDigits) {
         return Math.round(value * Math.pow(10, significantDigits))
                 / Math.pow(10, significantDigits);
+    }
+    
+    /**
+     * Round a {@code value} to the next occurrance of {@code step}. For example if {@code step ==
+     * 0.5} then {@code 1.2} is rounded to {@code 1.0} and {@code 1.3} is rounded to {@code 1.5}.
+     * 
+     * @param value
+     *        The value to round.
+     * @param step
+     *        The stepping to which the value is to be rounded.
+     * @return {@code ((int) (value / step)) * step}.
+     */
+    public static double round(double value, double step) {
+        return ((int) (value / step)) * step;
     }
     
     /**

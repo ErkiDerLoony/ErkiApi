@@ -1,9 +1,9 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -54,6 +54,8 @@ public class BasicStyleProvider implements StyleProvider {
         
         // Coordinate axes properties
         addMapping(new StylePropertyKey<Color>("AXES_COLOR"), new StyleProperty<Color>(Color.BLACK));
+        addMapping(new StylePropertyKey<Color>("AXES_FAINT_COLOR"), new StyleProperty<Color>(
+                Color.LIGHT_GRAY));
         addMapping(new StylePropertyKey<Stroke>("AXES_STROKE"), new StyleProperty<Stroke>(
                 new BasicStroke(1.25f)));
         addMapping(new StylePropertyKey<Integer>("AXES_ARROW_OFFSET"), new StyleProperty<Integer>(

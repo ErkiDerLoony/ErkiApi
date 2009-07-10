@@ -1,3 +1,20 @@
+/*
+ * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * 
+ * This file is part of Erki’s API.
+ * 
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
 package erki.api.plot.drawables;
 
 import java.awt.Color;
@@ -24,13 +41,13 @@ import erki.api.util.MathUtil;
  */
 public class LineAxes extends StyledDrawable {
     
-    public LineAxes(StyleProvider styleProvider) {
-        super(styleProvider);
-    }
-    
     private double[] steps = { 0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005, 0.001, 0.0025,
             0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0, 25.0, 50.0, 100.0,
             250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0 };
+    
+    public LineAxes(StyleProvider styleProvider) {
+        super(styleProvider);
+    }
     
     @Override
     public void draw(Graphics2D g2, CoordinateTransformer transformer) {

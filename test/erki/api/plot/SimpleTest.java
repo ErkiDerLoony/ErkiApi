@@ -1,9 +1,9 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.logging.Level;
 
 import javax.swing.JFrame;
@@ -31,8 +32,9 @@ import erki.api.plot.action.AutoRange;
 import erki.api.plot.action.Move;
 import erki.api.plot.action.PopupMenu;
 import erki.api.plot.action.Zoom;
+import erki.api.plot.drawables.BoxAxes;
 import erki.api.plot.drawables.ColouredCirclePoint;
-import erki.api.plot.drawables.LineAxes;
+import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
@@ -51,7 +53,7 @@ public class SimpleTest {
         
         final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
         final StyleProvider styleProvider = new BasicStyleProvider();
-        plot.add(new LineAxes(styleProvider));
+        plot.add(new BoxAxes(styleProvider));
         plot.add(new Move(MouseEvent.BUTTON1));
         plot.add(new Zoom());
         PopupMenu menu = new PopupMenu();
@@ -62,15 +64,24 @@ public class SimpleTest {
         
         plot.addMouseListener(new MouseAdapter() {
             
+            private Point2D.Double from = null;
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 
                 if (e.getButton() == MouseEvent.BUTTON2) {
-                    plot.add(new ColouredCirclePoint(plot.getCoordinateTransformer()
-                            .getCarthesianCoordinates(new Point(e.getX(), e.getY())), new Color(
-                            (int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math
-                                    .random() * 256)), styleProvider));
+                    Point2D.Double to = plot.getCoordinateTransformer().getCarthesianCoordinates(
+                            new Point(e.getX(), e.getY()));
+                    Color colour = new Color((int) (Math.random() * 256),
+                            (int) (Math.random() * 256), (int) (Math.random() * 256));
+                    plot.add(new ColouredCirclePoint(to, colour, styleProvider));
+                    
+                    if (from != null) {
+                        plot.add(new DrawableLine(from, to, colour, styleProvider));
+                    }
+                    
+                    from = to;
                 }
             }
         });

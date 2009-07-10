@@ -1,9 +1,9 @@
 /*
  * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -68,21 +68,18 @@ public abstract class StyledDrawable implements Drawable {
     }
     
     /**
-     * Used by {@link Plot2D} to check if the current {@link StyleProvider} can
-     * actually provide for all the needed style properties for this drawable
-     * object. No style property that is not contained in the returned
-     * collection may be requested from the {@code StyleProvider} in the
+     * Used by {@link Plot2D} to check if the current {@link StyleProvider} can actually provide for
+     * all the needed style properties for this drawable object. No style property that is not
+     * contained in the returned collection may be requested from the {@code StyleProvider} in the
      * {@link #draw(Graphics2D, CoordinateTransformer, StyleProvider)} method.
      * <p>
-     * The {@code StylePropertyKey}s contained in the returned {@code Set} are
-     * used for error messages if any necessary style property cannot be
-     * provided by the current {@code StyleProvider} an hence it might be useful
-     * if those {@code StylePropertyKey}s contained a description (see
-     * {@link StylePropertyKey#StylePropertyKey(String, String)}).
+     * The {@code StylePropertyKey}s contained in the returned {@code Set} are used for error
+     * messages if any necessary style property cannot be provided by the current {@code
+     * StyleProvider} an hence it might be useful if those {@code StylePropertyKey}s contained a
+     * description (see {@link StylePropertyKey#StylePropertyKey(String, String)}).
      * 
-     * @return A {@link Set} of {@link StylePropertyKey}s that contains all the
-     *         needed style properties of this drawable object or {@code null}
-     *         if no styles are needed.
+     * @return A {@link Set} of {@link StylePropertyKey}s that contains all the needed style
+     *         properties of this drawable object or {@code null} if no styles are needed.
      */
     public abstract Set<StylePropertyKey<?>> getNecessaryStyleProperties();
 }
