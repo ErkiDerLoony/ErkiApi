@@ -25,12 +25,10 @@ import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import erki.api.plot.action.Action;
 import erki.api.plot.drawables.Drawable;
@@ -237,157 +235,117 @@ public class Plot2D extends JPanel {
      * {@link Drawable}s are determined via the {@link Drawable#getBounds()} methods. If there
      * currently are no drawables to display or the only drawable object is a singular point the
      * default range as specified in the constructor call is displayed.
+     * <p>
+     * If the used coordinate axes use a border at the edge of the plot where nothing is painted if
+     * the plot is autoranged one call to this method may not achieve this totally because after an
+     * autorange the positions of the axes may change. This can at the moment only be curcumvented
+     * by another subsequent call to autorange <emph>after</emph> the plot has been repainted.
      */
     public void autorange() {
+        double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
         
-        /*
-         * This new thread is needed because autorange has in fact to be run two times (see below)
-         * and after the first time has to call SwingUtilities.invokeAndWait() to wait for a repaint
-         * which is not allowed from within the awt EventDispatcherThread. The call of this method
-         * on the other hand is often executed from within the EventDispatcherThread (e.g. the
-         * AutoRange action).
-         */
-        new Thread("AutorangeThread") {
+        // Zoom to default values if there are no drawable objects.
+        if (drawables.isEmpty()) {
+            setRange(DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y, DEFAULT_MAX_Y);
+            return;
+        }
+        
+        for (Drawable d : drawables) {
+            Rectangle2D.Double bounds = d.getBounds();
             
-            @Override
-            public void run() {
+            if (bounds == null) {
+                continue;
+            }
+            
+            if (bounds.x < minX) {
+                minX = bounds.x;
+            }
+            
+            if (bounds.y < minY) {
+                minY = bounds.y;
+            }
+            
+            if (bounds.x + bounds.width > maxX) {
+                maxX = bounds.x + bounds.width;
+            }
+            
+            if (bounds.y + bounds.height > maxY) {
+                maxY = bounds.y + bounds.height;
+            }
+        }
+        
+        if (MathUtil.equals(minX, Double.MAX_VALUE)) {
+            minX = DEFAULT_MIN_X;
+        }
+        
+        if (MathUtil.equals(maxX, Double.MIN_VALUE)) {
+            maxX = DEFAULT_MAX_X;
+        }
+        
+        if (MathUtil.equals(minY, Double.MAX_VALUE)) {
+            minY = DEFAULT_MIN_Y;
+        }
+        
+        if (MathUtil.equals(maxY, Double.MIN_VALUE)) {
+            maxY = DEFAULT_MAX_Y;
+        }
+        
+        // Prevent zooming to one singular point if there is only one point in
+        // the list of drawables.
+        if (MathUtil.equals(minX, maxX)) {
+            minX = DEFAULT_MIN_X;
+            maxX = DEFAULT_MAX_X;
+        }
+        
+        if (MathUtil.equals(minY, maxY)) {
+            minY = DEFAULT_MIN_Y;
+            maxY = DEFAULT_MAX_Y;
+        }
+        
+        setRange(minX, maxX, minY, maxY);
+        
+        // Respect the offset for coordinate axes (if any).
+        int left = 0, right = 0, top = 0, bottom = 0;
+        
+        for (Drawable d : drawables) {
+            
+            if (d instanceof CoordinateAxis) {
+                CoordinateAxis c = (CoordinateAxis) d;
                 
-                /*
-                 * If saving space for coordinate axes the needed space may change after the first
-                 * resize because the tick labels of the y-axis may change. I can’t think of another
-                 * way than another resize to fix this. The effect could of course happen multiple
-                 * times but I think repainting once is enough overhead.
-                 */
-                for (int i = 0; i < 2; i++) {
-                    double minX = Double.MAX_VALUE, maxX = Double.MIN_VALUE, minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
-                    
-                    // Zoom to default values if there are no drawable objects.
-                    if (drawables.isEmpty()) {
-                        setRange(DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y, DEFAULT_MAX_Y);
-                        return;
-                    }
-                    
-                    for (Drawable d : drawables) {
-                        Rectangle2D.Double bounds = d.getBounds();
-                        
-                        if (bounds == null) {
-                            continue;
-                        }
-                        
-                        if (bounds.x < minX) {
-                            minX = bounds.x;
-                        }
-                        
-                        if (bounds.y < minY) {
-                            minY = bounds.y;
-                        }
-                        
-                        if (bounds.x + bounds.width > maxX) {
-                            maxX = bounds.x + bounds.width;
-                        }
-                        
-                        if (bounds.y + bounds.height > maxY) {
-                            maxY = bounds.y + bounds.height;
-                        }
-                    }
-                    
-                    if (MathUtil.equals(minX, Double.MAX_VALUE)) {
-                        minX = DEFAULT_MIN_X;
-                    }
-                    
-                    if (MathUtil.equals(maxX, Double.MIN_VALUE)) {
-                        maxX = DEFAULT_MAX_X;
-                    }
-                    
-                    if (MathUtil.equals(minY, Double.MAX_VALUE)) {
-                        minY = DEFAULT_MIN_Y;
-                    }
-                    
-                    if (MathUtil.equals(maxY, Double.MIN_VALUE)) {
-                        maxY = DEFAULT_MAX_Y;
-                    }
-                    
-                    // Prevent zooming to one singular point if there is only one point in
-                    // the list of drawables.
-                    if (MathUtil.equals(minX, maxX)) {
-                        minX = DEFAULT_MIN_X;
-                        maxX = DEFAULT_MAX_X;
-                    }
-                    
-                    if (MathUtil.equals(minY, maxY)) {
-                        minY = DEFAULT_MIN_Y;
-                        maxY = DEFAULT_MAX_Y;
-                    }
-                    
-                    setRange(minX, maxX, minY, maxY);
-                    
-                    // Respect the offset for coordinate axes (if any).
-                    int left = 0, right = 0, top = 0, bottom = 0;
-                    
-                    for (Drawable d : drawables) {
-                        
-                        if (d instanceof CoordinateAxis) {
-                            CoordinateAxis c = (CoordinateAxis) d;
-                            
-                            if (c.getLeftOffset() > left) {
-                                left = c.getLeftOffset();
-                            }
-                            
-                            if (c.getRightOffset() > right) {
-                                right = c.getRightOffset();
-                            }
-                            
-                            if (c.getTopOffset() > top) {
-                                top = c.getTopOffset();
-                            }
-                            
-                            if (c.getBottomOffset() > bottom) {
-                                bottom = c.getBottomOffset();
-                            }
-                        }
-                    }
-                    
-                    if (left != 0 || right != 0) {
-                        double factor = (left + right)
-                                / (double) (transformer.getScreenWidth() - left - right);
-                        double range = maxX - minX;
-                        maxX += factor * (right / (double) (left + right)) * range;
-                        minX -= factor * (left / (double) (left + right)) * range;
-                    }
-                    
-                    if (top != 0 || bottom != 0) {
-                        double factor = (top + bottom)
-                                / (double) (transformer.getScreenHeight() - top - bottom);
-                        double range = maxY - minY;
-                        maxY += factor * (top / (double) (top + bottom)) * range;
-                        minY -= factor * (bottom / (double) (top + bottom)) * range;
-                    }
-                    
-                    // After the repaint this setRange causes the y-axis may be at a different
-                    // position
-                    // because of now wider or smaller tick labels. This can only be compensated by
-                    // another
-                    // resize, can’t it?
-                    setRange(minX, maxX, minY, maxY);
-                    
-                    try {
-                        
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                repaint();
-                            }
-                        });
-                        
-                    } catch (InterruptedException e) {
-                        throw new Error("Very fatal error!", e);
-                    } catch (InvocationTargetException e) {
-                        throw new Error("Very fatal error!", e);
-                    }
+                if (c.getLeftOffset() > left) {
+                    left = c.getLeftOffset();
+                }
+                
+                if (c.getRightOffset() > right) {
+                    right = c.getRightOffset();
+                }
+                
+                if (c.getTopOffset() > top) {
+                    top = c.getTopOffset();
+                }
+                
+                if (c.getBottomOffset() > bottom) {
+                    bottom = c.getBottomOffset();
                 }
             }
-        }.start();
+        }
+        
+        if (left != 0 || right != 0) {
+            double factor = (left + right) / (double) (transformer.getScreenWidth() - left - right);
+            double range = maxX - minX;
+            maxX += factor * (right / (double) (left + right)) * range;
+            minX -= factor * (left / (double) (left + right)) * range;
+        }
+        
+        if (top != 0 || bottom != 0) {
+            double factor = (top + bottom)
+                    / (double) (transformer.getScreenHeight() - top - bottom);
+            double range = maxY - minY;
+            maxY += factor * (top / (double) (top + bottom)) * range;
+            minY -= factor * (bottom / (double) (top + bottom)) * range;
+        }
+        
+        setRange(minX, maxX, minY, maxY);
     }
     
     @Override
