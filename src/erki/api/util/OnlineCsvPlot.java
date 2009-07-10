@@ -43,7 +43,7 @@ public class OnlineCsvPlot {
         
         for (int i = 0; i < args.length; i++) {
             final String filename = args[i];
-            final TimeSeries series = new TimeSeries(colours[i], false, styleProvider);
+            final TimeSeries series = new TimeSeries(colours[i], false);
             plot.add(series);
             
             new Thread(filename) {

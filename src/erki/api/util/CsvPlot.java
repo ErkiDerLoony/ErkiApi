@@ -66,7 +66,7 @@ public class CsvPlot {
             try {
                 BufferedReader fileIn = new BufferedReader(new FileReader(arg));
                 
-                TimeSeries timeSeries = new TimeSeries(colours[counter++], false, styleProvider);
+                TimeSeries timeSeries = new TimeSeries(colours[counter++], false);
                 plot.add(timeSeries);
                 String line;
                 

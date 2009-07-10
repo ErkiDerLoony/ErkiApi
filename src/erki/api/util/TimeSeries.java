@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 import erki.api.plot.CoordinateTransformer;
 import erki.api.plot.drawables.Drawable;
-import erki.api.plot.style.StyleProvider;
 
 public class TimeSeries implements Drawable {
     
@@ -21,8 +20,11 @@ public class TimeSeries implements Drawable {
     
     private double min, max, mean, std;
     
-    public TimeSeries(Color lineColour, boolean drawPoints, StyleProvider styleProvider) {
+    private boolean calcMeasures;
+    
+    public TimeSeries(Color lineColour, boolean calcMeasures) {
         this.lineColour = lineColour;
+        this.calcMeasures = calcMeasures;
     }
     
     public void add(double x, double y) {
@@ -32,7 +34,10 @@ public class TimeSeries implements Drawable {
         }
         
         mapping.put(x, y);
-        recalculateMeasures();
+        
+        if (calcMeasures) {
+            recalculateMeasures();
+        }
     }
     
     private void recalculateMeasures() {
