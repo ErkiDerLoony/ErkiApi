@@ -1,6 +1,5 @@
 package erki.api.plot;
 
-
 /**
  * Implemented by coordinate axes that require {@link Plot2D#autorange()} to leave an empty area at
  * the edge of the plot where only the coordinate axes are drawn.

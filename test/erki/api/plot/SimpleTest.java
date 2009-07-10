@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.logging.Level;
 
 import javax.swing.JFrame;
@@ -31,8 +32,9 @@ import erki.api.plot.action.AutoRange;
 import erki.api.plot.action.Move;
 import erki.api.plot.action.PopupMenu;
 import erki.api.plot.action.Zoom;
-import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.BoxAxes;
+import erki.api.plot.drawables.ColouredCirclePoint;
+import erki.api.plot.drawables.DrawableLine;
 import erki.api.plot.style.BasicStyleProvider;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
@@ -62,15 +64,24 @@ public class SimpleTest {
         
         plot.addMouseListener(new MouseAdapter() {
             
+            private Point2D.Double from = null;
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 
                 if (e.getButton() == MouseEvent.BUTTON2) {
-                    plot.add(new ColouredCirclePoint(plot.getCoordinateTransformer()
-                            .getCarthesianCoordinates(new Point(e.getX(), e.getY())), new Color(
-                            (int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math
-                                    .random() * 256)), styleProvider));
+                    Point2D.Double to = plot.getCoordinateTransformer().getCarthesianCoordinates(
+                            new Point(e.getX(), e.getY()));
+                    Color colour = new Color((int) (Math.random() * 256),
+                            (int) (Math.random() * 256), (int) (Math.random() * 256));
+                    plot.add(new ColouredCirclePoint(to, colour, styleProvider));
+                    
+                    if (from != null) {
+                        plot.add(new DrawableLine(from, to, colour, styleProvider));
+                    }
+                    
+                    from = to;
                 }
             }
         });

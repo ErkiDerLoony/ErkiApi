@@ -69,7 +69,7 @@ public class BoxAxes extends StyledDrawable implements CoordinateAxis {
         
         // Estimate tick steps
         int xStep = 0, yStep = 0;
-        boolean ticksFit = true;
+        boolean ticksFit = true, hasNegativeYValues = false;
         
         int maxWidth = 0;
         
@@ -128,6 +128,12 @@ public class BoxAxes extends StyledDrawable implements CoordinateAxis {
                 tick = tick.substring(0, tick.length() - 2);
             }
             
+            if (tick.startsWith("-")) {
+                hasNegativeYValues = true;
+            } else {
+                hasNegativeYValues = false;
+            }
+            
             maxWidth = g2.getFontMetrics().stringWidth(tick);
             
             for (double i = MathUtil.round(transformer.getCarthesianCoordinates(
@@ -151,6 +157,10 @@ public class BoxAxes extends StyledDrawable implements CoordinateAxis {
                 
                 if (tick.endsWith(".0")) {
                     tick = tick.substring(0, tick.length() - 2);
+                }
+                
+                if (tick.startsWith("-")) {
+                    hasNegativeYValues = true;
                 }
                 
                 if (g2.getFontMetrics().stringWidth(tick) > maxWidth) {
@@ -230,8 +240,15 @@ public class BoxAxes extends StyledDrawable implements CoordinateAxis {
                 g2.drawLine(p.x - tickOffset, p.y, p.x + tickOffset, p.y);
                 g2.drawLine(transformer.getScreenWidth() - 2 * boxOffset - tickOffset, p.y,
                         transformer.getScreenWidth() - 2 * boxOffset + tickOffset, p.y);
-                g2.drawString(tick, p.x - 2 * tickOffset - maxWidth, (int) (p.y + 0.5
-                        * g2.getFontMetrics().getHeight() - g2.getFontMetrics().getDescent()));
+                
+                if (hasNegativeYValues && !tick.startsWith("-")) {
+                    g2.drawString(tick, p.x - 2 * tickOffset - maxWidth
+                            + g2.getFontMetrics().stringWidth("-"), (int) (p.y + 0.5
+                            * g2.getFontMetrics().getHeight() - g2.getFontMetrics().getDescent()));
+                } else {
+                    g2.drawString(tick, p.x - 2 * tickOffset - maxWidth, (int) (p.y + 0.5
+                            * g2.getFontMetrics().getHeight() - g2.getFontMetrics().getDescent()));
+                }
             }
         }
         
