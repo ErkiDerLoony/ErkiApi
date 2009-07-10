@@ -22,6 +22,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Rectangle2D;
@@ -29,6 +31,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import erki.api.plot.action.Action;
 import erki.api.plot.drawables.Drawable;
@@ -346,6 +349,20 @@ public class Plot2D extends JPanel {
         }
         
         setRange(minX, maxX, minY, maxY);
+        
+        // Autorange again after some delay (when hopefully the awt
+        // EventDispatcherThread has repainted everything and thus the
+        // borders of the axes might have changed.
+        Timer timer = new Timer(500, new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    autorange();
+                }
+            });
+
+        timer.setRepeats(false);
+        timer.start();
     }
     
     @Override
