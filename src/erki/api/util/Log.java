@@ -43,14 +43,7 @@ import java.util.logging.Level;
  * </ul>
  * The special value {@link Level#OFF} turns off all log output so nothing will be printed at all.
  * <p>
- * The translation of the log levels into prefixes for the lines in the log output is not totally
- * consistent with the naming of the enum constants. For example messages of the type
- * {@link Level#FINE} are logged with prefix “DEBUG: ” (note that {@link #debug(String)} redirects
- * to {@link #fine(String)}). Java exceptions logged either via {@link #error(Throwable)} or
- * {@link #severe(Throwable)} are prefixed with “ERROR: ” while other errors logged either via
- * {@link #error(String)} or {@link #severe(String)} are prefixed with “SEVERE: ”. This behaviour is
- * intended to be able to distinguish between these two conditions but this may change in future
- * versions of this class.
+ * This class provides some additional methods
  * <p>
  * An example: If the global log level is {@link Level#INFO} and no class specific log levels have
  * been defined all messages with log levels CONFIG, FINE, FINER and FINEST will be discarded and
@@ -86,13 +79,14 @@ public class Log {
     /**
      * Compute whether or not a message of a given level is loggable for a specific class.
      * 
-     * @param classname
-     *        The fully qualified class name of the class that wants to print something to the log.
+     * @param e
+     *        Describes the class that wants to print something to the log.
      * @param level
      *        The log level of the information to be printed.
      * @return {@code true} if the class is allowed to print the message, {@code false} otherwise.
      */
-    private static boolean isLoggable(String classname, Level level) {
+    private static boolean isLoggable(StackTraceElement e, Level level) {
+        String classname = e.getClassName().replaceAll("\\$", ".");
         
         if (mapping.containsKey(classname)) {
             Level bound = mapping.get(classname);
@@ -114,6 +108,18 @@ public class Log {
     }
     
     /**
+     * Formats the information contained in a {@link StackTraceElement} for output in the log.
+     * 
+     * @param e
+     *        A {@link StackTraceElement} with the necessary information.
+     * @return A string that describes class, method and file where the log event occurred.
+     */
+    private static String getSrc(StackTraceElement e) {
+        return e.getClassName() + "." + e.getMethodName() + "(" + e.getFileName() + ":"
+                + e.getLineNumber() + ")";
+    }
+    
+    /**
      * Print debug information to the log file. The message is only actually printed to the current
      * handler if the log level is at most {@link Level#FINE}.
      * 
@@ -123,14 +129,26 @@ public class Log {
     public static void fine(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINE)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "DEBUG: ");
+        if (isLoggable(e, Level.FINE)) {
+            log(getSrc(e), line, "FINE: ");
         }
     }
     
-    /** See {@link #fine(String)}. */
+    /**
+     * Print debug information to the log file. In contrast to {@link #fine(String)} the prefix of
+     * the log entry is “DEBUG” in this case. The message is only actually printed to the current
+     * handler if the log level is at most {@link Level#FINE}.
+     * 
+     * @param line
+     *        The line of text to log.
+     * @see #fine(String)
+     */
     public static void debug(String line) {
-        fine(line);
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e, Level.FINE)) {
+            log(getSrc(e), line, "DEBUG: ");
+        }
     }
     
     /**
@@ -143,8 +161,8 @@ public class Log {
     public static void finer(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "FINER: ");
+        if (isLoggable(e, Level.FINER)) {
+            log(getSrc(e), line, "FINER: ");
         }
     }
     
@@ -158,15 +176,14 @@ public class Log {
     public static void finest(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "FINEST: ");
+        if (isLoggable(e, Level.FINEST)) {
+            log(getSrc(e), line, "FINEST: ");
         }
     }
     
     /**
-     * Logs a message. The message is only actually printed to the current handler if the log level
-     * is at most {@link Level#CONFIG}. It has no prefix (like FINE, INFO etc.) in the resulting log
-     * output.
+     * Logs a message about the configuration of a program. The message is only actually printed to
+     * the current handler if the log level is at most {@link Level#CONFIG}.
      * 
      * @param line
      *        The line of text to log.
@@ -174,8 +191,8 @@ public class Log {
     public static void config(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.CONFIG)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "");
+        if (isLoggable(e, Level.CONFIG)) {
+            log(getSrc(e), line, "CONFIG: ");
         }
     }
     
@@ -189,8 +206,8 @@ public class Log {
     public static void info(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.INFO)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "INFO: ");
+        if (isLoggable(e, Level.INFO)) {
+            log(getSrc(e), line, "INFO: ");
         }
     }
     
@@ -204,8 +221,8 @@ public class Log {
     public static void warning(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.WARNING)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "WARNING: ");
+        if (isLoggable(e, Level.WARNING)) {
+            log(getSrc(e), line, "WARNING: ");
         }
     }
     
@@ -221,20 +238,35 @@ public class Log {
     public static void error(Throwable error) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.SEVERE)) {
-            log(e.getClassName() + "." + e.getMethodName(), error.toString(), "ERROR: ");
+        if (isLoggable(e, Level.SEVERE)) {
+            log(getSrc(e), error.toString(), "ERROR: ");
             
             for (StackTraceElement s : error.getStackTrace()) {
-                log(e.getClassName() + "." + e.getMethodName(), "\tat " + s.toString(), "ERROR: ");
+                log(getSrc(e), "\tat " + s.toString(), "ERROR: ");
             }
             
             logCause(error.getCause(), e);
         }
     }
     
-    /** See {@link #error(Throwable)}. */
+    /**
+     * This is the same as {@link #error(Throwable)} except that the prefix of the log entry is
+     * “SEVERE” in this case rather than “ERROR”.
+     * 
+     * @see #error(Throwable)
+     */
     public static void severe(Throwable error) {
-        error(error);
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e, Level.SEVERE)) {
+            log(getSrc(e), error.toString(), "SEVERE: ");
+            
+            for (StackTraceElement s : error.getStackTrace()) {
+                log(getSrc(e), "\tat " + s.toString(), "SEVERE: ");
+            }
+            
+            logCause(error.getCause(), e);
+        }
     }
     
     /**
@@ -250,12 +282,10 @@ public class Log {
     private static void logCause(Throwable cause, StackTraceElement source) {
         
         if (cause != null) {
-            log(source.getClassName() + "." + source.getMethodName(), "Caused by: "
-                    + cause.toString(), "ERROR: ");
+            log(getSrc(source), "Caused by: " + cause.toString(), "ERROR: ");
             
             for (StackTraceElement s : cause.getStackTrace()) {
-                log(source.getClassName() + "." + source.getMethodName(), "\tat " + s.toString(),
-                        "ERROR: ");
+                log(getSrc(source), "\tat " + s.toString(), "ERROR: ");
             }
             
             logCause(cause.getCause(), source);
@@ -272,14 +302,23 @@ public class Log {
     public static void error(String line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName(), Level.SEVERE)) {
-            log(e.getClassName() + "." + e.getMethodName(), line, "SEVERE: ");
+        if (isLoggable(e, Level.SEVERE)) {
+            log(getSrc(e), line, "ERROR: ");
         }
     }
     
-    /** See {@link #error(String)}. */
+    /**
+     * The same as {@link #error(String)} except that the prefix is “SEVERE” in this case rather
+     * than “ERROR”.
+     * 
+     * @see #error(String)
+     */
     public static void severe(String line) {
-        error(line);
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e, Level.SEVERE)) {
+            log(getSrc(e), line, "SEVERE: ");
+        }
     }
     
     /**
