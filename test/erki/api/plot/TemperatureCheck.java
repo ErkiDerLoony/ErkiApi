@@ -23,25 +23,29 @@ import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Random;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import org.jfree.chart.axis.DateAxis;
+
 import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.style.StyleProvider;
+import erki.api.util.RuntimeUtil;
 
-public class AdvancedTest {
+public class TemperatureCheck {
     
     private static boolean killed = false;
     
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Test");
+        JFrame frame = new JFrame("Temperature check");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
         
         final Plot2d plot = new Plot2d(new StyleProvider());
+        plot.setDomainAxis(new DateAxis());
         final SlidingWindow window = new SlidingWindow(50);
         plot.add(window);
         cp.add(plot, BorderLayout.CENTER);
@@ -56,18 +60,34 @@ public class AdvancedTest {
             public void run() {
                 super.run();
                 
-                Random random = new Random();
-                int timestamp = 0;
-                
                 while (!killed) {
-                    Point2D.Double newPoint = new Point2D.Double(timestamp,
-                            random.nextGaussian() + 5.0);
-                    window.add(new ColouredCirclePoint(newPoint, new Color(random.nextInt())));
-                    plot.autorange();
-                    timestamp++;
+                    String temp = "";
                     
                     try {
-                        Thread.sleep(333);
+                        temp = RuntimeUtil.getProcessResult(
+                                "cat /proc/acpi/thermal_zone/THRM/temperature").getOutput();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                    
+                    temp = temp.replaceAll("[a-zA-Z: ]", "");
+                    double temperature = 0.0;
+                    
+                    try {
+                        temperature = Double.parseDouble(temp);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                    
+                    Point2D.Double newPoint = new Point2D.Double(System.currentTimeMillis(),
+                            temperature);
+                    window.add(new ColouredCirclePoint(newPoint, Color.BLACK));
+                    plot.autorange();
+                    
+                    try {
+                        Thread.sleep(3333);
                     } catch (InterruptedException e) {
                     }
                 }

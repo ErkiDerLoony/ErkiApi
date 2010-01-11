@@ -38,7 +38,7 @@ import erki.api.util.MathUtil;
  */
 public class CoordinateTransformer {
     
-    private final ValueAxis domainAxis, rangeAxis;
+    private ValueAxis domainAxis, rangeAxis;
     
     private final RenderingInfoAndAutoRangingXYPlot renderingInfoPlot;
     
@@ -136,6 +136,26 @@ public class CoordinateTransformer {
      */
     public double getHeight() {
         return dataArea().getBounds().height;
+    }
+    
+    /**
+     * Change the axis this coordinate transformer uses as the domain axis.
+     * 
+     * @param axis
+     *        The new domain axis. Must not be {@code null}!
+     */
+    public void setDomainAxis(ValueAxis axis) {
+        domainAxis = axis;
+    }
+    
+    /**
+     * Change the axis this coordinate transformer uses as the range axis.
+     * 
+     * @param axis
+     *        The new range axis. Must not be {@code null}!
+     */
+    public void setRangeAxis(ValueAxis axis) {
+        rangeAxis = axis;
     }
     
     /**

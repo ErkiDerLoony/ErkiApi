@@ -38,6 +38,7 @@ import javax.swing.JPopupMenu;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.Range;
 
@@ -276,6 +277,30 @@ public class Plot2d extends JPanel {
     @Override
     public synchronized void addMouseWheelListener(MouseWheelListener l) {
         chartPanel.addMouseWheelListener(l);
+    }
+    
+    /**
+     * Change the domain axis used by this plot. This method also updates the coordinate transformer
+     * of this plot accordingly.
+     * 
+     * @param axis
+     *        The new axis used as domain axis.
+     */
+    public void setDomainAxis(ValueAxis axis) {
+        plot.setDomainAxis(axis);
+        transformer.setDomainAxis(axis);
+    }
+    
+    /**
+     * Change the range axis used by this plot. This method also updates the coordinate transformer
+     * of this plot accordingly.
+     * 
+     * @param axis
+     *        The new axis used as range axis.
+     */
+    public void setRangeAxis(ValueAxis axis) {
+        plot.setRangeAxis(axis);
+        transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis(), plot);
     }
     
     @Override
