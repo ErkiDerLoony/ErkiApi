@@ -48,6 +48,11 @@ public class CommandLineParser {
      * All keys in the returned mapping are <emph>not</emph> stripped of their leading one or two
      * dashes.
      * <p>
+     * A key may be given multiple times on the command line, e.g. to specify multiple files. In
+     * this case the returned mapping will contain <emph>one</emph> key and all the multiple values
+     * in one string separated by null bytes. Thus the multiple values can easily be obtained by
+     * {@code map.get("option").split("\0")}.
+     * <p>
      * After all options a list of e.g. filenames may follow. So if a command line argument does not
      * start with a dash (“-”) where a key is expected the algorithm assumes that the list of
      * options is over a a final list of strings (e.g. filenames) follows. These final list of
@@ -98,14 +103,14 @@ public class CommandLineParser {
                 if (arg.contains("=")) {
                     String k = arg.substring(0, arg.indexOf('='));
                     String v = arg.substring(arg.indexOf('=') + 1);
-                    map.put(k, v);
+                    put(map, k, v);
                 } else {
                     
                     if (args.length == i + 1 || args[i + 1].startsWith("-")
                             || args[i + 1].equals("--")) {
-                        map.put(arg, null);
+                        put(map, arg, null);
                     } else {
-                        map.put(arg, args[i + 1]);
+                        put(map, arg, args[i + 1]);
                         i++;
                     }
                 }
@@ -116,14 +121,14 @@ public class CommandLineParser {
                 if (arg.length() > 2) {
                     String k = arg.substring(0, 2);
                     String v = arg.substring(2);
-                    map.put(k, v);
+                    put(map, k, v);
                 } else {
                     
                     if (args.length == i + 1 || args[i + 1].startsWith("-")
                             || args[i + 1].equals("--")) {
-                        map.put(arg, null);
+                        put(map, arg, null);
                     } else {
-                        map.put(arg, args[i + 1]);
+                        put(map, arg, args[i + 1]);
                         i++;
                     }
                 }
@@ -138,11 +143,23 @@ public class CommandLineParser {
                 }
                 
                 list = list.substring(0, list.length() - 1);
-                map.put(null, list);
+                put(map, null, list);
                 break;
             }
         }
         
         return map;
+    }
+    
+    /**
+     * Checks if {@code key} already exists in the map. If so the value is appended to {@code
+     * map.get(key)} (separated by {@code \0}). Otherwise the mapping {@code key} -> {@code value}
+     * is added to the map.
+     */
+    private static void put(TreeMap<String, String> map, String key, String value) {
+        
+        if (map.containsKey(key)) {
+            map.put(key, map.get(key) + "\0" + value);
+        }
     }
 }
