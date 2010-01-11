@@ -1,5 +1,5 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2010 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
  * This file is part of Erki’s API.
  * 
@@ -17,13 +17,10 @@
 
 package erki.api.plot.mandelbrot;
 
-import java.awt.event.MouseEvent;
-
 import javax.swing.JFrame;
 
-import erki.api.plot.Plot2D;
-import erki.api.plot.action.Move;
-import erki.api.plot.action.Zoom;
+import erki.api.plot.Plot2d;
+import erki.api.plot.style.StyleProvider;
 
 public class SwingUI extends JFrame {
     
@@ -33,9 +30,7 @@ public class SwingUI extends JFrame {
         setTitle("Mandelbrot");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
-        Plot2D plot = new Plot2D(-2, 1, -1, 1);
-        plot.add(new Move(MouseEvent.BUTTON1));
-        plot.add(new Zoom());
+        Plot2d plot = new Plot2d(new StyleProvider());
         plot.add(new Mandelbrot());
         getContentPane().add(plot);
         
