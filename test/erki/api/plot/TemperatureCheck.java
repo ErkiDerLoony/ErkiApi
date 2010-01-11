@@ -46,7 +46,7 @@ public class TemperatureCheck {
         
         final Plot2d plot = new Plot2d(new StyleProvider());
         plot.setDomainAxis(new DateAxis());
-        final SlidingWindow window = new SlidingWindow(50);
+        final SlidingWindow window = new SlidingWindow(600);
         plot.add(window);
         cp.add(plot, BorderLayout.CENTER);
         
@@ -87,7 +87,7 @@ public class TemperatureCheck {
                     plot.autorange();
                     
                     try {
-                        Thread.sleep(3333);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                     }
                 }

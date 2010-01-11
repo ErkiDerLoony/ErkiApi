@@ -34,6 +34,10 @@ public class SlidingWindow implements Drawable {
     
     private Queue<ColouredCirclePoint> window = new ConcurrentLinkedQueue<ColouredCirclePoint>();
     
+    private Queue<ColouredCirclePoint> meanWindow = new ConcurrentLinkedQueue<ColouredCirclePoint>();
+    
+    private Queue<ColouredCirclePoint> meanPoints = new ConcurrentLinkedQueue<ColouredCirclePoint>();
+    
     private int size;
     
     public SlidingWindow(int size) {
@@ -42,9 +46,28 @@ public class SlidingWindow implements Drawable {
     
     public void add(ColouredCirclePoint point) {
         window.offer(point);
+        meanPoints.offer(point);
         
         if (window.size() > size) {
             window.poll();
+        }
+        
+        if (meanPoints.size() > size / 10.0) {
+            meanPoints.poll();
+        }
+        
+        double mean = 0.0;
+        
+        for (ColouredCirclePoint p : meanPoints) {
+            mean += p.getY();
+        }
+        
+        mean /= meanPoints.size();
+        meanWindow.offer(new ColouredCirclePoint(new Point2D.Double(point.getX(), mean),
+                Color.BLACK));
+        
+        if (meanWindow.size() > size) {
+            meanWindow.poll();
         }
     }
     
@@ -53,11 +76,22 @@ public class SlidingWindow implements Drawable {
         ColouredCirclePoint old = null;
         
         for (ColouredCirclePoint point : window) {
-            point.draw(g2, transformer);
             
             if (old != null) {
                 new ColouredLine(new Point2D.Double(old.getX(), old.getY()), new Point2D.Double(
                         point.getX(), point.getY()), Color.BLACK).draw(g2, transformer);
+            }
+            
+            old = point;
+        }
+        
+        old = null;
+        
+        for (ColouredCirclePoint point : meanWindow) {
+            
+            if (old != null) {
+                new ColouredLine(new Point2D.Double(old.getX(), old.getY()), new Point2D.Double(
+                        point.getX(), point.getY()), Color.RED).draw(g2, transformer);
             }
             
             old = point;
@@ -74,6 +108,11 @@ public class SlidingWindow implements Drawable {
             LinkedList<Double> y = new LinkedList<Double>();
             
             for (ColouredCirclePoint p : window) {
+                x.add(p.getX());
+                y.add(p.getY());
+            }
+            
+            for (ColouredCirclePoint p : meanWindow) {
                 x.add(p.getX());
                 y.add(p.getY());
             }
