@@ -98,6 +98,39 @@ public class MathUtil {
     }
     
     /**
+     * Check if a double precision number equals zero. The comparison is done using some epsilon
+     * epsilon environment because of the numeric errors a computer makes.
+     * 
+     * @param number
+     *        The number to test.
+     * @param epsilon
+     *        The epsilon environment to use.
+     * @return {@code true} if {@code number <= epsilon && number >= -epsilon} and {@code false}
+     *         otherwise.
+     */
+    public static boolean isZero(double number, double epsilon) {
+        
+        if (number <= epsilon && number >= -epsilon) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Check if a double precision number equals zero. The comparison is done using the default
+     * epsilon environment {@link #EPSILON}.
+     * 
+     * @param number
+     *        The number to test.
+     * @return The method returns {@link #isZero(double, double)} with {@code number} as first and
+     *         {@link #EPSILON} as second argument.
+     */
+    public static boolean isZero(double number) {
+        return isZero(number, EPSILON);
+    }
+    
+    /**
      * Computes the minimum value of an {@link Iterable} of {@link Comparable} {@link Number}s.
      * 
      * @param <T>
