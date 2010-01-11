@@ -121,6 +121,24 @@ public class CoordinateTransformer {
     }
     
     /**
+     * Access the width of the drawing area.
+     * 
+     * @return The width of the drawing area in pixels.
+     */
+    public double getWidth() {
+        return dataArea().getBounds().width;
+    }
+    
+    /**
+     * Access the height of the drawing area.
+     * 
+     * @return The height of the drawing area in pixels.
+     */
+    public double getHeight() {
+        return dataArea().getBounds().height;
+    }
+    
+    /**
      * Convert java screen coordinates to the math coordinate system.
      * 
      * @param java

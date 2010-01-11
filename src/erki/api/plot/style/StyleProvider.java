@@ -17,6 +17,9 @@
 
 package erki.api.plot.style;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,6 +42,12 @@ public class StyleProvider {
      * needed by custom {@link Drawable}s should ge into subclasses.
      */
     public StyleProvider() {
+        put(new StyleKey<Color>(StyleConstants.PLOT_BACKGROUND_COLOR), Color.WHITE);
+        put(new StyleKey<Boolean>(StyleConstants.GRID_VISIBLE), true);
+        put(new StyleKey<Color>(StyleConstants.GRID_COLOR), Color.GRAY);
+        put(new StyleKey<Stroke>(StyleConstants.GRID_STROKE), new BasicStroke(0.5f,
+                BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f, new float[] { 2.0f, 2.0f }, 0));
+        put(new StyleKey<Boolean>(StyleConstants.ANTIALIASING_ENABLED), true);
     }
     
     /**

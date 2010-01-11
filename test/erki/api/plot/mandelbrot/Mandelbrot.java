@@ -34,10 +34,10 @@ public class Mandelbrot implements Drawable {
     @Override
     public void draw(Graphics2D g2, CoordinateTransformer transformer) {
         
-        for (int x = 0; x < transformer.getScreenWidth(); x++) {
+        for (int x = 0; x < transformer.getWidth(); x++) {
             
-            for (int y = 0; y < transformer.getScreenHeight(); y++) {
-                Point2D.Double p = transformer.getCarthesianCoordinates(new Point(x, y));
+            for (int y = 0; y < transformer.getHeight(); y++) {
+                Point2D.Double p = transformer.getMath(new Point(x, y));
                 Complex c = new Complex(p.getX(), p.getY());
                 Complex z = new Complex(0.0, 0.0);
                 
@@ -55,5 +55,6 @@ public class Mandelbrot implements Drawable {
     @Override
     public Rectangle2D.Double getBounds() {
         return null;
+//        return new Rectangle2D.Double(-2.0, 2.0, 4.0, 4.0);
     }
 }

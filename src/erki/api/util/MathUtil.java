@@ -137,7 +137,8 @@ public class MathUtil {
      *        The actual type of the numbers to compare.
      * @param values
      *        The values to compare.
-     * @return The minimum of all {@code values}.
+     * @return The minimum of all {@code values} or {@code null} if {@code values} is empty or does
+     *         itself equal {@code null}.
      */
     public static <T extends Number & Comparable<T>> T getMin(Iterable<T> values) {
         
@@ -166,7 +167,8 @@ public class MathUtil {
      *        The actual type of the numbers to compare.
      * @param values
      *        The values to compare.
-     * @return The maximum of all {@code values}.
+     * @return The maximum of all {@code values} or {@code null} if {@code values} is empty or
+     *         itself equals {@code null}.
      */
     public static <T extends Number & Comparable<T>> T getMax(Iterable<T> values) {
         

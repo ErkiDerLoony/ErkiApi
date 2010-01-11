@@ -22,6 +22,9 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -65,11 +68,11 @@ public class Plot2d extends JPanel {
     private static final double DEFAULT_MINY = -1.0;
     private static final double DEFAULT_MAXY = 1.0;
     
-    protected LinkedList<Drawable> drawers = new LinkedList<Drawable>();
+    private LinkedList<Drawable> drawers = new LinkedList<Drawable>();
     
-    protected CoordinateTransformer transformer;
+    private CoordinateTransformer transformer;
     
-    protected StyleProvider styleProvider;
+    private StyleProvider styleProvider;
     
     private RenderingInfoAndAutoRangingXYPlot plot;
     
@@ -190,11 +193,7 @@ public class Plot2d extends JPanel {
         
         if (drawer != null) {
             drawers.add(drawer);
-            
-            // rescale axes
-            plot.configureDomainAxes();
-            plot.configureRangeAxes();
-            chartPanel.repaint();
+            autorange();
         }
     }
     
@@ -208,11 +207,7 @@ public class Plot2d extends JPanel {
         
         if (drawers != null) {
             this.drawers.addAll(drawers);
-            
-            // rescale the axes
-            plot.configureDomainAxes();
-            plot.configureRangeAxes();
-            chartPanel.repaint();
+            autorange();
         }
     }
     
@@ -225,12 +220,7 @@ public class Plot2d extends JPanel {
      */
     public boolean remove(Drawable drawer) {
         boolean result = drawers.remove(drawer);
-        
-        // rescale axes
-        plot.getDomainAxis().configure();
-        plot.getRangeAxis().configure();
-        chartPanel.repaint();
-        
+        autorange();
         return result;
     }
     
@@ -245,6 +235,13 @@ public class Plot2d extends JPanel {
         LinkedList<Drawable> copy = new LinkedList<Drawable>();
         copy.addAll(drawers);
         return copy;
+    }
+    
+    /** Cause the plot to recalculate the automatic range of the axes and repaint itself. */
+    public void autorange() {
+        plot.configureDomainAxes();
+        plot.configureRangeAxes();
+        chartPanel.repaint();
     }
     
     /** @return This plot’s CoordinateTransformer. */
@@ -264,6 +261,21 @@ public class Plot2d extends JPanel {
      */
     public RenderingInfoAndAutoRangingXYPlot getPlot() {
         return plot;
+    }
+    
+    @Override
+    public synchronized void addMouseListener(MouseListener l) {
+        chartPanel.addMouseListener(l);
+    }
+    
+    @Override
+    public synchronized void addMouseMotionListener(MouseMotionListener l) {
+        chartPanel.addMouseMotionListener(l);
+    }
+    
+    @Override
+    public synchronized void addMouseWheelListener(MouseWheelListener l) {
+        chartPanel.addMouseWheelListener(l);
     }
     
     @Override

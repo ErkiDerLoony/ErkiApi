@@ -28,14 +28,8 @@ import java.util.logging.Level;
 
 import javax.swing.JFrame;
 
-import erki.api.plot.action.AutoRange;
-import erki.api.plot.action.Move;
-import erki.api.plot.action.PopupMenu;
-import erki.api.plot.action.Zoom;
-import erki.api.plot.drawables.BoxAxes;
 import erki.api.plot.drawables.ColouredCirclePoint;
-import erki.api.plot.drawables.DrawableLine;
-import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.drawables.ColouredLine;
 import erki.api.plot.style.StyleProvider;
 import erki.api.util.Log;
 
@@ -51,15 +45,7 @@ public class SimpleTest {
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
         
-        final Plot2D plot = new Plot2D(0.0, 1.0, 0.0, 1.0);
-        final StyleProvider styleProvider = new BasicStyleProvider();
-        plot.add(new BoxAxes(styleProvider));
-        plot.add(new Move(MouseEvent.BUTTON1));
-        plot.add(new Zoom());
-        PopupMenu menu = new PopupMenu();
-        plot.add(menu);
-        plot.add(new AutoRange(menu.getPopupMenu()));
-        plot.autorange();
+        final Plot2d plot = new Plot2d(new StyleProvider());
         cp.add(plot, BorderLayout.CENTER);
         
         plot.addMouseListener(new MouseAdapter() {
@@ -69,16 +55,17 @@ public class SimpleTest {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
+                System.out.println("Mouse pressed.");
                 
                 if (e.getButton() == MouseEvent.BUTTON2) {
-                    Point2D.Double to = plot.getCoordinateTransformer().getCarthesianCoordinates(
+                    Point2D.Double to = plot.getCoordinateTransformer().getMath(
                             new Point(e.getX(), e.getY()));
                     Color colour = new Color((int) (Math.random() * 256),
                             (int) (Math.random() * 256), (int) (Math.random() * 256));
-                    plot.add(new ColouredCirclePoint(to, colour, styleProvider));
+                    plot.add(new ColouredCirclePoint(to, colour));
                     
                     if (from != null) {
-                        plot.add(new DrawableLine(from, to, colour, styleProvider));
+                        plot.add(new ColouredLine(from, to, colour));
                     }
                     
                     from = to;

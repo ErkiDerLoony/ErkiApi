@@ -18,6 +18,7 @@
 package erki.api.plot;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -26,9 +27,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import erki.api.plot.drawables.CirclePoint;
-import erki.api.plot.drawables.LineAxes;
-import erki.api.plot.style.BasicStyleProvider;
+import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.style.StyleProvider;
 
 public class AdvancedTest {
@@ -42,11 +41,9 @@ public class AdvancedTest {
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
         
-        final Plot2D plot = new Plot2D();
-        final StyleProvider styleProvider = new BasicStyleProvider();
-        final SlidingWindow window = new SlidingWindow(50, styleProvider);
+        final Plot2d plot = new Plot2d(new StyleProvider());
+        final SlidingWindow window = new SlidingWindow(50);
         plot.add(window);
-        plot.add(new LineAxes(styleProvider));
         cp.add(plot, BorderLayout.CENTER);
         
         frame.pack();
@@ -65,9 +62,8 @@ public class AdvancedTest {
                 while (!killed) {
                     Point2D.Double newPoint = new Point2D.Double(timestamp,
                             random.nextGaussian() + 5.0);
-                    window.add(new CirclePoint(newPoint, styleProvider));
+                    window.add(new ColouredCirclePoint(newPoint, new Color(random.nextInt())));
                     plot.autorange();
-                    plot.repaint();
                     timestamp++;
                     
                     try {
