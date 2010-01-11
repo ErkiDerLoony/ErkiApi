@@ -51,12 +51,12 @@ public class SimpleConfig extends Config {
             UnsupportedEncodingException {
         
         // Additionally check if this configuration can store the specified option.
-        if (key.getKey().startsWith("[") && option.toString().endsWith("]")) {
+        if (key.getId().startsWith("[") && option.toString().endsWith("]")) {
             throw new IllegalArgumentException("This implementation cannot store this option "
                     + "because the key starts with ‘[’ and the value ends with ‘]’!");
         }
         
-        if (key.getKey().contains(" = ")) {
+        if (key.getId().contains(" = ")) {
             throw new IllegalArgumentException("This implementation cannot store this option "
                     + "because the key contains the special character sequence “ = ”!");
         }
@@ -138,7 +138,7 @@ public class SimpleConfig extends Config {
             fileOut.println("[" + group + "]");
             
             for (Key<?> key : groups.get(group).keySet()) {
-                fileOut.println(key.getKey() + "<"
+                fileOut.println(key.getId() + "<"
                         + groups.get(group).get(key).get().getClass().getCanonicalName() + "> = "
                         + groups.get(group).get(key).get());
             }

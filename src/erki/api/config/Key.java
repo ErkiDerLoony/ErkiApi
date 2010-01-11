@@ -47,19 +47,13 @@ public final class Key<T> implements Comparable<Key<T>> {
      * 
      * @return The string that identifies this key.
      */
-    public String getKey() {
+    public String getId() {
         return id;
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object other) {
-        
-        if (other instanceof Key && ((Key) other).id.equals(id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return other instanceof Key<?> && ((Key<?>) other).getId().equals(id);
     }
     
     @Override
@@ -69,6 +63,6 @@ public final class Key<T> implements Comparable<Key<T>> {
     
     @Override
     public int compareTo(Key<T> o) {
-        return id.compareTo(o.getKey());
+        return id.compareTo(o.getId());
     }
 }
