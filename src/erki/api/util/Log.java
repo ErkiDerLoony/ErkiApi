@@ -212,6 +212,21 @@ public class Log {
     }
     
     /**
+     * Prints a message to the log without any prefix. The message is only actually printed to the
+     * current handler if the log level is at most {@link Level#INFO}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void print(String line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e, Level.INFO)) {
+            log(getSrc(e), line, "");
+        }
+    }
+    
+    /**
      * Logs a message that is classified as a warning. The message is only actually printed to the
      * current handler if the log level for the logging class is at most {@link Level#WARNING}.
      * 
