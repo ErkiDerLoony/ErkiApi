@@ -46,7 +46,7 @@ public class TemperatureCheck {
         
         final Plot2d plot = new Plot2d(new StyleProvider());
         plot.setDomainAxis(new DateAxis());
-        final SlidingWindow window = new SlidingWindow(600);
+        final SlidingWindow window = new SlidingWindow(3600);
         plot.add(window);
         cp.add(plot, BorderLayout.CENTER);
         
