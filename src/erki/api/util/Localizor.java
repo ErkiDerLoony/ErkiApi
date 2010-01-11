@@ -71,8 +71,7 @@ public class Localizor {
      *         if no mapping file or folder for the requested locale could be found.
      */
     private Localizor(Locale locale) throws LocalizationException {
-        File file = new File(localeRoot.toString() + System.getProperty("file.separator")
-                + locale.toString());
+        File file = new File(localeRoot.toString() + File.separator + locale.toString());
         
         if (file.exists()) {
             readFile(file);
@@ -218,7 +217,8 @@ public class Localizor {
             string = string.replaceAll("\\{\\$" + i + "\\}", params[i]);
         }
         
-        return string == null ? "<BROKEN TRANSLATION FOR KEY “" + id + "”>" : string;
+        return string == null ? "<BROKEN TRANSLATION FOR KEY “" + id + "” in “" + localeRoot + "”>"
+                : string;
     }
     
     /**
