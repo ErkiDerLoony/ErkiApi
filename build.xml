@@ -24,7 +24,7 @@
     </fileset>
   </path>
 
-  <target name="all" depends="clean, jar, jar test, tar"/>
+  <target name="all" depends="clean, jar, jar test, tar, doc"/>
 
   <target name="test" depends="jar, jar test"/>
 
