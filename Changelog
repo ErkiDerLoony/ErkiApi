@@ -1,0 +1,30 @@
+0.0.4
+– Screw the old completely self-written plot api in favour of a more powerful implementation
+  that is based on JFreeChart.
+
+0.0.3
+– Command line parser can now handle list of files at the end.
+– The log level used is now the one from java logging.
+– Added a simple configuration api that stores program settings. It is not yet completely
+  usable but a simple ini-style format is already working.
+– Added a box axis for the plot.
+– Allow the same command line switch to appear more than once and parse the multiple
+  occurrences into a list.
+– The log can now print information without a prefix.
+
+0.0.2
+– Style provider support for the plot api that bundles the configuration of the look and
+  feel of the plot in one (or few) class(es).
+– New coordinate axes that are no longer static but are always displayed at the border of
+  the plot.
+– Zoom and move functionality for the plot.
+– The log automagically determines the source of the log message (kind of a hack) so the
+  source need not be supplied at each call of a log method.
+– Improved command line parser.
+– Add a simple, easy to use sound player to the utilities.
+– Improved localizor. The translations can now also be split into several files.
+
+0.0.1
+– Extended Java Swing to create a look and feel that roughly reminds of the LCARS layout
+  from the various Star Trek series.
+– Various utilities, e.g. Log, CommandLineParser, Localizor.
