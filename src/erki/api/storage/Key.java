@@ -15,30 +15,35 @@
  * not, see <http://www.gnu.org/licenses/>.
  */
 
-package erki.api.config;
+package erki.api.storage;
+
+import java.io.Serializable;
 
 /**
- * A key that can be used to identify a configuration option.
+ * A unique key that is used in {@link Storage} to identify some data object.
  * 
  * @author Edgar Kalkowski
  * @param <T>
- *        The type of the option identified by this key.
+ *        The type of the data object identified by this key.
  */
 /*
- * The generic parameter is not needed by this class but is essential to enforce that only
- * type-fitting pairs of keys and options are stored using the add method in erki.api.config.Config.
+ * The generic parameter T is not needed by this class but is essential to enforce that only
+ * type-fitting pairs of keys and options are stored using the add method in
+ * erki.api.storage.Storage.
  */
-public final class Key<T> implements Comparable<Key<T>> {
+public class Key<T, E extends Enum<E>> implements Comparable<Key<T, E>>, Serializable {
     
-    private final String id;
+    private static final long serialVersionUID = 8367334391369284855L;
+    
+    private final E id;
     
     /**
-     * Create a new key with a unique string identifier.
+     * Create a new key with a unique identifier.
      * 
      * @param id
-     *        The string that uniquely identifies this key.
+     *        The identifier of this key.
      */
-    public Key(String id) {
+    public Key(E id) {
         this.id = id;
     }
     
@@ -47,22 +52,22 @@ public final class Key<T> implements Comparable<Key<T>> {
      * 
      * @return The string that identifies this key.
      */
-    public String getId() {
+    public E getId() {
         return id;
     }
     
     @Override
     public boolean equals(Object other) {
-        return other instanceof Key<?> && ((Key<?>) other).getId().equals(id);
+        return other instanceof Key<?, ?> && ((Key<?, ?>) other).getId().equals(id);
     }
     
     @Override
     public String toString() {
-        return id;
+        return id.toString();
     }
     
     @Override
-    public int compareTo(Key<T> o) {
+    public int compareTo(Key<T, E> o) {
         return id.compareTo(o.getId());
     }
 }
