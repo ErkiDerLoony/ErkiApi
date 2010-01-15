@@ -23,6 +23,10 @@ import java.util.TreeMap;
  * An abstract storage facility that contains some data and persistently backs it to a file. The
  * actual format the data is stored in is specified by the subclasses. The data is accessible via
  * unique instances of {@link Key}.
+ * <p>
+ * Be aware that the backup file is always updated if {@link #save()} is called. If the client
+ * program however changes something about an already stored object later those changes are not
+ * mirrored in the backup file until that object is added again to the storage!
  * 
  * @author Edgar Kalkowski
  * @param <E>
@@ -50,7 +54,8 @@ public abstract class Storage<E extends Enum<E>> {
     }
     
     /**
-     * Add information to this storage facility.
+     * Add information to this storage facility. If it already contains stored information under the
+     * given key that information is overwritten silently.
      * 
      * @param <T>
      *        The type of the new data.
