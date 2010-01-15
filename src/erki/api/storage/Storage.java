@@ -65,6 +65,25 @@ public abstract class Storage<E extends Enum<E>> {
     }
     
     /**
+     * Check if this storage facility contains a value for some specific key.
+     * 
+     * @param <T>
+     *        The data type of the value that shall be requested.
+     * @param key
+     *        The key instance that uniquely identifies the requested value.
+     * @return {@code true} if there is a value stored for the given key, {@code false} otherwise.
+     * @throws NullPointerException
+     *         if the given key is {@code null} and the comparator of the internal map of this
+     *         storage facility does not allow {@code null} as key.
+     * @throws ClassCastException
+     *         if the given key cannot be compared with the keys used in the internal mapping of
+     *         this storage facility.
+     */
+    public <T> boolean contains(Key<T, E> key) {
+        return data.containsKey(key);
+    }
+    
+    /**
      * Access stored information.
      * 
      * @param <T>

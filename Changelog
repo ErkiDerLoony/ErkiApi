@@ -1,7 +1,8 @@
 0.0.4
 – Screw the old completely self-written plot api in favour of a more powerful implementation
   that is based on JFreeChart.
-– Rework configuration api. Now arbitrary (serializable) Java objects can be stored.
+– Rework configuration api. Now arbitrary (serializable) Java objects can be stored either
+  directly as serialized Java objects or xml encoded via the XStream library.
 
 0.0.3
 – Command line parser can now handle list of files at the end.

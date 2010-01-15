@@ -58,7 +58,7 @@ public class RuntimeUtil {
         String stderr = "", stdout = "", line;
         
         while ((line = pin.readLine()) != null) {
-            stdout = line + System.getProperty("line.separator");
+            stdout = stdout + line + System.getProperty("line.separator");
         }
         
         if (stdout.length() > 0) {
@@ -66,7 +66,7 @@ public class RuntimeUtil {
         }
         
         while ((line = perr.readLine()) != null) {
-            stderr = line + System.getProperty("line.separator");
+            stderr = stderr + line + System.getProperty("line.separator");
         }
         
         if (stderr.length() > 0) {
