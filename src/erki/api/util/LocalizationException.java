@@ -25,7 +25,6 @@ package erki.api.util;
  */
 public class LocalizationException extends RuntimeException {
     
-    /** In tribute to the api. */
     private static final long serialVersionUID = 7472689261506022430L;
     
     /**
