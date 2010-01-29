@@ -3,6 +3,9 @@ package erki.api.storage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.TreeMap;
 
 import com.thoughtworks.xstream.XStream;
@@ -34,9 +37,12 @@ public class XmlStorage<E extends Enum<E>> extends Storage<E> {
         try {
             // This cast is safe because this is what’s stored in #save().
             data = (TreeMap<Key<?, E>, Object>) new XStream(new DomDriver())
-                    .fromXML(new FileInputStream(filename));
+                    .fromXML(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
         } catch (FileNotFoundException e) {
             // That’s not too bad because the file will be generated eventually.
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("It seems your system does not support UTF-8 encoding "
+                    + "which is required by this application!", e);
         }
     }
     
@@ -44,9 +50,13 @@ public class XmlStorage<E extends Enum<E>> extends Storage<E> {
     protected void save() {
         
         try {
-            new XStream(new DomDriver()).toXML(data, new FileOutputStream(filename));
+            new XStream(new DomDriver()).toXML(data, new OutputStreamWriter(new FileOutputStream(
+                    filename), "UTF-8"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Could not store data!", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("It seems your system does not support UTF-8 encoding "
+                    + "which is required by this application!", e);
         }
     }
 }
