@@ -151,6 +151,10 @@ public class CommandLineParser {
         return map;
     }
     
+    public static void main(String[] args) {
+        parse(new String[] {"--help"});
+    }
+    
     /**
      * Checks if {@code key} already exists in the map. If so the value is appended to {@code
      * map.get(key)} (separated by {@code \0}). Otherwise the mapping {@code key} -> {@code value}
@@ -160,6 +164,8 @@ public class CommandLineParser {
         
         if (map.containsKey(key)) {
             map.put(key, map.get(key) + "\0" + value);
+        } else {
+            map.put(key, value);
         }
     }
 }
