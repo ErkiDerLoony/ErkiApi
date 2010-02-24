@@ -52,7 +52,7 @@ public class SlidingWindow implements Drawable {
             window.poll();
         }
         
-        if (meanPoints.size() > 300) {
+        if (meanPoints.size() > 30) {
             meanPoints.poll();
         }
         
