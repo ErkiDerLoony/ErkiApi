@@ -77,7 +77,6 @@ public class ExternalDrawerChartPanel extends ChartPanel {
         Locale.setDefault(Locale.ENGLISH);
         localizationResources = ResourceBundleWrapper
                 .getBundle("org.jfree.chart.LocalizationBundle");
-        System.out.println(localizationResources.getLocale());
         setPopupMenu(createPopupMenu(true, true, true, true, true));
     }
     
