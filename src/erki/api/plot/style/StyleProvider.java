@@ -19,6 +19,7 @@ package erki.api.plot.style;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Stroke;
 import java.util.Map;
 import java.util.TreeMap;
@@ -48,6 +49,10 @@ public class StyleProvider {
         put(new StyleKey<Stroke>(StyleConstants.GRID_STROKE), new BasicStroke(0.5f,
                 BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f, new float[] { 2.0f, 2.0f }, 0));
         put(new StyleKey<Boolean>(StyleConstants.ANTIALIASING_ENABLED), true);
+        put(new StyleKey<Font>(StyleConstants.AXES_TICK_FONT), new Font(Font.SANS_SERIF,
+                Font.PLAIN, 12));
+        put(new StyleKey<Color>(StyleConstants.AXES_TICK_FONT_COLOR), Color.BLACK);
+        put(new StyleKey<Color>(StyleConstants.AXES_COLOR), Color.GRAY);
     }
     
     /**

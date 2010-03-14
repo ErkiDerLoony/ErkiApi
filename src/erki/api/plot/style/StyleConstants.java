@@ -18,6 +18,7 @@
 package erki.api.plot.style;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Stroke;
 
 /**
@@ -28,8 +29,6 @@ import java.awt.Stroke;
  * @author Edgar Kalkowski
  */
 public enum StyleConstants {
-    
-    // BEGIN: Basic constants needed by Plot2d.
     
     /** This instance of {@link Color} defines the background colour of the plot. */
     PLOT_BACKGROUND_COLOR,
@@ -56,7 +55,14 @@ public enum StyleConstants {
      * This instance of {@link Boolean} indicates whether or not the plot shall be drawn
      * antialiased. This setting also works for the external drawers that can be added to the plot.
      */
-    ANTIALIASING_ENABLED
-    
-    // END: Basic constants needed by Plot2d.
+    ANTIALIASING_ENABLED,
+
+    /** This {@link Color} is used for the tick labels, e.g. of the {@link StyledNumberAxis}. */
+    AXES_TICK_FONT_COLOR,
+
+    /** This {@link Font} is used for the tick labels, e.g. of the {@link StyledNumberAxis}. */
+    AXES_TICK_FONT,
+
+    /** This {@link Color} is used to draw the coordinate axis, e.g. in {@link StyledNumberAxis}. */
+    AXES_COLOR
 }

@@ -17,6 +17,7 @@
 
 package erki.api.plot;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Paint;
 import java.awt.Stroke;
@@ -49,6 +50,7 @@ import erki.api.plot.pdfexport.SophisticatedPdfExport;
 import erki.api.plot.style.StyleConstants;
 import erki.api.plot.style.StyleKey;
 import erki.api.plot.style.StyleProvider;
+import erki.api.plot.style.StyledNumberAxis;
 
 /**
  * This panel provides a two-dimensional coordinate system and allows for external drawers to draw
@@ -125,16 +127,16 @@ public class Plot2d extends JPanel {
         
         // create JFreeChart with coordinate axes
         plot = new RenderingInfoAndAutoRangingXYPlot(this);
-        NumberAxis domainAxis = new NumberAxis();
-        NumberAxis rangeAxis = new NumberAxis();
-        rangeAxis.setAutoRangeIncludesZero(false);
-        domainAxis.setAutoRangeIncludesZero(false);
-        plot.setDomainAxis(domainAxis);
-        plot.setRangeAxis(rangeAxis);
         JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
         new StandardChartTheme("JFree").apply(chart);
-        plot.setBackgroundPaint(styleProvider.get(new StyleKey<Paint>(
-                StyleConstants.PLOT_BACKGROUND_COLOR)));
+        plot.setDomainAxis(new StyledNumberAxis(styleProvider));
+        plot.setRangeAxis(new StyledNumberAxis(styleProvider));
+        
+        Color backgroundColour = styleProvider.get(new StyleKey<Color>(
+                StyleConstants.PLOT_BACKGROUND_COLOR));
+        chart.setBackgroundPaint(backgroundColour);
+        plot.setBackgroundPaint(backgroundColour);
+        plot.setOutlinePaint(styleProvider.get(new StyleKey<Color>(StyleConstants.AXES_COLOR)));
         
         // add JFreeChart to this panel
         transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis());
