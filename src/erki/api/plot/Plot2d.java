@@ -127,14 +127,14 @@ public class Plot2d extends JPanel {
         plot = new RenderingInfoAndAutoRangingXYPlot(this);
         NumberAxis domainAxis = new NumberAxis();
         NumberAxis rangeAxis = new NumberAxis();
+        rangeAxis.setAutoRangeIncludesZero(false);
+        domainAxis.setAutoRangeIncludesZero(false);
         plot.setDomainAxis(domainAxis);
         plot.setRangeAxis(rangeAxis);
         JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
         new StandardChartTheme("JFree").apply(chart);
         plot.setBackgroundPaint(styleProvider.get(new StyleKey<Paint>(
                 StyleConstants.PLOT_BACKGROUND_COLOR)));
-        rangeAxis.setAutoRangeIncludesZero(false);
-        domainAxis.setAutoRangeIncludesZero(false);
         
         // add JFreeChart to this panel
         transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis());
