@@ -35,8 +35,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -60,7 +62,7 @@ public class Plot2d extends JPanel {
     
     private static final long serialVersionUID = 4045642298487773855L;
     
-    /**
+    /*
      * Default values for the coordinate ranges of both axes. They are returned by the getMin and
      * getMax methods if no drawers are present.
      */
@@ -68,6 +70,15 @@ public class Plot2d extends JPanel {
     private static final double DEFAULT_MAXX = 1.0;
     private static final double DEFAULT_MINY = -1.0;
     private static final double DEFAULT_MAXY = 1.0;
+    
+    /*
+     * Default ranges in pixels beyond which JFreeChart will start to scale the plot rather than to
+     * draw more or less content.
+     */
+    private static final int MIN_WIDTH = 20;
+    private static final int MIN_HEIGHT = 20;
+    private static final int MAX_WIDTH = 5000;
+    private static final int MAX_HEIGHT = 5000;
     
     private LinkedList<Drawable> drawers = new LinkedList<Drawable>();
     
@@ -77,7 +88,7 @@ public class Plot2d extends JPanel {
     
     private RenderingInfoAndAutoRangingXYPlot plot;
     
-    protected ExternalDrawerChartPanel chartPanel;
+    protected ChartPanel chartPanel;
     
     /**
      * Create a new Plot2d without a title.
@@ -126,8 +137,9 @@ public class Plot2d extends JPanel {
         domainAxis.setAutoRangeIncludesZero(false);
         
         // add JFreeChart to this panel
-        transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis(), plot);
-        chartPanel = new ExternalDrawerChartPanel(chart, transformer, this, styleProvider);
+        transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis());
+        chartPanel = new ChartPanel(chart, ChartPanel.DEFAULT_WIDTH, ChartPanel.DEFAULT_HEIGHT,
+                MIN_WIDTH, MIN_HEIGHT, MAX_WIDTH, MAX_HEIGHT, false, true, false, false, true, true);
         setLayout(new GridLayout());
         setOpaque(false);
         add(chartPanel);
@@ -281,7 +293,8 @@ public class Plot2d extends JPanel {
     
     /**
      * Change the domain axis used by this plot. This method also updates the coordinate transformer
-     * of this plot accordingly.
+     * of this plot accordingly. This way you can use e.g. a {@link DateAxis} instead of the default
+     * {@link NumberAxis}.
      * 
      * @param axis
      *        The new axis used as domain axis.
@@ -293,14 +306,15 @@ public class Plot2d extends JPanel {
     
     /**
      * Change the range axis used by this plot. This method also updates the coordinate transformer
-     * of this plot accordingly.
+     * of this plot accordingly. This way you can use e.g. a {@link DateAxis} instead of the default
+     * {@link NumberAxis}.
      * 
      * @param axis
      *        The new axis used as range axis.
      */
     public void setRangeAxis(ValueAxis axis) {
         plot.setRangeAxis(axis);
-        transformer = new CoordinateTransformer(plot.getDomainAxis(), plot.getRangeAxis(), plot);
+        transformer.setRangeAxis(axis);
     }
     
     @Override

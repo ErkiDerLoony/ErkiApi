@@ -25,7 +25,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.ui.RectangleEdge;
 
 import erki.api.util.MathUtil;
@@ -40,35 +39,35 @@ public class CoordinateTransformer {
     
     private ValueAxis domainAxis, rangeAxis;
     
-    private final RenderingInfoAndAutoRangingXYPlot renderingInfoPlot;
+    private Rectangle2D dataArea;
     
     /**
      * Create a new CoordinateTransformer for a specific plot.
      * 
-     * @param plot
-     *        The plot whose axes shall be used for the coordinate transformations.
+     * @param domainAxis
+     *        The domain axis that shall be used for calculating screen positions.
+     * @param rangeAxis
+     *        The range axis that shall be used for calculating screen positions.
      */
-    public CoordinateTransformer(ValueAxis domainAxis, ValueAxis rangeAxis,
-            RenderingInfoAndAutoRangingXYPlot renderingInfoPlot) {
+    public CoordinateTransformer(ValueAxis domainAxis, ValueAxis rangeAxis) {
         this.domainAxis = domainAxis;
         this.rangeAxis = rangeAxis;
-        this.renderingInfoPlot = renderingInfoPlot;
     }
     
     private int convertLengthX(double xLength) {
-        return (int) domainAxis.lengthToJava2D(xLength, dataArea(), RectangleEdge.BOTTOM);
+        return (int) domainAxis.lengthToJava2D(xLength, dataArea, RectangleEdge.BOTTOM);
     }
     
     private int convertLengthY(double yLength) {
-        return (int) rangeAxis.lengthToJava2D(yLength, dataArea(), RectangleEdge.LEFT);
+        return (int) rangeAxis.lengthToJava2D(yLength, dataArea, RectangleEdge.LEFT);
     }
     
     private int convertPointX(double x) {
-        return (int) domainAxis.valueToJava2D(x, dataArea(), RectangleEdge.BOTTOM);
+        return (int) domainAxis.valueToJava2D(x, dataArea, RectangleEdge.BOTTOM);
     }
     
     private int convertPointY(double y) {
-        return (int) rangeAxis.valueToJava2D(y, dataArea(), RectangleEdge.LEFT);
+        return (int) rangeAxis.valueToJava2D(y, dataArea, RectangleEdge.LEFT);
     }
     
     /**
@@ -116,8 +115,14 @@ public class CoordinateTransformer {
         return shape;
     }
     
-    private Rectangle2D dataArea() {
-        return renderingInfoPlot.getRenderingInfo().getDataArea();
+    /**
+     * Change the data area this coordinate transformer uses to calculate screen positions.
+     * 
+     * @param dataArea
+     *        The new data area as obtained by {@link RenderingInfoAndAutoRangingXYPlot}.
+     */
+    public void setDataArea(Rectangle2D dataArea) {
+        this.dataArea = dataArea;
     }
     
     /**
@@ -126,7 +131,7 @@ public class CoordinateTransformer {
      * @return The width of the drawing area in pixels.
      */
     public double getWidth() {
-        return dataArea().getBounds().width;
+        return dataArea.getBounds().width;
     }
     
     /**
@@ -135,7 +140,7 @@ public class CoordinateTransformer {
      * @return The height of the drawing area in pixels.
      */
     public double getHeight() {
-        return dataArea().getBounds().height;
+        return dataArea.getBounds().height;
     }
     
     /**
@@ -166,13 +171,10 @@ public class CoordinateTransformer {
      * @return The converted math coordinates.
      */
     public Point2D.Double getMath(Point java) {
-        PlotRenderingInfo renderingInfo = renderingInfoPlot.getRenderingInfo();
         
-        if (renderingInfo != null && rangeAxis != null && domainAxis != null) {
-            double newX = domainAxis.java2DToValue(java.x, renderingInfo.getDataArea(),
-                    RectangleEdge.BOTTOM);
-            double newY = rangeAxis.java2DToValue(java.y, renderingInfo.getDataArea(),
-                    RectangleEdge.LEFT);
+        if (rangeAxis != null && domainAxis != null) {
+            double newX = domainAxis.java2DToValue(java.x, dataArea, RectangleEdge.BOTTOM);
+            double newY = rangeAxis.java2DToValue(java.y, dataArea, RectangleEdge.LEFT);
             return new Point2D.Double(newX, newY);
         } else {
             /*
@@ -192,13 +194,10 @@ public class CoordinateTransformer {
      * @return The converted java screen coordinates (ready to be drawn to a graphics context).
      */
     public Point getJava(Point2D.Double jfreechart) {
-        PlotRenderingInfo renderingInfo = renderingInfoPlot.getRenderingInfo();
         
-        if (renderingInfo != null && rangeAxis != null && domainAxis != null) {
-            int newX = (int) domainAxis.valueToJava2D(jfreechart.x, renderingInfo.getDataArea(),
-                    RectangleEdge.BOTTOM);
-            int newY = (int) rangeAxis.valueToJava2D(jfreechart.y, renderingInfo.getDataArea(),
-                    RectangleEdge.LEFT);
+        if (rangeAxis != null && domainAxis != null) {
+            int newX = (int) domainAxis.valueToJava2D(jfreechart.x, dataArea, RectangleEdge.BOTTOM);
+            int newY = (int) rangeAxis.valueToJava2D(jfreechart.y, dataArea, RectangleEdge.LEFT);
             return new Point(newX, newY);
         } else {
             /*

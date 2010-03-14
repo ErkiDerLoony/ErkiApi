@@ -18,6 +18,7 @@
 package erki.api.plot;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -26,6 +27,10 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.PlotState;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
+
+import erki.api.plot.drawables.Drawable;
+import erki.api.plot.style.StyleConstants;
+import erki.api.plot.style.StyleKey;
 
 /**
  * Extends {@link XYPlot} to make the current {@link PlotRenderingInfo} visible to the public. This
@@ -41,8 +46,6 @@ public class RenderingInfoAndAutoRangingXYPlot extends XYPlot {
     // Minimal ranges that are displayed on both axes.
     private static final double MIN_X_RANGE = 1.0;
     private static final double MIN_Y_RANGE = 1.0;
-    
-    private PlotRenderingInfo info = null;
     
     private Plot2d plot;
     
@@ -171,15 +174,34 @@ public class RenderingInfoAndAutoRangingXYPlot extends XYPlot {
     public void draw(Graphics2D g2, Rectangle2D area, Point2D anchor, PlotState parentState,
             PlotRenderingInfo info) {
         super.draw(g2, area, anchor, parentState, info);
-        this.info = info;
-    }
-    
-    /**
-     * Access the current {@link PlotRenderingInfo} for this plot.
-     * 
-     * @return The current PlotRenderingInfo or {@code null} if the info is not yet computed.
-     */
-    public PlotRenderingInfo getRenderingInfo() {
-        return info;
+        g2.setClip(info.getDataArea());
+        plot.getCoordinateTransformer().setDataArea(info.getDataArea());
+        
+        // enable/disable antialiasing for all the external drawers
+        boolean antialiasing = plot.getStyleProvider().get(
+                new StyleKey<Boolean>(StyleConstants.ANTIALIASING_ENABLED));
+        
+        if (antialiasing) {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        } else {
+            g2
+                    .setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_OFF);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        }
+        
+        /*
+         * As access to the field drawers is not (and should not be) synchronized this is needed to
+         * prevent ModificationExceptions. This might mean that a drawer is called once again after
+         * it already had been removed from the drawer list but this is acceptable I think.
+         */
+        Drawable[] dArray = plot.getDrawers().toArray(new Drawable[0]);
+        
+        for (Drawable drawer : dArray) {
+            drawer.draw(g2, plot.getCoordinateTransformer());
+        }
     }
 }
