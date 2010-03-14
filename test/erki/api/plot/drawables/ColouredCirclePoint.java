@@ -43,4 +43,9 @@ public class ColouredCirclePoint implements Drawable {
         return new Rectangle2D.Double(point.getX() - OFFSET, point.getY() - OFFSET, 2.0 * OFFSET,
                 2.0 * OFFSET);
     }
+    
+    @Override
+    public String toString() {
+        return "(" + point.x + ", " + point.y + ")";
+    }
 }
