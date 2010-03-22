@@ -6,6 +6,7 @@
 – Identify localized strings via enum constants and not via strings any more.
 – Fix two grave bugs in the plot api that caused the plot to scale rather than to zoom if
   the plot window was very small or rather large.
+– Improved SoundPlayer.
 
 0.0.3
 – Command line parser can now handle list of files at the end.
