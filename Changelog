@@ -7,6 +7,8 @@
 – Fix two grave bugs in the plot api that caused the plot to scale rather than to zoom if
   the plot window was very small or rather large.
 – Improved SoundPlayer.
+– Make the location the translation files are searched at independent of the working
+  directory when starting the program.
 
 0.0.3
 – Command line parser can now handle list of files at the end.
