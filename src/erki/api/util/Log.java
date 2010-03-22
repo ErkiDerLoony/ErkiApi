@@ -372,6 +372,24 @@ public class Log {
         }
     }
     
+    /**
+     * Change the log level for specific classes to be more or less verbose. In contrast to
+     * {@link #setLevelForClasses(Level, Class...)} this method allows to change the log level even
+     * for classes that are not publicly visible.
+     * 
+     * @param level
+     *        The new log level for the given classes.
+     * @param classes
+     *        The canonical names (see e.g. {@link Class#getCanonicalName()}) of the classes whose
+     *        log level shall be changed.
+     */
+    public static void setLevelForClasses(Level level, String... classes) {
+        
+        for (String clazz : classes) {
+            mapping.put(clazz, level);
+        }
+    }
+    
     private static void log(String src, String line, String modifier) {
         String ln = line == null ? "" : line;
         handler.println("[" + getDate() + ", " + src + "] " + modifier + ln);
