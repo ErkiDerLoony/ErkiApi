@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.TreeMap;
 
@@ -85,30 +83,13 @@ public class Localizor<E extends Enum<E>> {
      *         if no mapping file or folder for the requested locale could be found.
      */
     public Localizor(Locale locale, String localeRoot) throws LocalizationException {
-        URL url = Localizor.class.getResource("/erki");
+        File root = PathUtil.getProgramRoot();
         
-        try {
-            
-            if (url.getProtocol().equals("file")) {
-                readFile(new File(new File(url.getPath()).getParentFile().getParentFile().getPath()
-                        + File.separator + localeRoot));
-            } else if (url.getProtocol().equals("jar")) {
-                
-                String path = new URL(url.getPath()).getPath();
-                
-                if (path.contains("!")) {
-                    path = path.substring(0, path.lastIndexOf("!"));
-                }
-                
-                readFile(new File(new File(path).getParentFile().getPath() + File.separator
-                        + localeRoot));
-            } else {
-                throw new LocalizationException(
-                        "Could not locate localization folder: Invalid protocol!s");
-            }
-            
-        } catch (MalformedURLException e) {
-            throw new LocalizationException("Could not locate localization folder!", e);
+        if (root == null) {
+            throw new LocalizationException(
+                    "Could not locate localization folder: Invalid protocol!s");
+        } else {
+            readFile(new File(root.getAbsolutePath() + File.separator + localeRoot));
         }
     }
     
