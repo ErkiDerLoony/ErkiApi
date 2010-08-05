@@ -42,6 +42,7 @@ public class StyledNumberAxis extends NumberAxis {
     public StyledNumberAxis(StyleProvider styleProvider) {
         super();
         setAutoRangeIncludesZero(false);
+        setTickMarkPaint(styleProvider.get(new StyleKey<Color>(StyleConstants.AXES_COLOR)));
         setTickLabelFont(styleProvider.get(new StyleKey<Font>(StyleConstants.AXES_TICK_FONT)));
         setTickLabelPaint(styleProvider
                 .get(new StyleKey<Color>(StyleConstants.AXES_TICK_FONT_COLOR)));
