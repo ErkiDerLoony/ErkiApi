@@ -54,8 +54,9 @@ public abstract class Storage<E extends Enum<E>> {
     }
     
     /**
-     * Add information to this storage facility. If it already contains stored information under the
-     * given key that information is overwritten silently.
+     * Add information to this storage facility and backs it up to the corresponding file. If it
+     * already contains stored information under the given key that information is overwritten
+     * silently.
      * 
      * @param <T>
      *        The type of the new data.
@@ -106,6 +107,20 @@ public abstract class Storage<E extends Enum<E>> {
          * types match.
          */
         return (T) data.get(key);
+    }
+    
+    /**
+     * Remove a value from this storage facility. If nothing is stored under the given key nothing
+     * happens.
+     * 
+     * @param <T>
+     *        The type of data to remove.
+     * @param key
+     *        The key under which the data is stored.
+     */
+    public <T> void remove(Key<T, E> key) {
+        data.remove(key);
+        save();
     }
     
     /**
