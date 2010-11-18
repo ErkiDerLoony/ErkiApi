@@ -17,78 +17,47 @@
 
 package erki.api.util;
 
-import java.util.Comparator;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
- * This class represents a parser for command lines. It takes the {@code String[]} of the main
- * method and parses it into a {@link TreeMap} mapping parameters to their values.
+ * This class parses command line arguments. Accepted formats are:
+ * <ul>
+ * <li>Short options with only a key and no value (just a switch), e.g. {@code -b}.
+ * <li>Short options with a key that consists of only one character and a value directly attached to
+ * the key, e.g. {@code -b233}.
+ * <li>Short options with a key and the value in the next argument (separated by a space on the
+ * command line), e.g. {@code -b 233}.
+ * <li>Long options with only a key and no value (long form of a switch), e.g. {@code --foo-bar}.
+ * <li>Long options with a key and a value attached to the key with a equal sign as separator, e.g.
+ * {@code --foo-bar=asdf}.
+ * <li>Long options with a key and the value in the next argument, e.g. {@code --foo-bar asdf}.
+ * </ul>
+ * This class provides convenience methods to easily access the option switches given on the command
+ * line. If an option switch is present multiple times in the command line the latter value
+ * overrides the previous ones.
+ * <p>
+ * After the last option switch a list of e.g. filenames may follow which can be accessed by
+ * {@link #getList()}. To prevent the algorithm from taking the first list item as the value of the
+ * last option switch a “ -- ” may be provided to clearly separate the option switches from the list
+ * of following arguments.
  * 
  * @author Edgar Kalkowski
  */
 public class CommandLineParser {
     
+    private HashMap<String, String> map = new HashMap<String, String>();
+    
+    private LinkedList<String> list = new LinkedList<String>();
+    
     /**
-     * Parse command line arguments. This method accepts the following option constellations:
-     * <ul>
-     * <li>Short options with only a key and no value (just a switch), e.g. {@code -b}.
-     * <li>Short options with a key that consists of only one character and a value directly
-     * attached to the key, e.g. {@code -b233}.
-     * <li>Short options with a key and the value in the next argument (separated by a space on the
-     * command line), e.g. {@code -b 233}.
-     * <li>Long options with only a key and no value (long form of a switch), e.g. {@code --foo-bar}.
-     * <li>Long options with a key and a value attached to the key with a equal sign as separator,
-     * e.g. {@code --foo-bar=asdf}.
-     * <li>Long options with a key and the value in the next argument, e.g. {@code --foo-bar asdf}.
-     * </ul>
-     * All values are returned as strings regardless if the actual command line options is a number.
-     * If an options is a simple switch without a value the corresponding key is mapped to {@code
-     * null} in the returned mapping.
-     * <p>
-     * All keys in the returned mapping are <emph>not</emph> stripped of their leading one or two
-     * dashes.
-     * <p>
-     * A key may be given multiple times on the command line, e.g. to specify multiple files. In
-     * this case the returned mapping will contain <emph>one</emph> key and all the multiple values
-     * in one string separated by null bytes. Thus the multiple values can easily be obtained by
-     * {@code map.get("option").split("\0")}.
-     * <p>
-     * After all options a list of e.g. filenames may follow. So if a command line argument does not
-     * start with a dash (“-”) where a key is expected the algorithm assumes that the list of
-     * options is over a a final list of strings (e.g. filenames) follows. These final list of
-     * strings is returned as the value of the special key {@code null} as one string with null
-     * bytes separating the list entries. Thus the list can easily be obtained e.g. via {@code
-     * map.get(null).split("\0")}. If the last option shall be without a value then “--” may be
-     * specified to explicitely end the options and parse everything into the final list from there
-     * on.
+     * Create a new CommandLineParser.
      * 
      * @param args
-     *        The command line arguments taken directly from the main method.
-     * @return A {@link TreeMap} containing parameters and their values.
+     *        The command line arguments to parse.
      */
-    public static TreeMap<String, String> parse(String[] args) {
-        
-        // Create a mapping that allows for null keys.
-        TreeMap<String, String> map = new TreeMap<String, String>(new Comparator<String>() {
-            
-            @Override
-            public int compare(String o1, String o2) {
-                
-                if (o1 == null && o2 == null) {
-                    return 0;
-                }
-                
-                if (o1 == null) {
-                    return Integer.MIN_VALUE;
-                }
-                
-                if (o2 == null) {
-                    return Integer.MAX_VALUE;
-                }
-                
-                return o1.compareTo(o2);
-            }
-        });
+    public CommandLineParser(String[] args) {
         
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -99,36 +68,38 @@ public class CommandLineParser {
             
             if (arg.startsWith("--")) {
                 // Parse long options.
+                arg = arg.substring(2);
                 
                 if (arg.contains("=")) {
                     String k = arg.substring(0, arg.indexOf('='));
                     String v = arg.substring(arg.indexOf('=') + 1);
-                    put(map, k, v);
+                    map.put(k, v);
                 } else {
                     
                     if (args.length == i + 1 || args[i + 1].startsWith("-")
                             || args[i + 1].equals("--")) {
-                        put(map, arg, null);
+                        map.put(arg, null);
                     } else {
-                        put(map, arg, args[i + 1]);
+                        map.put(arg, args[i + 1]);
                         i++;
                     }
                 }
                 
             } else if (arg.startsWith("-")) {
                 // Parse short options.
+                arg = arg.substring(1);
                 
-                if (arg.length() > 2) {
-                    String k = arg.substring(0, 2);
-                    String v = arg.substring(2);
-                    put(map, k, v);
+                if (arg.length() > 1) {
+                    String k = arg.substring(0, 1);
+                    String v = arg.substring(1);
+                    map.put(k, v);
                 } else {
                     
                     if (args.length == i + 1 || args[i + 1].startsWith("-")
                             || args[i + 1].equals("--")) {
-                        put(map, arg, null);
+                        map.put(arg, null);
                     } else {
-                        put(map, arg, args[i + 1]);
+                        map.put(arg, args[i + 1]);
                         i++;
                     }
                 }
@@ -136,36 +107,95 @@ public class CommandLineParser {
             } else {
                 // Parse final list of strings (e.g. filenames).
                 
-                String list = "";
-                
                 for (int j = i; j < args.length; j++) {
-                    list += args[j] + "\0";
+                    list.add(args[j]);
                 }
                 
-                list = list.substring(0, list.length() - 1);
-                put(map, null, list);
                 break;
             }
         }
-        
-        return map;
-    }
-    
-    public static void main(String[] args) {
-        parse(new String[] {"--help"});
     }
     
     /**
-     * Checks if {@code key} already exists in the map. If so the value is appended to {@code
-     * map.get(key)} (separated by {@code \0}). Otherwise the mapping {@code key} -> {@code value}
-     * is added to the map.
+     * Access the list of arguments that occurred after the last switch.
+     * 
+     * @return A list of final arguments or an empty list if there was no list of arguments.s
      */
-    private static void put(TreeMap<String, String> map, String key, String value) {
+    public LinkedList<String> getList() {
+        return list;
+    }
+    
+    /**
+     * Check whether or not some option switch is present in this command line.
+     * 
+     * @param keys
+     *        Multiple keys which shall be tested (e.g. a short option “l” and a long option
+     *        “logfile”) without leading dashes.
+     * @return {@code true} if at least one of the given options is present or {@code false} if none
+     *         of the given options are present.
+     */
+    public boolean contains(String... keys) {
         
-        if (map.containsKey(key)) {
-            map.put(key, map.get(key) + "\0" + value);
-        } else {
-            map.put(key, value);
+        for (String key : keys) {
+            
+            if (map.containsKey(key)) {
+                return true;
+            }
         }
+        
+        return false;
+    }
+    
+    /**
+     * Access the value of a command line option switch but do not remove it from the internal
+     * mapping.
+     * 
+     * @param keys
+     *        Option switches after which the desired value was given on the command line without
+     *        leading dashes. If there are multiple keys given (e.g. a short option “l” and a long
+     *        option “logfile”) the value of the latter always overrides the values of previous
+     *        keys.
+     * @return The value of the last option switch for which a value was stored or {@code null} if
+     *         either none of the given option switches is present in this command line or they were
+     *         switches without values after them.
+     */
+    public String peek(String... keys) {
+        String result = null;
+        
+        for (String key : keys) {
+            
+            if (contains(key)) {
+                result = map.get(key);
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * This does the same as {@link #peek(String...)} except it removes the returned value from the
+     * internal mapping.
+     */
+    public String pop(String... keys) {
+        String result = null;
+        
+        for (String key : keys) {
+            
+            if (contains(key)) {
+                result = map.get(key);
+                map.remove(key);
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Access the key set of the internal mapping of option switches to their values.
+     * 
+     * @return The set of option switches present in this command line.
+     */
+    public Set<String> keySet() {
+        return map.keySet();
     }
 }

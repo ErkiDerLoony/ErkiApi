@@ -1,5 +1,5 @@
 /*
- * © Copyright 2007–2010 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
+ * © Copyright 2007–2010 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
  * This file is part of Erki’s API.
  * 
@@ -21,7 +21,6 @@ import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
 
 /**
  * This static class provides a highly dynamic log. One can specify a global log level and also
@@ -31,27 +30,27 @@ import java.util.logging.Level;
  * <p>
  * The log levels are priorized in such way that events of a certain level are only logged if the
  * considered log level for the logging class is lower or equal to the level of the message to be
- * logged. The priority is (in descending order)
+ * logged. The priorities are (in descending order)
  * <ul>
- * <li>SEVERE (highest value)
+ * <li>OFF (highest value)
+ * <li>ERROR
  * <li>WARNING
  * <li>INFO
- * <li>CONFIG
- * <li>FINE
+ * <li>DEBUG
  * <li>FINER
  * <li>FINEST (lowest value)
  * </ul>
- * The special value {@link Level#OFF} turns off all log output so nothing will be printed at all.
  * <p>
- * This class provides some additional methods
- * <p>
- * An example: If the global log level is {@link Level#INFO} and no class specific log levels have
- * been defined all messages with log levels CONFIG, FINE, FINER and FINEST will be discarded and
- * not actually printed to the log. All SEVERE, WARNING and INFO messages are printed.
+ * An example: If the global log level is {@link Level#WARNING} and no class specific log levels
+ * have been defined all messages with log levels {@link Level#INFO}, {@link Level#DEBUG},
+ * {@link Level#FINER} and {@link Level#FINEST} will be discarded and not actually printed to the
+ * log. All {@link Level#WARNING} and {@link Level#ERROR} messages are printed.
  * <p>
  * The log is a simple {@link PrintStream} that defaults to be {@link System#out} and may be changed
  * at runtime e.g. to some log file via {@link #setHandler(PrintStream)}. Be careful to change the
  * log handler before printing anything to the log or otherwise that information may be lost.
+ * <p>
+ * All actual logging methods of this class are thread safe.
  * 
  * @author Edgar Kalkowski
  */
@@ -72,6 +71,9 @@ public class Log {
     /** The default log level for all classes for which no special log level is specified. */
     private static Level level = Level.INFO;
     
+    /** A lock to synchronize parallel access to the log. */
+    private static Object lock = new Object();
+    
     /** Prevent others from instanciating this static class. */
     private Log() {
     }
@@ -79,19 +81,18 @@ public class Log {
     /**
      * Compute whether or not a message of a given level is loggable for a specific class.
      * 
-     * @param e
-     *        Describes the class that wants to print something to the log.
+     * @param classname
+     *        The fully qualified class name of the class that wants to print something to the log.
      * @param level
      *        The log level of the information to be printed.
      * @return {@code true} if the class is allowed to print the message, {@code false} otherwise.
      */
-    private static boolean isLoggable(StackTraceElement e, Level level) {
-        String classname = e.getClassName().replaceAll("\\$", ".");
+    private static boolean isLoggable(String classname, Level level) {
         
         if (mapping.containsKey(classname)) {
             Level bound = mapping.get(classname);
             
-            if (level.intValue() < bound.intValue() || level.intValue() == Level.OFF.intValue()) {
+            if (level.ordinal() < bound.ordinal()) {
                 return false;
             } else {
                 return true;
@@ -99,24 +100,12 @@ public class Log {
             
         } else {
             
-            if (level.intValue() < Log.level.intValue() || level.intValue() == Level.OFF.intValue()) {
+            if (level.ordinal() < Log.level.ordinal()) {
                 return false;
             } else {
                 return true;
             }
         }
-    }
-    
-    /**
-     * Formats the information contained in a {@link StackTraceElement} for output in the log.
-     * 
-     * @param e
-     *        A {@link StackTraceElement} with the necessary information.
-     * @return A string that describes class, method and file where the log event occurred.
-     */
-    private static String getSrc(StackTraceElement e) {
-        return e.getClassName() + "." + e.getMethodName() + "(" + e.getFileName() + ":"
-                + e.getLineNumber() + ")";
     }
     
     /**
@@ -126,28 +115,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void fine(String line) {
+    public static void debug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.FINE)) {
-            log(getSrc(e), line, "FINE: ");
-        }
-    }
-    
-    /**
-     * Print debug information to the log file. In contrast to {@link #fine(String)} the prefix of
-     * the log entry is “DEBUG” in this case. The message is only actually printed to the current
-     * handler if the log level is at most {@link Level#FINE}.
-     * 
-     * @param line
-     *        The line of text to log.
-     * @see #fine(String)
-     */
-    public static void debug(String line) {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        
-        if (isLoggable(e, Level.FINE)) {
-            log(getSrc(e), line, "DEBUG: ");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEBUG)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "DEBUG: ");
+            }
         }
     }
     
@@ -158,11 +133,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void finer(String line) {
+    public static void finer(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.FINER)) {
-            log(getSrc(e), line, "FINER: ");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "FINER: ");
+            }
         }
     }
     
@@ -173,26 +151,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void finest(String line) {
+    public static void finest(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.FINEST)) {
-            log(getSrc(e), line, "FINEST: ");
-        }
-    }
-    
-    /**
-     * Logs a message about the configuration of a program. The message is only actually printed to
-     * the current handler if the log level is at most {@link Level#CONFIG}.
-     * 
-     * @param line
-     *        The line of text to log.
-     */
-    public static void config(String line) {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        
-        if (isLoggable(e, Level.CONFIG)) {
-            log(getSrc(e), line, "CONFIG: ");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "FINEST: ");
+            }
         }
     }
     
@@ -203,26 +169,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void info(String line) {
+    public static void info(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.INFO)) {
-            log(getSrc(e), line, "INFO: ");
-        }
-    }
-    
-    /**
-     * Prints a message to the log without any prefix. The message is only actually printed to the
-     * current handler if the log level is at most {@link Level#INFO}.
-     * 
-     * @param line
-     *        The line of text to log.
-     */
-    public static void print(String line) {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        
-        if (isLoggable(e, Level.INFO)) {
-            log(getSrc(e), line, "");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.INFO)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "INFO: ");
+            }
         }
     }
     
@@ -233,11 +187,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void warning(String line) {
+    public static void warning(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.WARNING)) {
-            log(getSrc(e), line, "WARNING: ");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.WARNING)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "WARNING: ");
+            }
         }
     }
     
@@ -253,34 +210,17 @@ public class Log {
     public static void error(Throwable error) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.SEVERE)) {
-            log(getSrc(e), error.toString(), "ERROR: ");
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.ERROR)) {
             
-            for (StackTraceElement s : error.getStackTrace()) {
-                log(getSrc(e), "\tat " + s.toString(), "ERROR: ");
+            synchronized (lock) {
+                log(e, error.toString(), "ERROR: ");
+                
+                for (StackTraceElement s : error.getStackTrace()) {
+                    log(e, "\tat " + s.toString(), "ERROR: ");
+                }
+                
+                logCause(error.getCause(), e);
             }
-            
-            logCause(error.getCause(), e);
-        }
-    }
-    
-    /**
-     * This is the same as {@link #error(Throwable)} except that the prefix of the log entry is
-     * “SEVERE” in this case rather than “ERROR”.
-     * 
-     * @see #error(Throwable)
-     */
-    public static void severe(Throwable error) {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        
-        if (isLoggable(e, Level.SEVERE)) {
-            log(getSrc(e), error.toString(), "SEVERE: ");
-            
-            for (StackTraceElement s : error.getStackTrace()) {
-                log(getSrc(e), "\tat " + s.toString(), "SEVERE: ");
-            }
-            
-            logCause(error.getCause(), e);
         }
     }
     
@@ -297,10 +237,10 @@ public class Log {
     private static void logCause(Throwable cause, StackTraceElement source) {
         
         if (cause != null) {
-            log(getSrc(source), "Caused by: " + cause.toString(), "ERROR: ");
+            log(source, "Caused by: " + cause.toString(), "ERROR: ");
             
             for (StackTraceElement s : cause.getStackTrace()) {
-                log(getSrc(source), "\tat " + s.toString(), "ERROR: ");
+                log(source, "\tat " + s.toString(), "ERROR: ");
             }
             
             logCause(cause.getCause(), source);
@@ -314,25 +254,14 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void error(String line) {
+    public static void error(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e, Level.SEVERE)) {
-            log(getSrc(e), line, "ERROR: ");
-        }
-    }
-    
-    /**
-     * The same as {@link #error(String)} except that the prefix is “SEVERE” in this case rather
-     * than “ERROR”.
-     * 
-     * @see #error(String)
-     */
-    public static void severe(String line) {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        
-        if (isLoggable(e, Level.SEVERE)) {
-            log(getSrc(e), line, "SEVERE: ");
+        if (isLoggable(e.getClassName(), Level.ERROR)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), "ERROR: ");
+            }
         }
     }
     
@@ -372,42 +301,38 @@ public class Log {
         }
     }
     
-    /**
-     * Change the log level for specific classes to be more or less verbose. In contrast to
-     * {@link #setLevelForClasses(Level, Class...)} this method allows to change the log level even
-     * for classes that are not publicly visible.
-     * 
-     * @param level
-     *        The new log level for the given classes.
-     * @param classes
-     *        The canonical names (see e.g. {@link Class#getCanonicalName()}) of the classes whose
-     *        log level shall be changed.
-     */
-    public static void setLevelForClasses(Level level, String... classes) {
+    private static void log(StackTraceElement e, String line, String modifier) {
+        String src = e.getClassName();
         
-        for (String clazz : classes) {
-            mapping.put(clazz, level);
+        if (src.contains(".")) {
+            src = src.substring(src.lastIndexOf(".") + 1, src.length());
         }
-    }
-    
-    private static void log(String src, String line, String modifier) {
+        
+        src += "." + e.getMethodName() + "(" + e.getLineNumber() + ")";
         String ln = line == null ? "" : line;
-        handler.println("[" + getDate() + ", " + src + "] " + modifier + ln);
+        boolean first = true;
+        
+        for (String l : ln.split("\n")) {
+            
+            if (first) {
+                handler.println("[" + getDate() + ", " + src + "] " + modifier + l);
+                first = false;
+            } else {
+                handler.println("[" + getDate() + ", " + src + "] " + modifier + "  " + l);
+            }
+        }
+        
         handler.flush();
     }
     
     private static String getDate() {
         Calendar calendar = Calendar.getInstance();
         
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1;
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
         int sec = calendar.get(Calendar.SECOND);
         int ms = calendar.get(Calendar.MILLISECOND);
         
-        String days = day < 10 ? "0" + day + "." : day + ".";
-        String months = month < 10 ? "0" + month + "." : month + ".";
         String hours = hour < 10 ? "0" + hour + ":" : hour + ":";
         String mins = min < 10 ? "0" + min + ":" : min + ":";
         String secs = sec < 10 ? "0" + sec : "" + sec;
@@ -421,6 +346,6 @@ public class Log {
             millis = "." + ms;
         }
         
-        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins + secs + millis;
+        return hours + mins + secs + millis;
     }
 }

@@ -24,13 +24,13 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.logging.Level;
 
 import javax.swing.JFrame;
 
 import erki.api.plot.drawables.ColouredCirclePoint;
 import erki.api.plot.drawables.ColouredLine;
 import erki.api.plot.style.StyleProvider;
+import erki.api.util.Level;
 import erki.api.util.Log;
 
 public class SimpleTest {
@@ -40,7 +40,7 @@ public class SimpleTest {
         frame.setTitle("A simple test of the plot api");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        Log.setLevel(Level.FINE);
+        Log.setLevel(Level.DEBUG);
         
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
