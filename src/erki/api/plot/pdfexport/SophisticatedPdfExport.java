@@ -33,6 +33,8 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.jfree.chart.axis.ValueAxis;
+
 import erki.api.plot.Plot2d;
 import erki.api.plot.style.StyleProvider;
 
@@ -85,7 +87,14 @@ public class SophisticatedPdfExport implements ActionListener {
         cp.setLayout(new BorderLayout());
         
         accumulationPlot = new Plot2d(styleProvider);
-        accumulationPlot.setPreferredSize(new Dimension(500, 500));
+        
+        try {
+            accumulationPlot.setDomainAxis((ValueAxis) plot.getPlot().getDomainAxis().clone());
+            accumulationPlot.setRangeAxis((ValueAxis) plot.getPlot().getRangeAxis().clone());
+        } catch (CloneNotSupportedException e) {
+            throw new Error("FATAL: Bad coordinate axis!");
+        }
+        
         cp.add(accumulationPlot, BorderLayout.CENTER);
         
         left = new JPanel();

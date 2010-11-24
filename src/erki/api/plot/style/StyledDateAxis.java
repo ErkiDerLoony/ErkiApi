@@ -39,7 +39,6 @@ public class StyledDateAxis extends DateAxis {
      *        The style provider that determines how the new date axis shall look.
      */
     public StyledDateAxis(StyleProvider styleProvider) {
-        super();
         setTickLabelFont(styleProvider.get(new StyleKey<Font>(StyleConstants.AXES_TICK_FONT)));
         setTickLabelPaint(styleProvider
                 .get(new StyleKey<Color>(StyleConstants.AXES_TICK_FONT_COLOR)));
