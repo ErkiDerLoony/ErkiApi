@@ -1,9 +1,6 @@
 #ifndef ARROW_AXES_H
 #define ARROW_AXES_H
 
-#include <QPainter>
-#include <QObject>
-
 #include "Drawer.hpp"
 
 /**
@@ -13,8 +10,6 @@
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
 class ArrowAxes : public Drawer {
-
-Q_OBJECT
 
 public:
 

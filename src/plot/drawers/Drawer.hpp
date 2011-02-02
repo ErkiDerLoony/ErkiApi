@@ -2,7 +2,6 @@
 #define DRAWER_H
 
 #include <QPainter>
-#include <QObject>
 
 #include "CoordinateTransformer.hpp"
 
@@ -12,9 +11,7 @@
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
-class Drawer : public QObject {
-
-Q_OBJECT
+class Drawer {
 
 public:
 
