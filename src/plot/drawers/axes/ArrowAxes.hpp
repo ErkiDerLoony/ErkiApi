@@ -15,7 +15,7 @@ public:
 
   ~ArrowAxes() {};
 
-  void draw(QPainter painter, CoordinateTransformer transformer);
+  void draw(QPainter* painter, CoordinateTransformer* transformer);
 
 };
 

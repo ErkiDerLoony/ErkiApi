@@ -1,5 +1,5 @@
 #include "ArrowAxes.hpp"
 
-void ArrowAxes::draw(QPainter painter, CoordinateTransformer transformer) {
-
+void ArrowAxes::draw(QPainter* painter, CoordinateTransformer* transformer) {
+  
 }

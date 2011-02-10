@@ -5,6 +5,8 @@
 
 #include "CoordinateTransformer.hpp"
 
+class CoordinateTransformer;
+
 /**
  * This class is an interface for all drawers that want to display something
  * in a Plot2d.
@@ -29,7 +31,7 @@ public:
    *                     coordinates into screen coordinates that can be used
    *                     to actually draw with the given painter.
    */
-  virtual void draw(QPainter painter, CoordinateTransformer transformer) = 0;
+  virtual void draw(QPainter* painter, CoordinateTransformer* transformer) = 0;
 
 };
 

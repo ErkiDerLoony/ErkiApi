@@ -12,8 +12,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers/axes)
 
 add_executable(test ${SRC} ${MOC_SRC})
 target_link_libraries(test ${QT_LIBRARIES})
-target_link_libraries(test ${CMAKE_BINARY_DIR}/src/plot/liberkiplot.so)
+target_link_libraries(test erkiplot)
 
 install(TARGETS test DESTINATION ${CMAKE_BINARY_DIR})
-install(FILES ${CMAKE_BINARY_DIR}/src/plot/liberkiplot.so
-        DESTINATION ${CMAKE_BINARY_DIR})

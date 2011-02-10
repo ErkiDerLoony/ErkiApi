@@ -3,8 +3,13 @@
 
 #include <QPointF>
 #include <QWidget>
+#include <QPaintEvent>
 
+#include "CoordinateTransformer.hpp"
 #include "Drawer.hpp"
+
+class CoordinateTransformer;
+class Drawer;
 
 /**
  * This class represents a 2D plot that can easily be extended by adding
@@ -18,16 +23,16 @@ Q_OBJECT
 
 public:
 
-  /** Create a new plot with default ranges (-1 to 1). */
-  Plot2d();
-
   /**
    * Create a new plot with given initial ranges.
    *
    * @param xRange  the initial range of the x axis of the new plot
+   *                (defaults to -1 to 1)
    * @param yRange  the initial range of the y axis of the new plot
+   *                (defaults to -1 to 1)
    */
-  Plot2d(QPointF* xRange, QPointF* yRange);
+  Plot2d(QPointF* xRange = new QPointF(-1.0, 1.0),
+         QPointF* yRange = new QPointF(-1.0, 1.0));
 
   /**
    * Destroy this plot. All remaining drawers will be deleted and their
@@ -42,10 +47,14 @@ public:
    */
   void add(Drawer* drawer);
 
+protected:
+  void paintEvent(QPaintEvent* event);
+
 private:
   std::list<Drawer*> mDrawers;
   QPointF* mxRange;
   QPointF* myRange;
+  CoordinateTransformer* mTransformer;
 
 };
 
