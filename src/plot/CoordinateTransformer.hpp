@@ -1,8 +1,6 @@
 #ifndef COORDINATE_TRANSFORMER_H
 #define COORDINATE_TRANSFORMER_H
 
-#include "Plot2d.hpp"
-
 class CoordinateTransformer {
 
 public:

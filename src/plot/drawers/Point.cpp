@@ -1,3 +1,7 @@
+#include <QPainter>
+
+#include "Drawer.hpp"
+#include "CoordinateTransformer.hpp"
 #include "Point.hpp"
 
 Point::Point(double x, double y) : mX(x), mY(y) {}

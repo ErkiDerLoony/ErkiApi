@@ -1,7 +1,10 @@
 #ifndef ARROW_AXES_H
 #define ARROW_AXES_H
 
-#include "Drawer.hpp"
+class QPainter;
+
+class Drawer;
+class CoordinateTransformer;
 
 /**
  * This {@link Drawer} displays simple horizontal and vertical axes that end in

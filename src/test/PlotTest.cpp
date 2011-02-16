@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "Drawer.hpp"
 #include "Plot2d.hpp"
 #include "ArrowAxes.hpp"
 #include "Point.hpp"

@@ -1,7 +1,10 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include "Drawer.hpp"
+class QPainter;
+
+class Drawer;
+class CoordinateTransformer;
 
 class Point : public Drawer {
 
