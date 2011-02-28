@@ -10,7 +10,15 @@ class LcarsFrame : public QWidget {
 Q_OBJECT
 
 public:
-  LcarsFrame();
+
+  /**
+   * Create a new LcarsFrame.
+   *
+   * @param title  the title of the new frame
+   */
+  LcarsFrame(QString& title);
+
+  /** Delete this frame’s content before it is destroyed itself. */
   virtual ~LcarsFrame();
 
   /**
@@ -30,15 +38,14 @@ public:
    */
   void setContent(QWidget* content) throw(NullPointerException);
 
-  virtual QSize sizeHint() const;
-
 protected:
   void paintEvent(QPaintEvent* event);
 
 private:
   QWidget* mContent;
-  static const int OFFSET = 5;
-  static const int DIAMETER = 30;
+  static const float OFFSET = 5.0;
+  static const float DIAMETER = 30.0;
+  static const float BAR_WIDTH = 130.0;
 
 };
 

@@ -9,6 +9,8 @@ qt4_automoc(${SRC})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/util)
 
-add_library(lcars STATIC ${SRC} ${MOC_SRC})
+add_library(lcars SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(lcars ${QT_LIBRARIES})
 target_link_libraries(lcars util)
+
+install(TARGETS lcars DESTINATION ${CMAKE_BINARY_DIR})

@@ -8,5 +8,7 @@ include(${QT_USE_FILE})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_library(util STATIC ${SRC} ${MOC_SRC})
+add_library(util SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(util ${QT_LIBRARIES})
+
+install(TARGETS util DESTINATION ${CMAKE_BINARY_DIR})

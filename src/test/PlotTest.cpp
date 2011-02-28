@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
   plot->add(new Point(0.0, 0.0));
 
   QGridLayout* layout = new QGridLayout();
-  layout->addWidget(plot, 0, 0);
+  //layout->addWidget(plot, 0, 0);
 
   frame->setLayout(layout);
   frame->show();

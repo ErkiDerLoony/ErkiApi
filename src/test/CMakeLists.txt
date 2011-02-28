@@ -14,7 +14,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/util)
 
 add_executable(test ${SRC} ${MOC_SRC})
 target_link_libraries(test ${QT_LIBRARIES})
-target_link_libraries(test erkiplot)
+target_link_libraries(test plot)
 target_link_libraries(test lcars)
 
 install(TARGETS test DESTINATION ${CMAKE_BINARY_DIR})
