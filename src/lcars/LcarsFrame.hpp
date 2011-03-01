@@ -2,6 +2,7 @@
 #define LCARS_FRAME
 
 #include <QWidget>
+#include <QFont>
 
 #include "NullPointerException.hpp"
 
@@ -43,6 +44,7 @@ protected:
 
 private:
   QWidget* mContent;
+  QString title;
   static const float OFFSET = 5.0;
   static const float DIAMETER = 30.0;
   static const float BAR_WIDTH = 130.0;

@@ -1,6 +1,6 @@
 #include "NullPointerException.hpp"
 
-NullPointerException::NullPointerException() : mText(NULL) {}
+NullPointerException::NullPointerException() : mText((char*) NULL) {}
 
 NullPointerException::NullPointerException(QString& text) : mText(text) {}
 

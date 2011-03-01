@@ -10,7 +10,8 @@
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
 
-  LcarsFrame* frame = new LcarsFrame();
+  QString title("Testframe");
+  LcarsFrame* frame = new LcarsFrame(title);
 
   Plot2d* plot = new Plot2d();
   plot->add(new ArrowAxes());

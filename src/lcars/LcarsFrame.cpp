@@ -2,21 +2,30 @@
 #include <QRectF>
 #include <QPen>
 #include <QBrush>
+#include <QFont>
 
 #include "LcarsFrame.hpp"
 #include "LcarsFrame.moc"
 #include "Lcars.hpp"
 
-LcarsFrame::LcarsFrame() {
-  mContent = new QWidget();
+LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget()) {
+
+  // Make the background black and move the content to the correct position.
   QPalette p;
   p.setColor(QPalette::Background, Qt::black);
   setPalette(p);
   mContent->setPalette(p);
   mContent->resize(100, 20);
   mContent->move(2*OFFSET + DIAMETER, 2*OFFSET + DIAMETER);
-  setMinimumSize(QSizeF(2*OFFSET + BAR_WIDTH + DIAMETER,
-                        2*OFFSET + 2*DIAMETER).toSize());
+
+  // Adjust minimum size.
+  QFontMetrics fm(QFont("Monospace", 14));
+  float w = 2.0*OFFSET + BAR_WIDTH + DIAMETER + mContent->sizeHint().width() +
+    fm.width(title);
+  float h = 2.0*OFFSET + 2.0*DIAMETER + mContent->sizeHint().height();
+  setMinimumSize(QSizeF(w, h).toSize());
+
+  setWindowTitle(title);
 }
 
 LcarsFrame::~LcarsFrame() {
@@ -83,6 +92,6 @@ void LcarsFrame::paintEvent(QPaintEvent* event) {
   p.setFont(QFont("Monospace", 14));
   QFontMetrics fm = p.fontMetrics();
   p.drawText(OFFSET + BAR_WIDTH + radius,
-                   OFFSET + radius + 0.5*fm.height() - fm.descent(),
-                   windowTitle());
+             OFFSET + radius + 0.5*fm.height() - fm.descent(),
+             windowTitle());
 }
