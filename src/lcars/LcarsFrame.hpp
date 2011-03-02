@@ -41,6 +41,7 @@ public:
 
 protected:
   void paintEvent(QPaintEvent* event);
+  void resizeEvent(QResizeEvent* event);
 
 private:
   QWidget* mContent;

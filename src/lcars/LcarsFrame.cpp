@@ -1,28 +1,33 @@
+#include <algorithm>
+
 #include <QPainter>
 #include <QRectF>
 #include <QPen>
 #include <QBrush>
 #include <QFont>
+#include <QTextEdit>
 
 #include "LcarsFrame.hpp"
 #include "LcarsFrame.moc"
 #include "Lcars.hpp"
 
-LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget()) {
+LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget(this)) {
 
-  // Make the background black and move the content to the correct position.
+  // Make the background black.
   QPalette p;
   p.setColor(QPalette::Background, Qt::black);
   setPalette(p);
+
+  // Debug:
+  p.setColor(QPalette::Background, Qt::red);
   mContent->setPalette(p);
-  mContent->resize(100, 20);
-  mContent->move(2*OFFSET + DIAMETER, 2*OFFSET + DIAMETER);
+  mContent->setAutoFillBackground(true);
 
   // Adjust minimum size.
   QFontMetrics fm(QFont("Monospace", 14));
-  float w = 2.0*OFFSET + BAR_WIDTH + DIAMETER + mContent->sizeHint().width() +
-    fm.width(title);
-  float h = 2.0*OFFSET + 2.0*DIAMETER + mContent->sizeHint().height();
+  float w = 2.0*OFFSET + BAR_WIDTH + DIAMETER +
+    std::max(mContent->size().width(), fm.width(title));
+  float h = 2.0*OFFSET + 2.0*DIAMETER + mContent->size().height();
   setMinimumSize(QSizeF(w, h).toSize());
 
   setWindowTitle(title);
@@ -45,6 +50,12 @@ void LcarsFrame::setContent(QWidget* content) throw(NullPointerException) {
     QString s("bla");
     throw NullPointerException(s);
   }
+}
+
+void LcarsFrame::resizeEvent(QResizeEvent* event) {
+  int w = size().width() - 3*OFFSET - BAR_WIDTH;
+  int h = size().height() - 3*OFFSET - DIAMETER;
+  mContent->setGeometry(2*OFFSET + BAR_WIDTH, 2*OFFSET + DIAMETER, w, h);
 }
 
 void LcarsFrame::paintEvent(QPaintEvent* event) {
@@ -91,7 +102,9 @@ void LcarsFrame::paintEvent(QPaintEvent* event) {
   p.setPen(Qt::black);
   p.setFont(QFont("Monospace", 14));
   QFontMetrics fm = p.fontMetrics();
-  p.drawText(OFFSET + BAR_WIDTH + radius,
+  float center = OFFSET + BAR_WIDTH +
+    (size().width() - 2.0*OFFSET - radius - BAR_WIDTH) / 2.0;
+  p.drawText(center - 0.5*fm.width(windowTitle()),
              OFFSET + radius + 0.5*fm.height() - fm.descent(),
              windowTitle());
 }
