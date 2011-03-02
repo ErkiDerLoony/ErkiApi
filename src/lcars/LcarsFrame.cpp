@@ -5,7 +5,6 @@
 #include <QPen>
 #include <QBrush>
 #include <QFont>
-#include <QTextEdit>
 
 #include "LcarsFrame.hpp"
 #include "LcarsFrame.moc"
@@ -17,11 +16,6 @@ LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget(this)) {
   QPalette p;
   p.setColor(QPalette::Background, Qt::black);
   setPalette(p);
-
-  // Debug:
-  p.setColor(QPalette::Background, Qt::red);
-  mContent->setPalette(p);
-  mContent->setAutoFillBackground(true);
 
   // Adjust minimum size.
   QFontMetrics fm(QFont("Monospace", 14));

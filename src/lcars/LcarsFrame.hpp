@@ -6,6 +6,13 @@
 
 #include "NullPointerException.hpp"
 
+/**
+ * This class represents a frame with special LCARS decoration and buttons. The
+ * frame contains a special widget that holds the content of the frame and which
+ * can be changed by calling setContent(QWidget*).
+ *
+ * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
+ */
 class LcarsFrame : public QWidget {
 
 Q_OBJECT
