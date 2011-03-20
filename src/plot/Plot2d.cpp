@@ -5,7 +5,7 @@
 
 Plot2d::Plot2d(QPointF* xRange, QPointF* yRange)
   : mxRange(xRange), myRange(yRange),
-    mTransformer(new CoordinateTransformer()) {
+    mTransformer(new CoordinateTransformer(this)) {
 }
 
 Plot2d::~Plot2d() {
