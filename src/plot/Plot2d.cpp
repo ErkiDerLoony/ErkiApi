@@ -1,5 +1,10 @@
 #include <iostream>
 
+#include <QPointF>
+#include <QPainter>
+
+#include "Drawer.hpp"
+#include "CoordinateTransformer.hpp"
 #include "Plot2d.hpp"
 #include "Plot2d.moc"
 

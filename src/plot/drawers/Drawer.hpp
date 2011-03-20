@@ -1,9 +1,7 @@
 #ifndef DRAWER_H
 #define DRAWER_H
 
-#include <QPainter>
-
-#include "CoordinateTransformer.hpp"
+class QPainter;
 
 class CoordinateTransformer;
 

@@ -13,6 +13,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/plot)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers)
 
-add_library(erkiplot STATIC ${SRC} ${MOC_SRC})
-target_link_libraries(erkiplot ${QT_LIBRARIES})
-target_link_libraries(erkiplot drawers)
+add_library(plot SHARED ${SRC} ${MOC_SRC})
+target_link_libraries(plot ${QT_LIBRARIES})
+target_link_libraries(plot drawers)
+
+install(TARGETS plot DESTINATION ${CMAKE_BINARY_DIR})

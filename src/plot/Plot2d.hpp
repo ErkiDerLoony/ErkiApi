@@ -1,12 +1,10 @@
 #ifndef PLOT2D_H
 #define PLOT2D_H
 
-#include <QPointF>
 #include <QWidget>
-#include <QPaintEvent>
 
-#include "CoordinateTransformer.hpp"
-#include "Drawer.hpp"
+class QPointF;
+class QPaintEvent;
 
 class CoordinateTransformer;
 class Drawer;

@@ -1,14 +1,10 @@
 #ifndef COORDINATE_TRANSFORMER_H
 #define COORDINATE_TRANSFORMER_H
 
-#include <QPainter>
-#include <QPoint>
-#include <QPointF>
-
-#include "Plot2d.hpp"
-
-/** forward declaration */
+/* Forward declarations. */
 class Plot2d;
+class QPoint;
+class QPointF;
 
 /**
  * This class is used by {@link Plot2d} to translate coordinates from math
