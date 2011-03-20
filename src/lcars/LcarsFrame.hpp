@@ -46,6 +46,14 @@ public:
    */
   void setContent(QWidget* content) throw(NullPointerException);
 
+  /**
+   * Override QWidget::setLayout(QLayout*) and redirect the call to #content().
+   *
+   * @param layout  The layout that will be displayed within the bounds of
+   *                #content().
+   */
+  void setLayout(QLayout* layout);
+
 protected:
   void paintEvent(QPaintEvent* event);
   void resizeEvent(QResizeEvent* event);

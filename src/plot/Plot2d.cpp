@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <QPointF>
 #include <QPainter>
 
@@ -27,9 +25,9 @@ void Plot2d::add(Drawer* drawer) {
 
 void Plot2d::paintEvent(QPaintEvent* event) {
   std::list<Drawer*>::iterator it;
-  QPainter* painter = new QPainter(this);
+  QPainter painter(this);
 
   for (it = mDrawers.begin(); it != mDrawers.end(); it++) {
-    (*it)->draw(painter, NULL);
+    (*it)->draw(&painter, NULL);
   }
 }

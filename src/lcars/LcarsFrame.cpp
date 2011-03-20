@@ -46,6 +46,10 @@ void LcarsFrame::setContent(QWidget* content) throw(NullPointerException) {
   }
 }
 
+void LcarsFrame::setLayout(QLayout* layout) {
+  mContent->setLayout(layout);
+}
+
 void LcarsFrame::resizeEvent(QResizeEvent* event) {
   int w = size().width() - 3*OFFSET - BAR_WIDTH;
   int h = size().height() - 3*OFFSET - DIAMETER;
