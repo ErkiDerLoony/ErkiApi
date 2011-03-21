@@ -1,4 +1,5 @@
 add_subdirectory(drawers)
+add_subdirectory(style)
 
 set(SRC
   Plot2d.cpp
@@ -11,10 +12,12 @@ qt4_automoc(${SRC})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/plot)
+include_directories(${PROJECT_SOURCE_DIR}/src/plot/style)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers)
 
 add_library(plot SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(plot ${QT_LIBRARIES})
 target_link_libraries(plot drawers)
+target_link_libraries(plot style)
 
 install(TARGETS plot DESTINATION ${CMAKE_BINARY_DIR})

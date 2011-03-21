@@ -15,10 +15,8 @@ class CoordinateTransformer;
 class ArrowAxes : public Drawer {
 
 public:
-
   ~ArrowAxes() {};
-
-  void draw(QPainter* painter, CoordinateTransformer* transformer);
+  virtual void draw(QPainter& painter, CoordinateTransformer& transformer);
 
 };
 

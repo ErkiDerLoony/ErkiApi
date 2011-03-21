@@ -7,6 +7,7 @@ include(${QT_USE_FILE})
 qt4_automoc(${SRC})
 
 include_directories(${PROJECT_SOURCE_DIR}/src/plot)
+include_directories(${PROJECT_SOURCE_DIR}/src/plot/style)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers/axes)
 include_directories(${PROJECT_SOURCE_DIR}/src/lcars)

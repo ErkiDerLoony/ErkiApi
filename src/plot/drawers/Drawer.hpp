@@ -29,7 +29,7 @@ public:
    *                     coordinates into screen coordinates that can be used
    *                     to actually draw with the given painter.
    */
-  virtual void draw(QPainter* painter, CoordinateTransformer* transformer) = 0;
+  virtual void draw(QPainter& painter, CoordinateTransformer& transformer) = 0;
 
 };
 

@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QGridLayout>
+#include <QPalette>
 
 #include "LcarsFrame.hpp"
 #include "Drawer.hpp"
@@ -14,7 +15,11 @@ int main(int argc, char** argv) {
   LcarsFrame* frame = new LcarsFrame(title);
 
   Plot2d* plot = new Plot2d();
-  //plot->add(new ArrowAxes());
+  plot->add(new ArrowAxes());
+  QPalette p = plot->palette();
+  p.setColor(QPalette::Window, QColor(127,200,255));
+  plot->setAutoFillBackground(true);
+  plot->setPalette(p);
 
   QGridLayout* layout = new QGridLayout();
   layout->addWidget(plot, 0, 0);

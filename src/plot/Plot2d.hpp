@@ -24,10 +24,10 @@ public:
   /**
    * Create a new plot with given initial ranges.
    *
-   * @param xRange  the initial range of the x axis of the new plot
-   *                (defaults to -1 to 1)
-   * @param yRange  the initial range of the y axis of the new plot
-   *                (defaults to -1 to 1)
+   * @param xRange         The initial range of the x axis of the new plot
+   *                       (defaults to -1 to 1).
+   * @param yRange         The initial range of the y axis of the new plot
+   *                       (defaults to -1 to 1).
    */
   Plot2d(QPointF* xRange = new QPointF(-1.0, 1.0),
          QPointF* yRange = new QPointF(-1.0, 1.0));

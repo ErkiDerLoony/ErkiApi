@@ -8,8 +8,7 @@
 
 Plot2d::Plot2d(QPointF* xRange, QPointF* yRange)
   : mxRange(xRange), myRange(yRange),
-    mTransformer(new CoordinateTransformer(this)) {
-}
+    mTransformer(new CoordinateTransformer(this)) {}
 
 Plot2d::~Plot2d() {
   std::list<Drawer*>::iterator it;
@@ -28,6 +27,6 @@ void Plot2d::paintEvent(QPaintEvent* event) {
   QPainter painter(this);
 
   for (it = mDrawers.begin(); it != mDrawers.end(); it++) {
-    (*it)->draw(&painter, NULL);
+    (*it)->draw(painter, *mTransformer);
   }
 }
