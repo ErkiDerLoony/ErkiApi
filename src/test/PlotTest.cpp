@@ -3,6 +3,7 @@
 #include <QPalette>
 
 #include "LcarsFrame.hpp"
+#include "StyleProvider.hpp"
 #include "Drawer.hpp"
 #include "Plot2d.hpp"
 #include "ArrowAxes.hpp"

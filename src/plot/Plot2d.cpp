@@ -3,12 +3,15 @@
 
 #include "Drawer.hpp"
 #include "CoordinateTransformer.hpp"
+#include "StyleProvider.hpp"
 #include "Plot2d.hpp"
 #include "Plot2d.moc"
 
-Plot2d::Plot2d(QPointF* xRange, QPointF* yRange)
+Plot2d::Plot2d(QPointF* xRange, QPointF* yRange, StyleProvider* styleProvider)
   : mxRange(xRange), myRange(yRange),
-    mTransformer(new CoordinateTransformer(this)) {}
+    mTransformer(new CoordinateTransformer(this)),
+    mStyleProvider(styleProvider) {
+}
 
 Plot2d::~Plot2d() {
   std::list<Drawer*>::iterator it;

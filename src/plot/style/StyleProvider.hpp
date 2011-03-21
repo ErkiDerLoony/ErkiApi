@@ -14,8 +14,9 @@ enum Keys {
 
 };
 
-/* Forward declaration. */
-template <typename T> class Key;
+/* Forward declarations. */
+template<typename T> class Key;
+class Object;
 
 /* Inevitable includes. */
 #include <map>
@@ -29,11 +30,40 @@ template <typename T> class Key;
 class StyleProvider {
 
 public:
+
+  /**
+   * Create a new StyleProvider that contains default values for all constants
+   * necessary for {@link Plot2d}.
+   */
   StyleProvider();
+
+  /** Delete this StyleProvider and clean up all contained values. */
   virtual ~StyleProvider();
 
+  /**
+   * Add a new value to this StyleProvider.
+   *
+   * @param pair  The key/value pair to add.
+   */
+  template<typename T> void add(std::pair<Key<T>, T> pair);
+
+  /**
+   * Add a new value to this StyleProvider.
+   *
+   * @param key    The unique key under which the new value will be stored.
+   * @param value  The new value.
+   */
+  template<typename T> void add(Key<T> key, T value);
+
+  /**
+   * Check whether a value is stored under some key.
+   *
+   * @param key  The key to check.
+   */
+  template<typename T> bool contains(Key<T> key);
+
 private:
-  std::map<Key<double>, double> values;
+  std::map<Key<Object>, Object> values;
 
 };
 

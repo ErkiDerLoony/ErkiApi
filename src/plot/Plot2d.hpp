@@ -8,6 +8,7 @@ class QPaintEvent;
 
 class CoordinateTransformer;
 class Drawer;
+class StyleProvider;
 
 /**
  * This class represents a 2D plot that can easily be extended by adding
@@ -28,9 +29,12 @@ public:
    *                       (defaults to -1 to 1).
    * @param yRange         The initial range of the y axis of the new plot
    *                       (defaults to -1 to 1).
+   * @param styleProvider  The style provider that will be used to determine the
+   *                       look of the new plot.
    */
   Plot2d(QPointF* xRange = new QPointF(-1.0, 1.0),
-         QPointF* yRange = new QPointF(-1.0, 1.0));
+         QPointF* yRange = new QPointF(-1.0, 1.0),
+         StyleProvider* styleProvider = new StyleProvider());
 
   /**
    * Destroy this plot. All remaining drawers will be deleted and their
@@ -53,6 +57,7 @@ private:
   QPointF* mxRange;
   QPointF* myRange;
   CoordinateTransformer* mTransformer;
+  StyleProvider* mStyleProvider;
 
 };
 

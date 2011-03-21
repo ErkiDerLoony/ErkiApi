@@ -1,5 +1,4 @@
-/* Forward declaration. */
-class StyleProvider;
+#include "StyleProvider.hpp" /* Contains enum Keys. */
 
 /**
  * This class is used to retain the type of style constant stored in an instance
@@ -11,11 +10,10 @@ class StyleProvider;
 template <typename T> class Key {
 
 public:
-  Key(Keys key, T value);
+  Key(Keys id) : mId(id) {}
   virtual ~Key() {};
 
 private:
-  Keys mKey;
-  T mValue;
+  Keys mId;
 
 };
