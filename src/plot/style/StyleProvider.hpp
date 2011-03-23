@@ -37,6 +37,8 @@ public:
 
   template<class O> operator Key<O>() { return Key<O>(mId); }
 
+  bool operator<(const Key<T> other) { return mId < other.mId; }
+
 };
 
 /**
@@ -66,14 +68,14 @@ public:
    * @param key    The unique key under which the new value will be stored.
    * @param value  The new value.
    */
-  template<typename T> void add(Key<T> key, T value);
+  template<class T> void add(Key<T> key, T value);
 
   /**
    * Check whether a value is stored under some key.
    *
    * @param key  The key to check.
    */
-  template<typename T> bool contains(Key<T> key);
+  template<class T> bool contains(Key<T> key);
 
 };
 

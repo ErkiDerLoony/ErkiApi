@@ -7,7 +7,7 @@ namespace Lcars {
 
   QColor green(127, 255, 127);
 
-  QColor blue(127, 200, 255);
+  QColor blue(50, 175, 255);
 
 }
 

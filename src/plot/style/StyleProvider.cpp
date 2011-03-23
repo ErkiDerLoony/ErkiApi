@@ -12,10 +12,10 @@ StyleProvider::StyleProvider() {
 
 StyleProvider::~StyleProvider() {}
 
-template<typename T> void StyleProvider::add(Key<T> key, T value) {
+template<class T> void StyleProvider::add(const Key<T> key, const T value) {
   values.insert(std::make_pair(key, value));
 }
 
-template<typename T> bool StyleProvider::contains(Key<T> key) {
+template<class T> bool StyleProvider::contains(Key<T> key) {
   return (values.find(key) != values.end());
 }
