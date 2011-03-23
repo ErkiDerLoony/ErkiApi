@@ -1,6 +1,12 @@
 #ifndef STYLE_PROVIDER_H
 #define STYLE_PROVIDER_H
 
+/* Forward declaration. */
+class Object;
+
+/* Inevitable includes. */
+#include <map>
+
 /**
  * This enum is used to uniquely identify style constants stored in a
  * StyleProvider.
@@ -14,12 +20,24 @@ enum Keys {
 
 };
 
-/* Forward declarations. */
-template<typename T> class Key;
-class Object;
+/**
+ * This class is used to retain the type of style constant stored in an instance
+ * of {@link StyleProvider}. The actual type is not used when comparing two keys
+ * so make sure the used identifier (see {@link Keys}) is unique.
+ *
+ * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
+ */
+template<class T> class Key {
 
-/* Inevitable includes. */
-#include <map>
+  Keys mId;
+
+public:
+  Key(Keys id) : mId(id) {}
+  virtual ~Key() {}
+
+  template<class O> operator Key<O>() { return Key<O>(mId); }
+
+};
 
 /**
  * This class is used to store style constants that define the look of a
@@ -28,6 +46,8 @@ class Object;
  * @autor Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
 class StyleProvider {
+
+  std::map<Key<Object>, Object> values;
 
 public:
 
@@ -43,13 +63,6 @@ public:
   /**
    * Add a new value to this StyleProvider.
    *
-   * @param pair  The key/value pair to add.
-   */
-  template<typename T> void add(std::pair<Key<T>, T> pair);
-
-  /**
-   * Add a new value to this StyleProvider.
-   *
    * @param key    The unique key under which the new value will be stored.
    * @param value  The new value.
    */
@@ -61,9 +74,6 @@ public:
    * @param key  The key to check.
    */
   template<typename T> bool contains(Key<T> key);
-
-private:
-  std::map<Key<Object>, Object> values;
 
 };
 
