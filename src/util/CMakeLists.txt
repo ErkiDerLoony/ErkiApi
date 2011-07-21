@@ -1,5 +1,6 @@
 set(SRC
   NullPointerException.cpp
+  Log.cpp
 )
 
 find_package(Qt4 REQUIRED)
