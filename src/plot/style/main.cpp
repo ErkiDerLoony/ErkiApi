@@ -1,7 +1,8 @@
-#include <iostream>
 #include <map>
 
-#include "Object.hpp"
+class Object {};
+
+class Colour : public Object {};
 
 enum Keys {
   BACKGROUND
@@ -17,22 +18,28 @@ public:
 
   Keys get() { return mId; }
 
-  template<class O> operator Key<O>() { return Key<O>(mId); }
-  bool operator<(Key<T> other) { return mId < other.mId; }
+  template<class O> operator Key<O>() const { return Key<O>(mId); }
+  bool operator<(const Key<T> other) const { return mId < other.mId; }
 
 };
 
-void add(Key<Object> key, Object value) {
-  std::map<Key<Object>, Object> values;
-  values.insert(std::make_pair(key, value));
+std::map<Key<Object>, Object> values;
+
+template<class T> void add(Key<T> key, T value) {
+  values[key] = value;
 }
 
-class Colour : public Object {
+template<class T> T get(Key<T> key) {
+  return (T) (values[key]);
+}
 
-};
+template<> Colour get(Key<Colour> key) {
+  return reinterpret_cast<Colour>(values[key]);
+}
 
 int main() {
   Key<Colour> key(BACKGROUND);
   Colour value;
   add(key, value);
+  Colour c = get(key);
 }
