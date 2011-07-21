@@ -79,7 +79,7 @@ public:
    *
    * @param key  The key to check.
    */
-  template<class T> bool contains(const Key<T> key);
+  template<class T> bool contains(const Key<T> key) const;
 
   /**
    * Access style constants stored in the StyleProvider.

@@ -14,10 +14,14 @@ template<class T> void StyleProvider::add(const Key<T> key, const T value) {
   values[key] = value;
 }
 
-template<class T> bool StyleProvider::contains(Key<T> key) {
+template<class T> bool StyleProvider::contains (const Key<T> key) const {
   return (values.find(key) != values.end());
 }
 
-template<class T> T StyleProvider::get(Key<T> key) {
-  return (T) (values[key]);
+template<class T> T StyleProvider::get(const Key<T> key) {
+  return values[key];
+}
+
+template<> Colour StyleProvider::get(Key<Colour> key) {
+  return reinterpret_cast<Colour>(values[key]);
 }
