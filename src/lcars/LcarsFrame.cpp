@@ -41,8 +41,7 @@ void LcarsFrame::setContent(QWidget* content) throw(NullPointerException) {
     delete mContent;
     mContent = content;
   } else {
-    QString s("bla");
-    throw NullPointerException(s);
+    throw NullPointerException(new QString("bla"));
   }
 }
 

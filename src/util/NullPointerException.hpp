@@ -19,14 +19,14 @@ public:
    *
    * @param text  The error message of the new exception.
    */
-  NullPointerException(QString& text);
+  NullPointerException(QString* text);
 
   /**
    * Create a new NullPointerException without a specific textual explanation.
    */
   NullPointerException();
 
-  /** Clean up the internal error message. */
+  /** Do cleanup if necessary. */
   virtual ~NullPointerException() throw();
 
   /**
@@ -34,10 +34,10 @@ public:
    *
    * @returns  this exception’s error message
    */
-  QString text();
+  QString* text();
 
 private:
-  QString mText;
+  QString* mText;
 
 };
 

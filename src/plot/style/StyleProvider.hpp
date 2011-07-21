@@ -49,6 +49,10 @@ public:
  */
 class StyleProvider {
 
+  /**
+   * This map stores the internal mapping of {@link Key} instances to the
+   * according values.
+   */
   std::map<Key<Object>, Object> values;
 
 public:
@@ -76,6 +80,15 @@ public:
    * @param key  The key to check.
    */
   template<class T> bool contains(const Key<T> key);
+
+  /**
+   * Access style constants stored in the StyleProvider.
+   *
+   * @param key  The key of the value to retrieve. If this StyleProvider does
+   *             not contain a mapping for the given key {@code NULL} is
+   *             returned.
+   */
+  template<class T> T get(const Key<T> key);
 
 };
 

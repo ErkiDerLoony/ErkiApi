@@ -1,5 +1,6 @@
 set(SRC
   StyleProvider.cpp
+  wrappers/Colour.hpp
 )
 
 find_package(Qt4 REQUIRED)
