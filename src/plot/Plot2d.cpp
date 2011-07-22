@@ -15,7 +15,7 @@ Plot2d::Plot2d(QPointF* xRange, QPointF* yRange, StyleProvider* styleProvider)
     mStyleProvider(styleProvider) {
   QPalette p = palette();
   p.setColor(QPalette::Window,
-             styleProvider->get(Key<Colour>(BACKGROUND)).get());
+             styleProvider->get(Key<Colour>(BACKGROUND))->get());
   setAutoFillBackground(true);
   setPalette(p);
 }
@@ -26,10 +26,16 @@ Plot2d::~Plot2d() {
   for (it = mDrawers.begin(); it != mDrawers.end(); it++) {
     delete *it;
   }
+
+  delete axes;
 }
 
 void Plot2d::add(Drawer* drawer) {
   mDrawers.push_back(drawer);
+}
+
+void Plot2d::setAxes(Axes* axes) {
+  this->axes = axes;
 }
 
 void Plot2d::paintEvent(QPaintEvent* event) {

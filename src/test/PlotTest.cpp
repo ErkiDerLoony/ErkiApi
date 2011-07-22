@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
   LcarsFrame* frame = new LcarsFrame(title);
 
   Plot2d* plot = new Plot2d();
-  plot->add(new ArrowAxes());
+  plot->setAxes(new ArrowAxes());
+  plot->add(new Point(0.5, 1.0));
 
   QGridLayout* layout = new QGridLayout();
   layout->addWidget(plot, 0, 0);

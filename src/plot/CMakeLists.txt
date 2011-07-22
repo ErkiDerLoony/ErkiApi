@@ -1,5 +1,6 @@
 add_subdirectory(drawers)
 add_subdirectory(style)
+add_subdirectory(axes)
 
 set(SRC
   Plot2d.cpp

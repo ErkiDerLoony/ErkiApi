@@ -53,7 +53,7 @@ class StyleProvider {
    * This map stores the internal mapping of {@link Key} instances to the
    * according values.
    */
-  std::map<Key<Object>, Object> values;
+  std::map<Key<Object>, Object*> values;
 
 public:
 
@@ -72,7 +72,7 @@ public:
    * @param key    The unique key under which the new value will be stored.
    * @param value  The new value.
    */
-  template<class T> void add(const Key<T> key, const T value);
+  template<class T> void add(const Key<T> key, T* value);
 
   /**
    * Check whether a value is stored under some key.
@@ -88,7 +88,7 @@ public:
    *             not contain a mapping for the given key {@code NULL} is
    *             returned.
    */
-  template<class T> T get(const Key<T> key);
+  template<class T> T* get(const Key<T> key);
 
 };
 

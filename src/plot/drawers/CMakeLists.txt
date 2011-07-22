@@ -1,5 +1,3 @@
-add_subdirectory(axes)
-
 set(SRC
   Point.cpp
 )

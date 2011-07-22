@@ -9,6 +9,7 @@ class QPaintEvent;
 class CoordinateTransformer;
 class Drawer;
 class StyleProvider;
+class Axes;
 
 /**
  * This class represents a 2D plot that can easily be extended by adding
@@ -49,10 +50,18 @@ public:
    */
   void add(Drawer* drawer);
 
+  /**
+   * Add coordinate axes to this plot. In the future there will be default axes.
+   *
+   * @param axes  The coordinate axes to set for this plot.
+   */
+  void setAxes(Axes* axes);
+
 protected:
   void paintEvent(QPaintEvent* event);
 
 private:
+  Axes* axes;
   std::list<Drawer*> mDrawers;
   QPointF* mxRange;
   QPointF* myRange;
