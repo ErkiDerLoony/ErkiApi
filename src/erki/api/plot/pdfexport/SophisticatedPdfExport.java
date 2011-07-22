@@ -51,8 +51,6 @@ import erki.api.plot.style.StyleProvider;
  */
 public class SophisticatedPdfExport implements ActionListener {
     
-    private static final long serialVersionUID = -7533151605417797603L;
-    
     static JDialog dialog = null;
     
     private static Plot2d accumulationPlot;

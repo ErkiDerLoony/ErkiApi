@@ -35,8 +35,6 @@ import java.util.TreeMap;
  */
 public abstract class Storage<E extends Enum<E>> {
     
-    private static final long serialVersionUID = -1339066671328991003L;
-    
     protected TreeMap<Key<?, E>, Object> data = new TreeMap<Key<?, E>, Object>();
     
     protected final String filename;

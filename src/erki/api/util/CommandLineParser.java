@@ -119,7 +119,7 @@ public class CommandLineParser {
     /**
      * Access the list of arguments that occurred after the last switch.
      * 
-     * @return A list of final arguments or an empty list if there was no list of arguments.s
+     * @return A list of final arguments or an empty list if there was no list of arguments.
      */
     public LinkedList<String> getList() {
         return list;
