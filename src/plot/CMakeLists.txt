@@ -16,10 +16,12 @@ include_directories(${PROJECT_SOURCE_DIR}/src/plot)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/style)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/style/wrappers)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers)
+include_directories(${PROJECT_SOURCE_DIR}/src/plot/axes)
 
 add_library(plot SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(plot ${QT_LIBRARIES})
 target_link_libraries(plot drawers)
+target_link_libraries(plot axes)
 target_link_libraries(plot style)
 
 install(TARGETS plot DESTINATION ${CMAKE_BINARY_DIR})

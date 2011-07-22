@@ -39,5 +39,6 @@ void ArrowAxes::setMaxY(double maxY) {
 }
 
 void ArrowAxes::draw(QPainter& p, CoordinateTransformer& t) {
-
+  p.setPen(QPen(1.5f));
+  p.drawLine(20, 20, 25, 30);
 }

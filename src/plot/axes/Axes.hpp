@@ -6,6 +6,7 @@ class CoordinateTransformer;
 
 class Axes {
 
+protected:
   double minX, maxX, minY, maxY;
 
 public:

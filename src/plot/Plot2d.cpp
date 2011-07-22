@@ -1,6 +1,7 @@
 #include <QPointF>
 #include <QPainter>
 
+#include "Axes.hpp"
 #include "Drawer.hpp"
 #include "CoordinateTransformer.hpp"
 #include "StyleProvider.hpp"
@@ -41,6 +42,8 @@ void Plot2d::setAxes(Axes* axes) {
 void Plot2d::paintEvent(QPaintEvent* event) {
   std::list<Drawer*>::iterator it;
   QPainter painter(this);
+
+  axes->draw(painter, *mTransformer);
 
   for (it = mDrawers.begin(); it != mDrawers.end(); it++) {
     (*it)->draw(painter, *mTransformer);

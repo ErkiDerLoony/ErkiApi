@@ -16,8 +16,6 @@ class CoordinateTransformer;
  */
 class ArrowAxes : public Axes {
 
-  double minX, maxX, minY, maxY;
-
 public:
 
   virtual ~ArrowAxes();
