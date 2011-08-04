@@ -1,6 +1,6 @@
 project(ErkiApi CXX C)
 cmake_minimum_required(VERSION 2.6)
-add_definitions("-Wall -O2 -g")
+add_definitions("-Wall -O2 -g -fPIC")
 
 add_subdirectory(src)
 
