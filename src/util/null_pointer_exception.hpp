@@ -2,7 +2,7 @@
 #define NULL_POINTER_EXCEPTION_H
 
 #include <exception>
-#include <QString>
+#include <string>
 
 /**
  * This class models an exception which indicates that a null pointer occurred.
@@ -10,34 +10,34 @@
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
-class NullPointerException : public std::exception {
+class null_pointer_exception : public std::exception {
 
 public:
 
   /**
-   * Create a new NullPointerException.
+   * Create a new null_pointer_exception.
    *
    * @param text  The error message of the new exception.
    */
-  NullPointerException(QString* text);
+  null_pointer_exception(std::string text);
 
   /**
-   * Create a new NullPointerException without a specific textual explanation.
+   * Create a new null_pointer_exception without a specific textual explanation.
    */
-  NullPointerException();
+  null_pointer_exception();
 
   /** Do cleanup if necessary. */
-  virtual ~NullPointerException() throw();
+  virtual ~null_pointer_exception() throw();
 
   /**
    * Access the error message stored with this exception.
    *
    * @returns  this exception’s error message
    */
-  QString* text();
+  std::string text();
 
 private:
-  QString* mText;
+  std::string m_text;
 
 };
 

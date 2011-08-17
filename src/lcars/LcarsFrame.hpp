@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QFont>
 
-#include "NullPointerException.hpp"
+#include "null_pointer_exception.hpp"
 
 /**
  * This class represents a frame with special LCARS decoration and buttons. The
@@ -40,11 +40,11 @@ public:
   /**
    * Change the content of this frame.
    *
-   * @param content  the new widget that shall act as the container for the
-   *                 content of this frame
-   * @throws NullPointerException  if the given widget is NULL
+   * @param content  The new widget that shall act as the container for the
+   *                 content of this frame.
+   * @throws null_pointer_exception  if the given widget is 0.
    */
-  void setContent(QWidget* content) throw(NullPointerException);
+  void setContent(QWidget* content) throw(null_pointer_exception);
 
   /**
    * Override QWidget::setLayout(QLayout*) and redirect the call to #content().

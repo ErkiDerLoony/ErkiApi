@@ -1,9 +1,13 @@
+set(CLI_SRC
+  command_line_parser_test.cpp
+)
+
 set(PLOT_SRC
   PlotTest.cpp
 )
 
 set(LOG_SRC
-  LogTest.cpp
+  log_test.cpp
 )
 
 find_package(Qt4 REQUIRED)
@@ -27,3 +31,7 @@ install(TARGETS testplot DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(testlog ${LOG_SRC})
 target_link_libraries(testlog util)
 install(TARGETS testlog DESTINATION ${CMAKE_BINARY_DIR})
+
+add_executable(testcommandlineparser ${CLI_SRC})
+target_link_libraries(testcommandlineparser util)
+install(TARGETS testcommandlineparser DESTINATION ${CMAKE_BINARY_DIR})

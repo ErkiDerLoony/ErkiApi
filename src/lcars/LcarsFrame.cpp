@@ -9,6 +9,7 @@
 #include "LcarsFrame.hpp"
 #include "LcarsFrame.moc"
 #include "Lcars.hpp"
+#include "null_pointer_exception.hpp"
 
 LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget(this)) {
 
@@ -35,13 +36,13 @@ QWidget* LcarsFrame::content() {
   return mContent;
 }
 
-void LcarsFrame::setContent(QWidget* content) throw(NullPointerException) {
+void LcarsFrame::setContent(QWidget* content) throw(null_pointer_exception) {
 
   if (content != NULL) {
     delete mContent;
     mContent = content;
   } else {
-    throw NullPointerException(new QString("bla"));
+    throw null_pointer_exception("Content must not be 0!");
   }
 }
 
