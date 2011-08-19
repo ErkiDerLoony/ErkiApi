@@ -1,16 +1,21 @@
+#include "command_line_parser.hpp"
+#include "log.hpp"
+
 #include <iostream>
 #include <stdarg.h>
 
-#include "command_line_parser.hpp"
-
 command_line_parser::command_line_parser(int argc, char** argv) {
+  LOG_DEBUG << "Parsing " << (argc - 1) << " options." << std::endl;
 
-  for (int i = 0; i < argc; i++) {
+  for (int i = 1; i < argc; i++) {
+    LOG_DEBUG << "Parsing option no. " << i << "." << std::endl;
     std::string arg = argv[i];
+    LOG_DEBUG << "Option is " << arg << std::endl;
     if (arg == "--") continue;
 
     if (arg.substr(0, 2) == "--") {
       // Parse long options.
+      LOG_DEBUG << "Recognized a long option." << std::endl;
       arg = arg.substr(2);
       size_t found = arg.find("=");
 
@@ -31,6 +36,7 @@ command_line_parser::command_line_parser(int argc, char** argv) {
 
     } else if (arg.substr(0, 1) == "-") {
       // Parse short options.
+      LOG_DEBUG << "Recognized a short option." << std::endl;
       arg = arg.substr(1);
 
       if (arg.size() > 1) {
@@ -49,8 +55,10 @@ command_line_parser::command_line_parser(int argc, char** argv) {
       }
     } else {
       // Parse final list of strings (e.g. filenames).
+      LOG_DEBUG << "Parsing final list of strings." << std::endl;
 
       for (int j = i; j < argc; j++) {
+        LOG_DEBUG << "Pushing " << argv[j] << "." << std::endl;
         m_list.push_back(argv[j]);
       }
 
@@ -74,6 +82,12 @@ bool command_line_parser::contains(int nr, ...) {
   }
 
   return false;
+}
+
+std::vector<std::string> command_line_parser::list() {
+  LOG_DEBUG << "Accessing list (has " << m_list.size() << " entries)."
+            << std::endl;
+  return m_list;
 }
 
 std::map<std::string,

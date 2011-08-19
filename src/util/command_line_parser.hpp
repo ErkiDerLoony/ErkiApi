@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include <list>
+#include <vector>
 
 /**
  * This class takes command line arguments as passed to the main method and
@@ -16,7 +16,7 @@ class command_line_parser {
 
   std::map<std::string, std::string> m_args;
 
-  std::list<std::string> m_list;
+  std::vector<std::string> m_list;
 
 public:
 
@@ -25,7 +25,8 @@ public:
    *
    * @param argc  The number of arguments that are contained in the argument
    *              array.
-   * @param argv  The argument array.
+   * @param argv  The argument array as provided by {@code main} (i.e. the first
+   *              entry contains the program’s name).
    */
   command_line_parser(int argc, char** argv);
 
@@ -42,7 +43,7 @@ public:
    * internal key-value mapping. This allows for iteration over all switches
    * contained in this command_line_parser.
    *
-   * @returns  The begin iterator of the underlying map.
+   * @return  The begin iterator of the underlying map.
    */
   std::map<std::string, std::string>::const_iterator begin();
 
@@ -51,13 +52,21 @@ public:
    * mapping. This allows for iteration over all switches contained in this
    * command_line_parser.
    *
-   * @returns  The end iterator of the underlying map.
+   * @return  The end iterator of the underlying map.
    */
   std::map<std::string, std::string>::const_iterator end();
 
-  // std::list<std::string> list();
+  /**
+   * Access a copy of the internal list of values that were supplied after the
+   * option switches on the command line.
+   *
+   * @return  A list of finally supplied strings (e.g. file names).
+   */
+  std::vector<std::string> list();
 
-  // std::string peek(std::string keys);
+  //std::string peek(std::string keys);
+
+  //std::string pop(std::string keys);
 
 };
 

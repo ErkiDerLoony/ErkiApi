@@ -14,7 +14,7 @@
     log::output << "[" << log::format_time() << " "                     \
                 << log::format_file(__FILE__) << "::" << __FUNCTION__   \
                 << "(" << __LINE__ << ")] "                             \
-                << log::format_modifier(m) << " "                       \
+                << log::format_modifier(m) << ": "                      \
 
 /** This macro logs an error message if the log level is sufficiently high. */
 #define LOG_ERROR \
