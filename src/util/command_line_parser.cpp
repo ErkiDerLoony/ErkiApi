@@ -12,7 +12,7 @@ command_line_parser::command_line_parser(int argc, char** argv) {
 
     if (arg.substr(0, 2) == "--") {
       // Parse long options.
-      log_debug("Recognized a long option.");
+      log::debug << "Recognized a long option.";
       arg = arg.substr(2);
       size_t found = arg.find("=");
 
@@ -33,7 +33,7 @@ command_line_parser::command_line_parser(int argc, char** argv) {
 
     } else if (arg.substr(0, 1) == "-") {
       // Parse short options.
-      log_debug("Recognized a short option.");
+      log::debug << "Recognized a short option.";
       arg = arg.substr(1);
 
       if (arg.size() > 1) {
