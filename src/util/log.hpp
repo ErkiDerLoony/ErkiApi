@@ -5,155 +5,90 @@
 #include <iostream>
 #include <map>
 
-#define LOG(l,m,t)                                                    \
-  l "[" << log::time() << " " << __FILE__ << "::" << __FUNCTION__     \
-  << "(" << __LINE__ << ")] " << m << " " t
-
-#define LOG_DEBUG(t)                            \
-  LOG(log::debug, "DEBUG", t)
-
-#define LOG_INFO(t)                             \
-  LOG(log::info, "INFO", t)
-
-#define LOG_WARNING(t)                          \
-  LOG(log::warning, "WARNING", t)
-
-#define LOG_ERROR(t)                            \
-  LOG(log::error, "ERROR", t)
-
 /**
- * This class represents a log utility. It supports multiple log levels and
- * adjustment of the level on a per-file basis.
- *
- * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
+ * This macro is used internally by the other log macros and should not be
+ * used explicitely.
  */
-class log {
+#define LOG(m)                                                          \
+  if (log::is_loggable(m, log::format_file(__FILE__)))                  \
+    log::output << "[" << log::format_time() << " "                     \
+                << log::format_file(__FILE__) << "::" << __FUNCTION__   \
+                << "(" << __LINE__ << ")] "                             \
+                << log::format_modifier(m) << " "                       \
 
-public:
+/** This macro logs an error message if the log level is sufficiently high. */
+#define LOG_ERROR \
+  LOG(log::ERROR)
 
-  /** This enum contains all possible log levels. */
+/** This macro logs a warning message if the log level is sufficiently high. */
+#define LOG_WARNING \
+  LOG(log::WARNING)
+
+/** This macro logs an info message if the log level is sufficiently high. */
+#define LOG_INFO \
+  LOG(log::INFO)
+
+/** This macro logs debug information if the log level is sufficiently high. */
+#define LOG_DEBUG \
+  LOG(log::DEBUG)
+
+namespace log {
+
+  /** This enum defines the possible log levels. */
   enum loglevel {
     DEBUG, INFO, WARNING, ERROR, NONE
   };
 
-private:
-
   /**
-   * This class uses the {@code std::ostream} of a {@link log} to output logging
-   * information if the log level fits.
+   * The output all log messages that are loggable under the given log level
+   * conditions shall be printed to.
    */
-  class log_ostream {
-
-  private:
-
-    /** This log level of this stream. */
-    log::loglevel m_level;
-
-    /** The method that actually logs stuff the the {@link m_output}. */
-    /*    void real_log(log::loglevel modifier, int line, std::string file,
-          std::string function, std::string text);*/
-
-  public:
-
-    /**
-     * Create a new log_ostream.
-     *
-     * @param level  The log level of the new stream.
-     */
-    log_ostream(log::loglevel level);
-
-    /** Do cleanup if necessary. */
-    virtual ~log_ostream();
-
-    log_ostream& operator<<(const char*);
-    log_ostream& operator<<(const std::string&);
-
-  };
-
-  /** Allow log_ostream to use private members. */
-  friend class log_ostream;
-
-  /** The actual output all logging information is printed to. */
-  static std::ostream& m_output;
-
-  /** Indicates whether or not the date shall be included in the log output. */
-  static bool m_print_date;
+  extern std::ostream& output;
 
   /**
-   * The current global log level which is used if no specific log level is
-   * defined for a file.
+   * This flag specifies whether or not the date shall be included in log
+   * messages.
    */
-  static loglevel m_level;
+  extern bool print_date;
 
-  /** The mapping of specific log levels for some files. */
-  static std::map<std::string, loglevel> m_mapping;
+  /** The current global log level. */
+  extern loglevel level;
 
-public:
-
-  /**
-   * This stream is used to log debug information. Do NOT use it directly but
-   * rather use the {@link LOG_DEBUG} macro. The debug messages are only
-   * actually logged if the log level for the file that contains the log
-   * instruction is sufficiently high.
-   */
-  static log_ostream debug;
+  /** The mapping that contains special log levels for some files. */
+  extern std::map<std::string, loglevel> mapping;
 
   /**
-   * This stream is used to log info messages. Do NOT use it directly but rather
-   * use the {@link LOG_INFO} macro. The info messages are only actually logged
-   * if the log level for the file that contains the log instruction is
-   * sufficiently high.
-   */
-  static log_ostream info;
-
-  /**
-   * This stream is used to log warning messages. Do NOT use it directly but
-   * rather use the {@link LOG_WARNING} macro. The warning messages are only
-   * actually logged if the log level for the file that contains the log
-   * instruction is sufficiently high.
-   */
-  static log_ostream warning;
-
-  /**
-   * This stream is used to log error messages. Do NOT use it directly but
-   * rather use the {@link LOG_ERROR} macro. The error messages are only
-   * actually logged if the log level for the file that contains the log
-   * instruction is sufficiently high.
-   */
-  static log_ostream error;
-
-  /**
-   * Change the specific log level for some file.
+   * Set a special log level for some file. This may also be done by inserting
+   * the log level/filename pair into {@link mapping}.
    *
-   * @param level  The new log level for the given file.
-   * @param file   The filename for which the log level shall be changed.
+   * @param level  The log level that shall be set.
+   * @param file   The file the log level shall be changed for.
    */
-  static void set_level_for_file(loglevel level, std::string file);
+  void set_level_for_file(loglevel level, std::string file);
 
   /**
-   * Change the global log level which is used if no specific log level is
-   * specified for some file.
+   * Check whether or not a log message shall actually be printed to the log
+   * regarding the current log level and any special log level defined for the
+   * file that contains the log instruction.
    *
-   * @param level  The new global log level.
+   * @param level  The level of the message that shall be logged.
+   * @param file   The file that contained the log instruction.
    */
-  static void set_level(loglevel level);
+  bool is_loggable(loglevel level, std::string file);
 
   /**
-   * Change the actual log output.
+   * Format a log level for output.
    *
-   * @param output  The new stream to which all log output is printed.
+   * @param level  The log level to format.
    */
-  static void set_output(std::ostream& output);
+  std::string format_modifier(loglevel level);
 
-  /**
-   * Change the flag that indicates whether the date shall be included in the
-   * log output.
-   *
-   * @param print_date  If this is {@code true} the date is included, otherwise
-   *                    it is not.
-   */
-  static void set_print_date(bool print_date);
+  /** Format the current time for output in a log message. */
+  std::string format_time();
 
-};
+  /** Format a filename for output in a log message. */
+  std::string format_file(std::string filename);
+
+}
 
 #endif /* LOG_H */

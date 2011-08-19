@@ -1,91 +1,63 @@
+#include <string>
+#include <iostream>
+#include <time.h>
+
 #include "log.hpp"
 
-log::log_ostream::log_ostream(log::loglevel level) : m_level(level) {}
+std::ostream& log::output = std::cout;
 
-log::log_ostream::~log_ostream() {}
+bool log::print_date = false;
 
-/*
-void log::log_ostream::real_log(log::loglevel modifier, std::string text) {
+log::loglevel log::level = log::INFO;
 
-  // Create better filename representation.
-  int pos = file.find_last_of("/");
-  file = file.substr(pos + 1);
+std::map<std::string, log::loglevel> log::mapping;
 
-  if (log::m_mapping.find(file) != log::m_mapping.end()) {
-    if (modifier < log::m_mapping[file]) return;
+std::string log::format_file(std::string filename) {
+  int pos = filename.find_last_of("/");
+  filename = filename.substr(pos + 1);
+  return filename;
+}
+
+bool log::is_loggable(log::loglevel level, std::string filename) {
+
+  if (mapping.find(filename) != mapping.end()) {
+    if (level < mapping[filename]) return false;
   } else {
-    if (modifier < log::m_level) return;
+    if (level < log::level) return false;
   }
 
-  // Construct timing information.
+  return true;
+}
+
+std::string log::format_time() {
   time_t rawtime;
   struct tm *timeinfo;
   char buffer[80];
   time(&rawtime);
   timeinfo = localtime(&rawtime);
-  if (log::m_print_date)
+  if (log::print_date)
     strftime(buffer, 80, "%d.%m.%Y %H:%M:%S,", timeinfo);
   else
     strftime(buffer, 80, "%H:%M:%S", timeinfo);
+  return std::string(buffer);
+}
 
-  std::string mod;
+std::string log::format_modifier(log::loglevel mod) {
 
-  switch (modifier) {
+  switch (mod) {
   case DEBUG:
-    mod = "DEBUG";
-    break;
+    return "DEBUG";
   case INFO:
-    mod = "INFO";
-    break;
+    return "INFO";
   case WARNING:
-    mod = "WARNING";
-    break;
+    return "WARNING";
   case ERROR:
-    mod = "ERROR";
-    break;
+    return "ERROR";
   default:
-    mod = "UNKNOWN";
+    return "UNKNOWN";
   }
-
-  // Output everything.
-  log::m_output << "[" << buffer << " " << file << "::" << function << "(" <<
-    line << ")] " << mod << ": " << text << std::endl;
 }
-*/
-
-log::log_ostream& log::log_ostream::operator<<(const char* text) {
-  return *this;
-}
-
-log::log_ostream& log::log_ostream::operator<<(const std::string& text) {
-  real_log(m_level, text);
-  return *this;
-}
-
-std::ostream& log::m_output = std::cout;
-bool log::m_print_date = false;
-log::loglevel log::m_level = INFO;
-std::map<std::string, log::loglevel> log::m_mapping =
-                   std::map<std::string, log::loglevel>();
-
-log::log_ostream log::debug = log::log_ostream(DEBUG);
-log::log_ostream log::info = log::log_ostream(INFO);
-log::log_ostream log::warning = log::log_ostream(warning);
-log::log_ostream log::error = log::log_ostream(error);
 
 void log::set_level_for_file(log::loglevel level, std::string file) {
-  log::log::m_mapping.insert(std::pair<std::string,
-                                       log::loglevel>(file, level));
-}
-
-void log::set_level(log::loglevel level) {
-  log::m_level = level;
-}
-
-void log::set_output(std::ostream& output) {
-  //log::error << "This feature is not yet implemented.";
-}
-
-void log::set_print_date(bool print_date) {
-  log::m_print_date = print_date;
+  log::mapping.insert(std::pair<std::string, log::loglevel>(file, level));
 }
