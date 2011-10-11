@@ -1,9 +1,9 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.util;
 
 import java.io.BufferedReader;
@@ -107,14 +106,15 @@ public class Localizor {
                             throw new LocalizationException("Duplicate mapping for key “"
                                     + line.substring(0, line.indexOf('=')) + "”!");
                         } else {
-                            map.put(line.substring(0, line.indexOf('=')), line.substring(line
-                                    .indexOf('=') + 1));
+                            map.put(line.substring(0, line.indexOf('=')),
+                                    line.substring(line.indexOf('=') + 1));
                         }
                     }
                 }
                 
             } catch (IOException e) {
-                throw new LocalizationException("Error while parsing localization file " + file + "!", e);
+                throw new LocalizationException("Error while parsing localization file " + file
+                        + "!", e);
             }
             
         } else if (file.isDirectory()) {
@@ -124,7 +124,8 @@ public class Localizor {
             }
             
         } else {
-            throw new LocalizationException("The locale file to parse is neither a file nor a directory!");
+            throw new LocalizationException(
+                    "The locale file to parse is neither a file nor a directory!");
         }
     }
     
@@ -134,8 +135,8 @@ public class Localizor {
      * 
      * @param locale
      *        The {@link Locale} to check.
-     * @return {@code true} if a mapping file or folder for the requested locale exists.<br /> {@code
-     *         false} otherwise.
+     * @return {@code true} if a mapping file or folder for the requested locale exists.<br />
+     *         {@code false} otherwise.
      */
     public static boolean isValidLocale(Locale locale) {
         
@@ -156,7 +157,8 @@ public class Localizor {
      * @param locale
      *        The locale to search for.
      * @return {@code true} if the delivered list of file names contains a file or folder equal to
-     *         {@code locale.toString()}, <br /> {@code false} otherwise.
+     *         {@code locale.toString()}, <br />
+     *         {@code false} otherwise.
      */
     private static boolean contains(String[] files, Locale locale) {
         
@@ -269,9 +271,9 @@ public class Localizor {
      * @return A reference to the new {@code Localizor} object representing the default locale.
      * @throws LocalizationException
      *         If no mapping file or folder for the default locale could be found. Please make sure
-     *         such a file exists by asserting that {@code
-     *         isValidLocale(java.util.Locale.getDefault())} returns {@code true} before calling
-     *         this method.
+     *         such a file exists by asserting that
+     *         {@code isValidLocale(java.util.Locale.getDefault())} returns {@code true} before
+     *         calling this method.
      */
     public static Localizor newInstance() throws LocalizationException {
         instance = new Localizor(Locale.getDefault());

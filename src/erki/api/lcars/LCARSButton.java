@@ -1,22 +1,19 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.lcars;
 
 import java.awt.Color;
@@ -78,8 +75,8 @@ public class LCARSButton extends AbstractButton {
                 if (isEnabled()) {
                     
                     for (ActionListener listener : getActionListeners()) {
-                        listener.actionPerformed(new ActionEvent(e.getSource(),
-                                e.getID(), getActionCommand()));
+                        listener.actionPerformed(new ActionEvent(e.getSource(), e.getID(),
+                                getActionCommand()));
                     }
                 }
             }
@@ -103,11 +100,10 @@ public class LCARSButton extends AbstractButton {
     @Override
     public Dimension getMinimumSize() {
         Dimension minimumSize = super.getMinimumSize();
-        int minWidth = Math.max(Math.max(getGraphics().getFontMetrics()
-                .stringWidth(getText())
+        int minWidth = Math.max(Math.max(getGraphics().getFontMetrics().stringWidth(getText())
                 + diameter, 2 * diameter), minimumSize.width);
-        int minHeight = Math.max(Math.max(diameter, getGraphics()
-                .getFontMetrics().getHeight()), minimumSize.height);
+        int minHeight = Math.max(Math.max(diameter, getGraphics().getFontMetrics().getHeight()),
+                minimumSize.height);
         return new Dimension(minWidth, minHeight);
     }
     
@@ -131,8 +127,7 @@ public class LCARSButton extends AbstractButton {
         }
         
         // Activate Antialiasing
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         // Draw edges
         if (isEnabled()) {
@@ -162,8 +157,7 @@ public class LCARSButton extends AbstractButton {
         g2.fillArc(0, 0, diameter, diameter, 0, 360);
         g2.fillArc(getWidth() - diameter, 0, diameter, diameter, 0, 360);
         g2.fillArc(0, getHeight() - diameter, diameter, diameter, 0, 360);
-        g2.fillArc(getWidth() - diameter, getHeight() - diameter, diameter,
-                diameter, 0, 360);
+        g2.fillArc(getWidth() - diameter, getHeight() - diameter, diameter, diameter, 0, 360);
         
         // Fill body
         g2.fillRect(radius, 0, getWidth() - diameter, getHeight());
@@ -171,9 +165,8 @@ public class LCARSButton extends AbstractButton {
         
         // Draw text
         g2.setColor(Color.BLACK);
-        g2.drawString(getText(), getWidth() / 2
-                - g2.getFontMetrics().stringWidth(getText()) / 2, getHeight()
-                / 2 + g2.getFontMetrics().getHeight() / 2
-                - g2.getFontMetrics().getDescent());
+        g2.drawString(getText(), getWidth() / 2 - g2.getFontMetrics().stringWidth(getText()) / 2,
+                getHeight() / 2 + g2.getFontMetrics().getHeight() / 2
+                        - g2.getFontMetrics().getDescent());
     }
 }

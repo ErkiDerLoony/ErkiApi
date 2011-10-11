@@ -1,20 +1,18 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.lcars;
@@ -42,16 +40,15 @@ public class PackTest {
         Container cp = frame.getContentPane();
         cp.setLayout(new BorderLayout());
         
-        ButtonBarButton butt = new ButtonBarButton("Ende", LCARSUtil.RED,
-                LCARSUtil.RED_BRIGHT);
+        ButtonBarButton butt = new ButtonBarButton("Ende", LCARSUtil.RED, LCARSUtil.RED_BRIGHT);
         
         butt.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    frame.dispose();
-                }
-            });
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
         
         frame.addLCARSButton(new ButtonBarButton("Dummy 1"));
         frame.addLCARSButton(new ButtonBarButton("Dummy 2"));
@@ -69,8 +66,8 @@ public class PackTest {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                new LCARSInfoBox("Information", "Sie haben den richtigen " 
-                        + "Knopf gedrückt! :)", frame).setVisible(true);
+                new LCARSInfoBox("Information", "Sie haben den richtigen " + "Knopf gedrückt! :)",
+                        frame).setVisible(true);
             }
         });
         
@@ -79,14 +76,13 @@ public class PackTest {
         content.add(button);
         
         button.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    IOException ex = new IOException("Sie haben den falschen "
-                            + "Knopf gedrückt! :(");
-                    new LCARSErrorBox("Fatal error!", ex).setVisible(true);
-                }
-            });
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IOException ex = new IOException("Sie haben den falschen " + "Knopf gedrückt! :(");
+                new LCARSErrorBox("Fatal error!", ex).setVisible(true);
+            }
+        });
         
         cp.add(content, BorderLayout.CENTER);
         

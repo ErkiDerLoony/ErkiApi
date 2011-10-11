@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
+ * 
+ * This file is part of Erki’s API.
+ * 
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
 package erki.api.plot.drawables;
 
 import java.awt.Color;
@@ -69,8 +85,8 @@ public class LineAxes extends StyledDrawable {
             int oldX = origin.x;
             ticksFit = true;
             
-            for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()), Math
-                    .abs(transformer.getCartMinX())); i += steps[xStep]) {
+            for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()),
+                    Math.abs(transformer.getCartMinX())); i += steps[xStep]) {
                 Point p = transformer.getScreenCoordinates(new Point2D.Double(i, 0.0));
                 String tick = MathUtil.round(i, 7) + "";
                 
@@ -96,8 +112,8 @@ public class LineAxes extends StyledDrawable {
             ticksFit = true;
             maxWidth = 0;
             
-            for (double i = steps[yStep]; i < Math.max(Math.abs(transformer.getCartMaxY()), Math
-                    .abs(transformer.getCartMinY())); i += steps[yStep]) {
+            for (double i = steps[yStep]; i < Math.max(Math.abs(transformer.getCartMaxY()),
+                    Math.abs(transformer.getCartMinY())); i += steps[yStep]) {
                 Point p = transformer.getScreenCoordinates(new Point2D.Double(0.0, i));
                 String tick = MathUtil.round(i, 7) + "";
                 
@@ -124,8 +140,8 @@ public class LineAxes extends StyledDrawable {
         int tickOffset = styleProvider.getProperty(
                 new StylePropertyKey<Integer>("AXES_TICK_OFFSET")).getProperty();
         
-        for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()), Math
-                .abs(transformer.getCartMinX())); i += steps[xStep]) {
+        for (double i = steps[xStep]; i < Math.max(Math.abs(transformer.getCartMaxX()),
+                Math.abs(transformer.getCartMinX())); i += steps[xStep]) {
             Point p = transformer.getScreenCoordinates(new Point2D.Double(i, 0.0));
             String tick = MathUtil.round(i, 7) + "";
             
@@ -157,8 +173,8 @@ public class LineAxes extends StyledDrawable {
             }
         }
         
-        for (double i = steps[yStep]; i < Math.max(Math.abs(transformer.getCartMaxY()), Math
-                .abs(transformer.getCartMinY())); i += steps[yStep]) {
+        for (double i = steps[yStep]; i < Math.max(Math.abs(transformer.getCartMaxY()),
+                Math.abs(transformer.getCartMinY())); i += steps[yStep]) {
             Point p = transformer.getScreenCoordinates(new Point2D.Double(0.0, i));
             
             if (p.y - 0.5 * g2.getFontMetrics().getHeight() > 2 * arrowOffset

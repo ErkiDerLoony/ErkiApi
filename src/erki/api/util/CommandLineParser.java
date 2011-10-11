@@ -1,9 +1,9 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.util;
 
 import java.util.TreeMap;
@@ -41,8 +40,8 @@ public class CommandLineParser {
      * <li>Long options with a key and the value in the next argument, e.g. {@code --foo-bar asdf}.
      * </ul>
      * All values are returned as strings regardless if the actual command line options is a number.
-     * If an options is a simple switch without a value the corresponding key is mapped to {@code
-     * null} in the returned mapping.
+     * If an options is a simple switch without a value the corresponding key is mapped to
+     * {@code null} in the returned mapping.
      * 
      * @param args
      *        The command line arguments taken directly from the main method.

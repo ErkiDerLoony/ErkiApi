@@ -4,7 +4,7 @@ To compile call `ant` in the main folder.
 This call creates a jar file that you can include in your own project.
 
 If you want to use this api you will also need iText version 2.1.4 which you can either copy from
-the lib folder or install elsewhere. Apart from that this api requires Java 7 to build.
+the lib folder or install elsewhere. Apart from that this api requires Java 6 to build.
 
 Report bugs to <eMail@edgar-kalkowski.de>
 

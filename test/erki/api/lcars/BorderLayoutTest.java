@@ -1,20 +1,18 @@
 /*
- * © Copyright 2007-2009 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.lcars;
@@ -31,8 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- * Tests the LCARS api using a {@link BorderLayout} for lying out the test
- * components.
+ * Tests the LCARS api using a {@link BorderLayout} for lying out the test components.
  * 
  * @author Edgar Kalkowski
  */
@@ -69,27 +66,25 @@ public class BorderLayoutTest {
         for (int i = 0; i < 10; i++) {
             
             if (i == 3) {
-                ButtonBarButton buttonBarButton = new ButtonBarButton(
-                        "Testknopf Nr. " + i, LCARSUtil.GREEN,
-                        LCARSUtil.GREEN_BRIGHT);
+                ButtonBarButton buttonBarButton = new ButtonBarButton("Testknopf Nr. " + i,
+                        LCARSUtil.GREEN, LCARSUtil.GREEN_BRIGHT);
                 frame.addLCARSButton(buttonBarButton);
                 
                 buttonBarButton.addActionListener(new ActionListener() {
                     
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        JOptionPane.showMessageDialog(frame, "Button »"
-                                + e.getActionCommand() + "« pressed.", "Info",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Button »" + e.getActionCommand()
+                                + "« pressed.", "Info", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
                 
             } else if (i == 4 || i == 5 || i == 6) {
-                frame.addLCARSButton(new ButtonBarButton("Testknopf Nr. " + i,
-                        LCARSUtil.YELLOW, LCARSUtil.YELLOW_BRIGHT));
+                frame.addLCARSButton(new ButtonBarButton("Testknopf Nr. " + i, LCARSUtil.YELLOW,
+                        LCARSUtil.YELLOW_BRIGHT));
             } else if (i == 7) {
-                frame.addLCARSButton(new ButtonBarButton("Testknopf Nr. " + i,
-                        LCARSUtil.RED, LCARSUtil.RED_BRIGHT));
+                frame.addLCARSButton(new ButtonBarButton("Testknopf Nr. " + i, LCARSUtil.RED,
+                        LCARSUtil.RED_BRIGHT));
             } else {
                 frame.addLCARSButton(new ButtonBarButton("Testknopf Nr. " + i));
             }
