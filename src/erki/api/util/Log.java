@@ -1,22 +1,19 @@
 /*
- * (c) Copyright 2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of the chatbot ABCPeter.
+ * This file is part of Erki’s API.
  * 
- * The chatbot ABCPeter is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.util;
 
 import java.io.PrintStream;
@@ -24,9 +21,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * This class logs everything that happens about the bot to a
- * {@link PrintStream}. This defaults to be stdout but may be set to a file via
- * the {@link #setHander(PrintStream)} method.
+ * This class logs everything that happens about the bot to a {@link PrintStream}. This defaults to
+ * be stdout but may be set to a file via the {@link #setHander(PrintStream)} method.
  * 
  * @author Edgar Kalkowski
  */
@@ -69,14 +65,14 @@ public class Log {
     }
     
     /**
-     * Logs an exception represented by an instance of {@link Throwable} or any
-     * subclass of it including the stacktrace.
+     * Logs an exception represented by an instance of {@link Throwable} or any subclass of it
+     * including the stacktrace.
      * 
      * @param source
      *        The source class that wants to log this error.
      * @param error
-     *        The {@link Throwable} object that describes the exception and the
-     *        stacktrace. Must not be {@code null}.
+     *        The {@link Throwable} object that describes the exception and the stacktrace. Must not
+     *        be {@code null}.
      */
     public static void error(Class<?> source, Throwable error) {
         log(source, error.toString(), "ERROR: ");
@@ -94,8 +90,8 @@ public class Log {
      * @param source
      *        The source object that wants to log this.
      * @param cause
-     *        The cause of an error that is the starting point for the recursive
-     *        traversal of the causes.
+     *        The cause of an error that is the starting point for the recursive traversal of the
+     *        causes.
      */
     private static void logCause(Class<?> source, Throwable cause) {
         
@@ -111,14 +107,14 @@ public class Log {
     }
     
     /**
-     * Logs an exception represented by an instance of {@link Throwable} or any
-     * subclass of it including the stacktrace.
+     * Logs an exception represented by an instance of {@link Throwable} or any subclass of it
+     * including the stacktrace.
      * 
      * @param source
      *        The source object that wants to log this error.
      * @param error
-     *        The {@link Throwable} object that describes the exception and the
-     *        stacktrace. Must not be {@code null}.
+     *        The {@link Throwable} object that describes the exception and the stacktrace. Must not
+     *        be {@code null}.
      */
     public static void error(Object source, Throwable error) {
         log(source, error.toString(), "ERROR: ");
@@ -136,8 +132,8 @@ public class Log {
      * @param source
      *        The source object that wants to log this.
      * @param cause
-     *        The cause of an error that is the starting point for the recursive
-     *        traversal of the causes.
+     *        The cause of an error that is the starting point for the recursive traversal of the
+     *        causes.
      */
     private static void logCause(Object source, Throwable cause) {
         
@@ -225,9 +221,8 @@ public class Log {
     }
     
     /**
-     * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated via {@link
-     * #setDebug(true)}.
+     * Print debug information to the log file. This information is only actually printed if
+     * debugging was previously activated via {@link #setDebug(true)}.
      * 
      * @param source
      *        The source object that wants to log this message.
@@ -242,9 +237,8 @@ public class Log {
     }
     
     /**
-     * Print debug information to the log file. This information is only
-     * actually printed if debugging was previously activated via {@link
-     * #setDebug(true)}.
+     * Print debug information to the log file. This information is only actually printed if
+     * debugging was previously activated via {@link #setDebug(true)}.
      * 
      * @param source
      *        The souce class that wants to log this message.
@@ -259,46 +253,43 @@ public class Log {
     }
     
     private static void log(Object source, String line, String modifier) {
-        String src = source == null ? "<unknown.source>" : source.getClass()
-                .getCanonicalName() == null ? "<anonymous.class>" : source
-                .getClass().getCanonicalName();
-        src += source == null ? "" : "@"
-                + Integer.toHexString(source.hashCode());
+        String src = source == null ? "<unknown.source>"
+                : source.getClass().getCanonicalName() == null ? "<anonymous.class>" : source
+                        .getClass().getCanonicalName();
+        src += source == null ? "" : "@" + Integer.toHexString(source.hashCode());
         String ln = line == null ? "" : line;
         log(formatDate(), src, modifier, ln);
     }
     
     private static void log(Class<?> source, String line, String modifier) {
-        String src = source == null ? "<unknown.source>" : source
-                .getCanonicalName() == null ? "<anonymous.class>" : source
-                .getCanonicalName();
+        String src = source == null ? "<unknown.source>"
+                : source.getCanonicalName() == null ? "<anonymous.class>" : source
+                        .getCanonicalName();
         String ln = line == null ? "" : line;
         log(formatDate(), src, modifier, ln);
     }
     
     /**
-     * Activate or deactivate the debug mode. Debugging is deactivated by
-     * default. Lines printed via {@link #debug(Object, String)} are ignored and
-     * not printed to the log file if debugging is deactivated.
+     * Activate or deactivate the debug mode. Debugging is deactivated by default. Lines printed via
+     * {@link #debug(Object, String)} are ignored and not printed to the log file if debugging is
+     * deactivated.
      * 
      * @param debug
-     *        If {@code true} all a bunch of debug info is printed to the log
-     *        file. If {@code false} all debug output will be ignored.
+     *        If {@code true} all a bunch of debug info is printed to the log file. If {@code false}
+     *        all debug output will be ignored.
      */
     public static void setDebug(boolean debug) {
         Log.debug = debug;
     }
     
     /**
-     * @return {@code true} if debugging is currently enabled, {@code false}
-     *         otherwise.
+     * @return {@code true} if debugging is currently enabled, {@code false} otherwise.
      */
     public static boolean isDebug() {
         return debug;
     }
     
-    private static void log(String date, String source, String modifier,
-            String line) {
+    private static void log(String date, String source, String modifier, String line) {
         handler.println("[" + date + ", " + source + "] " + modifier + line);
         handler.flush();
     }
@@ -323,14 +314,12 @@ public class Log {
         String mins = min < 10 ? "0" + min + ":" : min + ":";
         String secs = sec < 10 ? "0" + sec : "" + sec;
         
-        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins
-                + secs;
+        return days + months + calendar.get(Calendar.YEAR) + " " + hours + mins + secs;
     }
     
     /**
-     * Change the handler i.d. the receiver of the log messages. The handler
-     * defaults to be stdout but this way one can redirect the log output e.g.
-     * to a file.
+     * Change the handler i.d. the receiver of the log messages. The handler defaults to be stdout
+     * but this way one can redirect the log output e.g. to a file.
      * 
      * @param handler
      *        The new handler of log messages.

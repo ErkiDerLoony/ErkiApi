@@ -1,22 +1,19 @@
 /*
- * (c) Copyright 2007-2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.lcars;
 
 import java.awt.BorderLayout;
@@ -102,8 +99,7 @@ public class LCARSTabbedPane extends JComponent {
             private static final long serialVersionUID = 5045252819579873202L;
             
             @Override
-            public void paintBorder(Component c, Graphics g, int x, int y,
-                    int width, int height) {
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
                 super.paintBorder(c, g, x, y, width, height);
                 Graphics2D g2;
                 
@@ -119,17 +115,14 @@ public class LCARSTabbedPane extends JComponent {
                 
                 g2.drawLine(0, 0, childContent.getWidth(), 0);
                 g2.drawLine(0, 0, 0, childContent.getHeight() - CIRCLE_RADIUS);
-                g2.drawArc(0, childContent.getHeight() - CIRCLE_DIAMETER - 1,
-                        CIRCLE_DIAMETER, CIRCLE_DIAMETER, 180, 90);
-                g2.drawLine(CIRCLE_RADIUS, childContent.getHeight() - 1,
-                        childContent.getWidth() - CIRCLE_RADIUS - 1,
-                        childContent.getHeight() - 1);
-                g2.drawArc(childContent.getWidth() - CIRCLE_DIAMETER - 1,
-                        childContent.getHeight() - CIRCLE_DIAMETER - 1,
-                        CIRCLE_DIAMETER, CIRCLE_DIAMETER, 270, 90);
-                g2.drawLine(childContent.getWidth() - 1, childContent
-                        .getHeight()
-                        - CIRCLE_RADIUS, childContent.getWidth() - 1, 0);
+                g2.drawArc(0, childContent.getHeight() - CIRCLE_DIAMETER - 1, CIRCLE_DIAMETER,
+                        CIRCLE_DIAMETER, 180, 90);
+                g2.drawLine(CIRCLE_RADIUS, childContent.getHeight() - 1, childContent.getWidth()
+                        - CIRCLE_RADIUS - 1, childContent.getHeight() - 1);
+                g2.drawArc(childContent.getWidth() - CIRCLE_DIAMETER - 1, childContent.getHeight()
+                        - CIRCLE_DIAMETER - 1, CIRCLE_DIAMETER, CIRCLE_DIAMETER, 270, 90);
+                g2.drawLine(childContent.getWidth() - 1, childContent.getHeight() - CIRCLE_RADIUS,
+                        childContent.getWidth() - 1, 0);
             }
         });
         
@@ -138,8 +131,7 @@ public class LCARSTabbedPane extends JComponent {
             private static final long serialVersionUID = 5646375881918861645L;
             
             @Override
-            public void paintBorder(Component c, Graphics g, int x, int y,
-                    int width, int height) {
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
                 super.paintBorder(c, g, x, y, width, height);
                 Graphics2D g2;
                 
@@ -155,12 +147,11 @@ public class LCARSTabbedPane extends JComponent {
                 
                 g2.drawLine(0, tabBar.getHeight(), 0, CIRCLE_RADIUS);
                 g2.drawArc(0, 0, CIRCLE_DIAMETER, CIRCLE_DIAMETER, 90, 90);
-                g2.drawLine(CIRCLE_RADIUS, 0, tabBar.getWidth() - CIRCLE_RADIUS
-                        - 1, 0);
-                g2.drawArc(tabBar.getWidth() - CIRCLE_DIAMETER - 1, 0,
-                        CIRCLE_DIAMETER, CIRCLE_DIAMETER, 0, 90);
-                g2.drawLine(tabBar.getWidth() - 1, CIRCLE_RADIUS, tabBar
-                        .getWidth() - 1, tabBar.getHeight());
+                g2.drawLine(CIRCLE_RADIUS, 0, tabBar.getWidth() - CIRCLE_RADIUS - 1, 0);
+                g2.drawArc(tabBar.getWidth() - CIRCLE_DIAMETER - 1, 0, CIRCLE_DIAMETER,
+                        CIRCLE_DIAMETER, 0, 90);
+                g2.drawLine(tabBar.getWidth() - 1, CIRCLE_RADIUS, tabBar.getWidth() - 1,
+                        tabBar.getHeight());
             }
         });
     }
@@ -195,8 +186,8 @@ public class LCARSTabbedPane extends JComponent {
                 }
                 
                 for (ActionListener listener : tabChangeListeners) {
-                    listener.actionPerformed(new ActionEvent(button, e.getID(),
-                            button.getActionCommand()));
+                    listener.actionPerformed(new ActionEvent(button, e.getID(), button
+                            .getActionCommand()));
                 }
             }
         });
@@ -229,16 +220,14 @@ public class LCARSTabbedPane extends JComponent {
         if (wasSelected && buttons.higherKey(title) != null) {
             childContent.removeAll();
             buttons.get(buttons.higherKey(title)).setSelected(true);
-            childContent.add(panels.get(panels.higherKey(title)),
-                    BorderLayout.CENTER);
+            childContent.add(panels.get(panels.higherKey(title)), BorderLayout.CENTER);
             currentSelection = buttons.higherKey(title);
             childContent.revalidate();
             childContent.repaint();
         } else if (wasSelected && buttons.lowerKey(title) != null) {
             childContent.removeAll();
             buttons.get(buttons.lowerKey(title)).setSelected(true);
-            childContent.add(panels.get(panels.lowerKey(title)),
-                    BorderLayout.CENTER);
+            childContent.add(panels.get(panels.lowerKey(title)), BorderLayout.CENTER);
             currentSelection = buttons.lowerKey(title);
             childContent.revalidate();
             childContent.repaint();
@@ -263,8 +252,7 @@ public class LCARSTabbedPane extends JComponent {
     }
     
     /**
-     * Adds an {@link ActionListener} that is notified if the user selects a
-     * different tab.
+     * Adds an {@link ActionListener} that is notified if the user selects a different tab.
      * 
      * @param listener
      *        The <code>ActionListener</code> to add.

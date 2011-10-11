@@ -1,27 +1,24 @@
 /*
- * (c) Copyright 2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.util;
 
 /**
- * This exception is to be thrown if the {@link Localizor} does not find a
- * mapping file for a requested locale.
+ * This exception is to be thrown if the {@link Localizor} does not find a mapping file for a
+ * requested locale.
  * 
  * @author Edgar Kalkowski
  */
@@ -31,16 +28,14 @@ public class LocaleNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 7472689261506022430L;
     
     /**
-     * Creates a new {@code LocaleNotFoundException} with null as it's detailed
-     * message.
+     * Creates a new {@code LocaleNotFoundException} with null as it's detailed message.
      */
     public LocaleNotFoundException() {
         super();
     }
     
     /**
-     * Creates a new {@code LocaleNotFoundException} with {@code message} as
-     * it's detailed message.
+     * Creates a new {@code LocaleNotFoundException} with {@code message} as it's detailed message.
      * 
      * @param message
      *        The detailed message of this exception.
@@ -50,9 +45,8 @@ public class LocaleNotFoundException extends RuntimeException {
     }
     
     /**
-     * Creates a new {@code LocaleNotFoundException} with {@code cause} being
-     * the cause of the exception. This cause can later be retrieved by the
-     * {@link Throwable#getCause()} method.
+     * Creates a new {@code LocaleNotFoundException} with {@code cause} being the cause of the
+     * exception. This cause can later be retrieved by the {@link Throwable#getCause()} method.
      * 
      * @param cause
      *        The cause of this exception.
@@ -62,8 +56,8 @@ public class LocaleNotFoundException extends RuntimeException {
     }
     
     /**
-     * Creates a new {@code LocaleNotFoundException} with a detailed message and
-     * a cause later to be examined via {@link Throwable#getCause()}.
+     * Creates a new {@code LocaleNotFoundException} with a detailed message and a cause later to be
+     * examined via {@link Throwable#getCause()}.
      * 
      * @param message
      *        The detailed message of this exception.

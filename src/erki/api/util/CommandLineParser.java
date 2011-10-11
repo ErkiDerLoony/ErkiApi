@@ -1,40 +1,35 @@
 /*
- * (c) Copyright 2008 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski <eMail@edgar-kalkowski.de>
  * 
- * This file is part of Erki's API.
+ * This file is part of Erki’s API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki’s API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package erki.api.util;
 
 import java.util.TreeMap;
 
 /**
- * This class represents a parser for command lines. It takes the {@code
- * String[]} of the main method and parses it into a {@link TreeMap} mapping
- * parameters to their values.
+ * This class represents a parser for command lines. It takes the {@code String[]} of the main
+ * method and parses it into a {@link TreeMap} mapping parameters to their values.
  * 
  * @author Edgar Kalkowski
  */
 public class CommandLineParser {
     
     /**
-     * Parse command line arguments. The concatenated arguments are scanned in a
-     * unix style way and split up in key/value pairs that are returned in a
-     * {@link TreeMap}. The keys may start with either »--« or »-« (e.g.
-     * »--help« or »-help«) and the value may be separated from the key by
+     * Parse command line arguments. The concatenated arguments are scanned in a unix style way and
+     * split up in key/value pairs that are returned in a {@link TreeMap}. The keys may start with
+     * either »--« or »-« (e.g. »--help« or »-help«) and the value may be separated from the key by
      * either a space or a »=« (e.g. »--port 7886« or »--port=7886«).
      * 
      * @param args
