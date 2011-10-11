@@ -1,10 +1,24 @@
-To build all class files and the library jar execute
-  $ ant 
-in this directory.
+This is ErkiAPI version 0.2.1.
 
-To use the library in your own program add every jar file in the "lib" directory and the
-ErkiAPI-*.jar which was created by ant to your projects libraries.
+To compile call `ant` in the main folder.
+This call creates a jar file that you can include in your own project.
 
-Send bugs or questions to eMail@edgar-kalkowski.de!
+If you want to use this api you will also need iText version 2.1.4 which you can either copy from
+the lib folder or install elsewhere. Apart from that this api requires Java 7 to build.
 
-Have fun! :)
+Report bugs to <eMail@edgar-kalkowski.de>
+
+© Copyright 2007–2011 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+
+
+The ErkiAPI is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.

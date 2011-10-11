@@ -1,6 +1,6 @@
 <project name="ErkiAPI" default="jar">
 
-  <property name="version" value="0.2.0" />
+  <property name="version" value="0.2.1" />
 
   <property name="bin.dir" value="bin" />
   <property name="test.bin" value="bin.test" />
