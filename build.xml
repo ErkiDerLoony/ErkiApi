@@ -1,6 +1,6 @@
 <project name="ErkiAPI" default="tar">
 
-  <property name="version" value="0.0.1" />
+  <property name="version" value="0.1.0" />
   <property name="bin.dir" value="bin" />
   <property name="src.dir" value="src" />
   <property name="test.dir" value="test" />
