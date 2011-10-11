@@ -3,18 +3,16 @@
  * 
  * This file is part of Erki's API.
  * 
- * Erki's API is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
+ * Erki's API is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 package erki.api.lcars;
@@ -28,9 +26,11 @@ import javax.swing.JComboBox;
 /**
  * Extends {@link JComboBox} to look like LCARS.
  * 
+ * @param T
+ *        Type of items held by the combo box.
  * @author Edgar Kalkowski
  */
-public class LCARSComboBox extends JComboBox {
+public class LCARSComboBox<T> extends JComboBox<T> {
     
     /** In tribute to the api. */
     private static final long serialVersionUID = 7682715065346648537L;
@@ -42,19 +42,19 @@ public class LCARSComboBox extends JComboBox {
     }
     
     /** Delegates to {@link JComboBox#JComboBox(ComboBoxModel)}. */
-    public LCARSComboBox(ComboBoxModel model) {
+    public LCARSComboBox(ComboBoxModel<T> model) {
         super(model);
         initLCARS();
     }
     
     /** Delegates to {@link JComboBox#JComboBox(Object[])}. */
-    public LCARSComboBox(Object[] items) {
+    public LCARSComboBox(T[] items) {
         super(items);
         initLCARS();
     }
     
     /** Delegates to {@link JComboBox#JComboBox(Vector)}. */
-    public LCARSComboBox(Vector<?> items) {
+    public LCARSComboBox(Vector<T> items) {
         super(items);
     }
     
