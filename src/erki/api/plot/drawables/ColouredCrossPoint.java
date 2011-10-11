@@ -32,8 +32,6 @@ import erki.api.plot.style.StyleProvider;
 
 public class ColouredCrossPoint extends StyledDrawable {
     
-    private static final long serialVersionUID = -7603800844085258749L;
-    
     private Color colour;
     
     private double x, y;

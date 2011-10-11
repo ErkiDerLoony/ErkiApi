@@ -32,8 +32,6 @@ import erki.api.plot.style.StyleProvider;
 
 public class ColouredCirclePoint extends StyledDrawable {
     
-    private static final long serialVersionUID = -2994504030381719105L;
-    
     private Color colour;
     
     private double x, y;

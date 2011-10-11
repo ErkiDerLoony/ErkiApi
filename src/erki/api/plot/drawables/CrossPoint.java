@@ -32,8 +32,6 @@ import erki.api.plot.style.StyleProvider;
 
 public class CrossPoint extends StyledDrawable {
     
-    private static final long serialVersionUID = -7603800844085258749L;
-    
     private double x, y;
     
     public CrossPoint(double x, double y, StyleProvider styleProvider) {

@@ -32,8 +32,6 @@ import erki.api.plot.style.StyleProvider;
 
 public class DrawableLine extends StyledDrawable {
     
-    private static final long serialVersionUID = 6844062407525196699L;
-    
     private Point2D.Double start;
     private Point2D.Double end;
     

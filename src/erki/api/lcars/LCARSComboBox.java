@@ -26,9 +26,11 @@ import javax.swing.JComboBox;
 /**
  * Extends {@link JComboBox} to look like LCARS.
  * 
+ * @param T
+ *        The type of item stored in this combo box.
  * @author Edgar Kalkowski
  */
-public class LCARSComboBox extends JComboBox {
+public class LCARSComboBox<T> extends JComboBox<T> {
     
     /** In tribute to the api. */
     private static final long serialVersionUID = 7682715065346648537L;
@@ -40,19 +42,19 @@ public class LCARSComboBox extends JComboBox {
     }
     
     /** Delegates to {@link JComboBox#JComboBox(ComboBoxModel)}. */
-    public LCARSComboBox(ComboBoxModel model) {
+    public LCARSComboBox(ComboBoxModel<T> model) {
         super(model);
         initLCARS();
     }
     
     /** Delegates to {@link JComboBox#JComboBox(Object[])}. */
-    public LCARSComboBox(Object[] items) {
+    public LCARSComboBox(T[] items) {
         super(items);
         initLCARS();
     }
     
     /** Delegates to {@link JComboBox#JComboBox(Vector)}. */
-    public LCARSComboBox(Vector<?> items) {
+    public LCARSComboBox(Vector<T> items) {
         super(items);
     }
     
