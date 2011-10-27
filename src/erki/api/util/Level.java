@@ -24,6 +24,6 @@ package erki.api.util;
  */
 public enum Level {
     
-    FINEST, FINER, DEBUG, INFO, WARNING, ERROR, OFF;
+    FINEST_DEBUG, FINER_DEBUG, FINE_DEBUG, DEBUG, INFO, WARNING, ERROR, OFF;
     
 }

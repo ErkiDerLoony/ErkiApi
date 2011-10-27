@@ -37,14 +37,16 @@ import java.util.TreeMap;
  * <li>WARNING
  * <li>INFO
  * <li>DEBUG
- * <li>FINER
- * <li>FINEST (lowest value)
+ * <li>FINE_DEBUG
+ * <li>FINER_DEBUG
+ * <li>FINEST_DEBUG (lowest value)
  * </ul>
  * <p>
  * An example: If the global log level is {@link Level#WARNING} and no class specific log levels
  * have been defined all messages with log levels {@link Level#INFO}, {@link Level#DEBUG},
- * {@link Level#FINER} and {@link Level#FINEST} will be discarded and not actually printed to the
- * log. All {@link Level#WARNING} and {@link Level#ERROR} messages are printed.
+ * {@link Level#FINE_DEBUG} {@link Level#FINER} and {@link Level#FINEST} will be discarded and not
+ * actually printed to the log. All {@link Level#WARNING} and {@link Level#ERROR} messages are
+ * printed.
  * <p>
  * The log is a simple {@link PrintStream} that defaults to be {@link System#out} and may be changed
  * at runtime e.g. to some log file via {@link #setHandler(PrintStream)}. Be careful to change the
@@ -67,6 +69,8 @@ public class Log {
      * classes for example to only get debug output for some classes and not for all.
      */
     private static Map<String, Level> mapping = new TreeMap<String, Level>();
+    
+    private static String format = "[%H:%M:%S.%m, %T, %c.%f(%l)] %L: %t";
     
     /** The default log level for all classes for which no special log level is specified. */
     private static Level level = Level.INFO;
@@ -121,32 +125,50 @@ public class Log {
         if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "DEBUG: ");
+                log(e, line.toString(), Level.DEBUG);
             }
         }
     }
     
     /**
      * Print debug information to the log file. The message is only actually printed to the current
-     * handler if the log level is at most {@link Level#FINER}.
+     * handler if the log level is at most {@link Level#FINE_DEBUG}.
      * 
      * @param line
      *        The line of text to log.
      */
-    public static void finer(Object line) {
+    public static void fineDebug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER)) {
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINE_DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "FINER: ");
+                log(e, line.toString(), Level.FINE_DEBUG);
             }
         }
     }
     
     /**
      * Print debug information to the log file. The message is only actually printed to the current
-     * handler if the log level is at most {@link Level#FINEST}.
+     * handler if the log level is at most {@link Level#FINER_DEBUG}.
+     * 
+     * @param line
+     *        The line of text to log.
+     */
+    public static void finerDebug(Object line) {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER_DEBUG)) {
+            
+            synchronized (lock) {
+                log(e, line.toString(), Level.FINER_DEBUG);
+            }
+        }
+    }
+    
+    /**
+     * Print debug information to the log file. The message is only actually printed to the current
+     * handler if the log level is at most {@link Level#FINEST_DEBUG}.
      * 
      * @param line
      *        The line of text to log.
@@ -154,10 +176,10 @@ public class Log {
     public static void finest(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST)) {
+        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST_DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "FINEST: ");
+                log(e, line.toString(), Level.FINEST_DEBUG);
             }
         }
     }
@@ -175,7 +197,7 @@ public class Log {
         if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.INFO)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "INFO: ");
+                log(e, line.toString(), Level.INFO);
             }
         }
     }
@@ -193,7 +215,7 @@ public class Log {
         if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.WARNING)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "WARNING: ");
+                log(e, line.toString(), Level.WARNING);
             }
         }
     }
@@ -213,10 +235,10 @@ public class Log {
         if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.ERROR)) {
             
             synchronized (lock) {
-                log(e, error.toString(), "ERROR: ");
+                log(e, error.toString(), Level.ERROR);
                 
                 for (StackTraceElement s : error.getStackTrace()) {
-                    log(e, "\tat " + s.toString(), "ERROR: ");
+                    log(e, "\tat " + s.toString(), Level.ERROR);
                 }
                 
                 logCause(error.getCause(), e);
@@ -237,10 +259,10 @@ public class Log {
     private static void logCause(Throwable cause, StackTraceElement source) {
         
         if (cause != null) {
-            log(source, "Caused by: " + cause.toString(), "ERROR: ");
+            log(source, "Caused by: " + cause.toString(), Level.ERROR);
             
             for (StackTraceElement s : cause.getStackTrace()) {
-                log(source, "\tat " + s.toString(), "ERROR: ");
+                log(source, "\tat " + s.toString(), Level.ERROR);
             }
             
             logCause(cause.getCause(), source);
@@ -260,7 +282,7 @@ public class Log {
         if (isLoggable(e.getClassName(), Level.ERROR)) {
             
             synchronized (lock) {
-                log(e, line.toString(), "ERROR: ");
+                log(e, line.toString(), Level.ERROR);
             }
         }
     }
@@ -301,51 +323,94 @@ public class Log {
         }
     }
     
-    private static void log(StackTraceElement e, String line, String modifier) {
-        String src = e.getClassName();
-        
-        if (src.contains(".")) {
-            src = src.substring(src.lastIndexOf(".") + 1, src.length());
-        }
-        
-        src += "." + e.getMethodName() + "(" + e.getLineNumber() + ")";
-        String ln = line == null ? "" : line;
-        boolean first = true;
-        
-        for (String l : ln.split("\n")) {
-            
-            if (first) {
-                handler.println("[" + getDate() + ", " + src + "] " + modifier + l);
-                first = false;
-            } else {
-                handler.println("[" + getDate() + ", " + src + "] " + modifier + "  " + l);
-            }
-        }
-        
-        handler.flush();
+    /**
+     * Change the format of the log output. The following replacements are applied in the given
+     * order:
+     * <ul>
+     * <li>%D → day in two digit notation
+     * <li>%n → month in two digit notation
+     * <li>%y → year in four digit notation
+     * <li>%H → hour in two digit notation
+     * <li>%M → minute in two digit notation
+     * <li>%S → second in two digit notation
+     * <li>%m → millisecond in three digit notation
+     * <li>%T → thread name
+     * <li>%c → class name
+     * <li>%f → method name
+     * <li>%l → line number
+     * <li>%L → message level (see {@link Level}).
+     * <li>%t → text of the log message
+     * </ul>
+     * 
+     * @param format
+     *        The new log output format.
+     */
+    public static void setFormat(String format) {
+        Log.format = format;
     }
     
-    private static String getDate() {
+    private static void log(StackTraceElement e, String line, Level level) {
+        String className = e.getClassName();
+        
+        if (className.contains(".")) {
+            className = className.substring(className.lastIndexOf(".") + 1, className.length());
+        }
+        
+        String methodName = e.getMethodName();
+        String lineNumber = e.getLineNumber() + "";
+        
         Calendar calendar = Calendar.getInstance();
         
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
         int sec = calendar.get(Calendar.SECOND);
         int ms = calendar.get(Calendar.MILLISECOND);
         
-        String hours = hour < 10 ? "0" + hour + ":" : hour + ":";
-        String mins = min < 10 ? "0" + min + ":" : min + ":";
-        String secs = sec < 10 ? "0" + sec : "" + sec;
+        String days = day < 10 ? "0" + day : day + "";
+        String months = month < 10 ? "0" + month : month + "";
+        String hours = hour < 10 ? "0" + hour : hour + "";
+        String mins = min < 10 ? "0" + min : min + "";
+        String secs = sec < 10 ? "0" + sec : sec + "";
         String millis;
         
         if (ms < 10) {
-            millis = ".00" + ms;
+            millis = "00" + ms;
         } else if (ms < 100) {
-            millis = ".0" + ms;
+            millis = "0" + ms;
         } else {
-            millis = "." + ms;
+            millis = "" + ms;
         }
         
-        return hours + mins + secs + millis;
+        String message = format;
+        
+        message = message.replaceAll("%D", days);
+        message = message.replaceAll("%n", months);
+        message = message.replaceAll("%y", year + "");
+        message = message.replaceAll("%H", hours);
+        message = message.replaceAll("%M", mins);
+        message = message.replaceAll("%S", secs);
+        message = message.replaceAll("%m", millis);
+        message = message.replaceAll("%T", Thread.currentThread().getName());
+        message = message.replaceAll("%c", className);
+        message = message.replaceAll("%f", methodName);
+        message = message.replaceAll("%l", lineNumber);
+        message = message.replaceAll("%L", level.name());
+        
+        boolean first = true;
+        
+        for (String ln : line.split("\n")) {
+            
+            if (first) {
+                handler.println(message.replaceAll("%t", ln));
+                first = false;
+            } else {
+                handler.println(message.replaceAll("%t", "  " + ln));
+            }
+        }
+        
+        handler.flush();
     }
 }
