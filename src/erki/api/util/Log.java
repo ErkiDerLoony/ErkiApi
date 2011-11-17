@@ -335,6 +335,7 @@ public class Log {
      * <li>%S → second in two digit notation
      * <li>%m → millisecond in three digit notation
      * <li>%T → thread name
+     * <li>%i → thread id
      * <li>%c → class name
      * <li>%f → method name
      * <li>%l → line number
@@ -394,6 +395,7 @@ public class Log {
         message = message.replaceAll("%S", secs);
         message = message.replaceAll("%m", millis);
         message = message.replaceAll("%T", Thread.currentThread().getName());
+        message = message.replaceAll("%i", "" + Thread.currentThread().getId());
         message = message.replaceAll("%c", className);
         message = message.replaceAll("%f", methodName);
         message = message.replaceAll("%l", lineNumber);
