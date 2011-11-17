@@ -1,41 +1,31 @@
 0.4.0
-– Screw the old completely self-written plot api in favour of a more powerful implementation
-  that is based on JFreeChart.
-– Rework configuration api. Now arbitrary (serializable) Java objects can be stored either
-  directly as serialized Java objects or xml encoded via the XStream library.
+– Screw the old completely self-written plot api in favour of a more powerful implementation that is based on JFreeChart.
+– Rework configuration api. Now arbitrary (serializable) Java objects can be stored either directly as serialized Java objects or xml encoded via the XStream library.
 – Identify localized strings via enum constants and not via strings any more.
-– Fix two grave bugs in the plot api that caused the plot to scale rather than to zoom if
-  the plot window was very small or rather large.
+– Fix two grave bugs in the plot api that caused the plot to scale rather than to zoom if the plot window was very small or rather large.
 – Improved SoundPlayer.
-– Make the location the translation files are searched at independent of the working
-  directory when starting the program.
+– Make the translation files are searched at independent of the working directory when starting the program.
 – Update the CommandLineParser to be more object oriented.
-– Update the Log to use it’s own Level class and to make the output lines shorter and thus
-  more readable.
+– Update the Log to use it’s own Level class and to make the output lines shorter and thus more readable.
+– Make the log output format user-defineable.
 
 0.3.0
 – Command line parser can now handle list of files at the end.
 – The log level used is now the one from java logging.
-– Added a simple configuration api that stores program settings. It is not yet completely
-  usable but a simple ini-style format is already working.
+– Added a simple configuration api that stores program settings. It is not yet completely usable but a simple ini-style format is already working.
 – Added a box axis for the plot.
-– Allow the same command line switch to appear more than once and parse the multiple
-  occurrences into a list.
+– Allow the same command line switch to appear more than once and parse the multiple occurrences into a list.
 – The log can now print information without a prefix.
 
 0.2.0
-– Style provider support for the plot api that bundles the configuration of the look and
-  feel of the plot in one (or few) class(es).
-– New coordinate axes that are no longer static but are always displayed at the border of
-  the plot.
+– Style provider support for the plot api that bundles the configuration of the look and feel of the plot in one (or few) class(es).
+– New coordinate axes that are no longer static but are always displayed at the border of the plot.
 – Zoom and move functionality for the plot.
-– The log automagically determines the source of the log message (kind of a hack) so the
-  source need not be supplied at each call of a log method.
+– The log automagically determines the source of the log message (kind of a hack) so the source need not be supplied at each call of a log method.
 – Improved command line parser.
 – Add a simple, easy to use sound player to the utilities.
 – Improved localizor. The translations can now also be split into several files.
 
 0.1.0
-– Extended Java Swing to create a look and feel that roughly reminds of the LCARS layout
-  from the various Star Trek series.
+– Extended Java Swing to create a look and feel that roughly reminds of the LCARS layout from the various Star Trek series.
 – Various utilities, e.g. Log, CommandLineParser, Localizor.
