@@ -7,7 +7,7 @@
 – Make the translation files are searched at independent of the working directory when starting the program.
 – Update the CommandLineParser to be more object oriented.
 – Update the Log to use it’s own Level class and to make the output lines shorter and thus more readable.
-– Make the log output format user-defineable.
+– Make the log output format user-defineable and add support for colours using ANSI control chars.
 
 0.3.0
 – Command line parser can now handle list of files at the end.

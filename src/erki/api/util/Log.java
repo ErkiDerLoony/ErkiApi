@@ -17,9 +17,14 @@
 
 package erki.api.util;
 
+import java.awt.Color;
 import java.io.PrintStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -52,11 +57,50 @@ import java.util.TreeMap;
  * at runtime e.g. to some log file via {@link #setHandler(PrintStream)}. Be careful to change the
  * log handler before printing anything to the log or otherwise that information may be lost.
  * <p>
+ * The log supports colouring which is by default disabled. To enable it use
+ * {@link #setUseColours(boolean)}. By default it prints warnings in yellow and errors in red which
+ * can be changed via {@link #setColour(Level, Color)}.
+ * <p>
  * All actual logging methods of this class are thread safe.
  * 
  * @author Edgar Kalkowski
  */
 public class Log {
+    
+    /**
+     * This enum denotes colours which can be produced by ANSI control codes.
+     * 
+     * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
+     */
+    public enum AnsiColour {
+        BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
+        
+        BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE;
+    }
+    
+    /** Colour mapping for the different log levels. */
+    private static final Map<Level, AnsiColour> COLOURS = new HashMap<Level, AnsiColour>();
+    
+    static {
+        COLOURS.put(Level.FINEST_DEBUG, AnsiColour.BRIGHT_BLACK);
+        COLOURS.put(Level.FINER_DEBUG, AnsiColour.BRIGHT_BLACK);
+        COLOURS.put(Level.FINE_DEBUG, AnsiColour.BRIGHT_BLACK);
+        COLOURS.put(Level.DEBUG, AnsiColour.BRIGHT_BLACK);
+        COLOURS.put(Level.INFO, AnsiColour.BRIGHT_GREEN);
+        COLOURS.put(Level.WARNING, AnsiColour.BRIGHT_YELLOW);
+        COLOURS.put(Level.ERROR, AnsiColour.BRIGHT_RED);
+        
+        // Log all uncaught exceptions and prevent them from going to System.err.
+        UncaughtExceptionHandler handler = new UncaughtExceptionHandler() {
+            
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Log.error(e);
+            }
+        };
+        
+        Thread.setDefaultUncaughtExceptionHandler(handler);
+    }
     
     /**
      * This is the handler to which all log output is printed. It defaults to be System.out but may
@@ -70,7 +114,12 @@ public class Log {
      */
     private static Map<String, Level> mapping = new TreeMap<String, Level>();
     
-    private static String format = "[%H:%M:%S.%m, %T, %c.%f(%l)] %L: %t";
+    /* Default formats for the log output string. */
+    private static final String DEFAULT_FORMAT = "[%H:%M:%S.%m, [%i], %c.%f(%l)] %L: %t";
+    private static final String DEFAULT_FORMAT_WITH_DATE = "[%D.%n.%y %H:%M:%S.%m, [%i], %c.%f(%l)] %L: %t";
+    
+    /** The default format of the log output string. */
+    private static String format = DEFAULT_FORMAT;
     
     /** The default log level for all classes for which no special log level is specified. */
     private static Level level = Level.INFO;
@@ -78,8 +127,26 @@ public class Log {
     /** A lock to synchronize parallel access to the log. */
     private static Object lock = new Object();
     
+    /** Indicates whether the output shall be coloured using ANSI control codes. */
+    private static boolean useColour = false;
+    
+    /** A list of unknown escape characters that the used was already warned about. */
+    private static LinkedList<Character> warned = new LinkedList<>();
+    
     /** Prevent others from instanciating this static class. */
     private Log() {
+    }
+    
+    /**
+     * Check whether or not a given level would currently be logged for the calling class.
+     * 
+     * @param level
+     *        The level that shall be checked.
+     * @return {@code true} if messages with the given log level would be currently logged or
+     *         {@code false} if their log level is too low.
+     */
+    public static boolean isLoggable(Level level) {
+        return isLoggable(new Throwable().getStackTrace()[1].getClassName(), level);
     }
     
     /**
@@ -92,6 +159,7 @@ public class Log {
      * @return {@code true} if the class is allowed to print the message, {@code false} otherwise.
      */
     private static boolean isLoggable(String classname, Level level) {
+        classname = classname.replaceAll("\\$[0-9]*", "");
         
         if (mapping.containsKey(classname)) {
             Level bound = mapping.get(classname);
@@ -122,10 +190,10 @@ public class Log {
     public static void debug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.DEBUG)) {
+        if (isLoggable(e.getClassName(), Level.DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.DEBUG);
+                log(e, Objects.toString(line), Level.DEBUG);
             }
         }
     }
@@ -140,10 +208,10 @@ public class Log {
     public static void fineDebug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINE_DEBUG)) {
+        if (isLoggable(e.getClassName(), Level.FINE_DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.FINE_DEBUG);
+                log(e, Objects.toString(line), Level.FINE_DEBUG);
             }
         }
     }
@@ -158,10 +226,10 @@ public class Log {
     public static void finerDebug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINER_DEBUG)) {
+        if (isLoggable(e.getClassName(), Level.FINER_DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.FINER_DEBUG);
+                log(e, Objects.toString(line), Level.FINER_DEBUG);
             }
         }
     }
@@ -173,13 +241,13 @@ public class Log {
      * @param line
      *        The line of text to log.
      */
-    public static void finest(Object line) {
+    public static void finestDebug(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.FINEST_DEBUG)) {
+        if (isLoggable(e.getClassName(), Level.FINEST_DEBUG)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.FINEST_DEBUG);
+                log(e, Objects.toString(line), Level.FINEST_DEBUG);
             }
         }
     }
@@ -194,10 +262,10 @@ public class Log {
     public static void info(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.INFO)) {
+        if (isLoggable(e.getClassName(), Level.INFO)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.INFO);
+                log(e, Objects.toString(line), Level.INFO);
             }
         }
     }
@@ -212,10 +280,10 @@ public class Log {
     public static void warning(Object line) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.WARNING)) {
+        if (isLoggable(e.getClassName(), Level.WARNING)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.WARNING);
+                log(e, Objects.toString(line), Level.WARNING);
             }
         }
     }
@@ -232,7 +300,7 @@ public class Log {
     public static void error(Throwable error) {
         StackTraceElement e = new Throwable().getStackTrace()[1];
         
-        if (isLoggable(e.getClassName().replaceAll("\\$", "."), Level.ERROR)) {
+        if (isLoggable(e.getClassName(), Level.ERROR)) {
             
             synchronized (lock) {
                 log(e, error.toString(), Level.ERROR);
@@ -282,9 +350,18 @@ public class Log {
         if (isLoggable(e.getClassName(), Level.ERROR)) {
             
             synchronized (lock) {
-                log(e, line.toString(), Level.ERROR);
+                log(e, Objects.toString(line), Level.ERROR);
             }
         }
+    }
+    
+    /**
+     * Access the current output handler of the log.
+     * 
+     * @return The output handler of the log.
+     */
+    public static PrintStream getHandler() {
+        return handler;
     }
     
     /**
@@ -295,6 +372,15 @@ public class Log {
      */
     public static void setHandler(PrintStream handler) {
         Log.handler = handler;
+    }
+    
+    /**
+     * Access the current global log level.
+     * 
+     * @return The global log level.
+     */
+    public static Level getLevel() {
+        return level;
     }
     
     /**
@@ -309,6 +395,25 @@ public class Log {
     }
     
     /**
+     * Access the log level for a specific class. If no specific log level was defined, the global
+     * log level is returned.
+     * 
+     * @param clazz
+     *        The class whose log level shall be returned.
+     * @return The given class’ log level or the global log level if no specific log level was
+     *         defined for the given class.
+     */
+    public static Level getLevelForClass(Class<?> clazz) {
+        String name = clazz.getCanonicalName().replaceAll("\\$[0-9]*", "");
+        
+        if (mapping.containsKey(name)) {
+            return mapping.get(name);
+        } else {
+            return getLevel();
+        }
+    }
+    
+    /**
      * Change the log level for specific classes to be more or less verbose.
      * 
      * @param level
@@ -319,8 +424,45 @@ public class Log {
     public static void setLevelForClasses(Level level, Class<?>... classes) {
         
         for (Class<?> clazz : classes) {
-            mapping.put(clazz.getCanonicalName(), level);
+            mapping.put(clazz.getCanonicalName().replaceAll("\\$[0-9]*", ""), level);
         }
+    }
+    
+    /**
+     * Check the log level of the calling class.
+     * 
+     * @return A special log level for the calling class if one was defined (e.g. via
+     *         {@link #setLevelForClasses(Level, Class...)}) or the global log level as given by
+     *         {@link #getLevel()}.
+     */
+    public static Level getLevelForMe() {
+        String name = new Throwable().getStackTrace()[1].getClassName().replaceAll("\\$[0-9]*", "");
+        
+        if (mapping.containsKey(name)) {
+            return mapping.get(name);
+        } else {
+            return getLevel();
+        }
+    }
+    
+    /**
+     * Change the log level of the calling class.
+     * 
+     * @param level
+     *        The new log level for the calling class.
+     */
+    public static void setLevelForMe(Level level) {
+        mapping.put(new Throwable().getStackTrace()[1].getClassName().replaceAll("\\$[0-9]*", ""),
+                level);
+    }
+    
+    /**
+     * Access the current log format.
+     * 
+     * @return The format that is currently used for log messages.
+     */
+    public static String getFormat() {
+        return format;
     }
     
     /**
@@ -336,6 +478,7 @@ public class Log {
      * <li>%m → millisecond in three digit notation
      * <li>%T → thread name
      * <li>%i → thread id
+     * <li>%p → package name
      * <li>%c → class name
      * <li>%f → method name
      * <li>%l → line number
@@ -350,10 +493,112 @@ public class Log {
         Log.format = format;
     }
     
-    private static void log(StackTraceElement e, String line, Level level) {
+    /** Reset the log format to the default format. */
+    public static void setFormatDefault() {
+        Log.format = DEFAULT_FORMAT;
+    }
+    
+    /** Reset the log format to the default format that includes the date of the log messages. */
+    public static void setFormatDefaultWithDate() {
+        Log.format = DEFAULT_FORMAT_WITH_DATE;
+    }
+    
+    /**
+     * Check whether the log output is coloured using ANSI control codes.
+     * 
+     * @return {@code true} if the ANSI control codes will be inserted into the log output to colour
+     *         the log messages or {@code false} if no colour codes will be included.
+     */
+    public static boolean isColourUsed() {
+        return useColour;
+    }
+    
+    /**
+     * Change the colouring behaviour of the log.
+     * 
+     * @param useColour
+     *        If this is {@code true} from this point forward ANSI control codes will be inserted
+     *        into the log output to colour the log messages according to their level.
+     */
+    public static void setColourUsed(boolean useColour) {
+        Log.useColour = useColour;
+    }
+    
+    /**
+     * Check which colour is used to print messages of a certain level. Be aware that colouring must
+     * be enabled ({@link #setColourUsed(boolean)}) for actual colouring to take place.
+     * 
+     * @param level
+     *        The log level whose colour is requested.
+     * @return The colour that will be used for messages of the given level or {@code null} if for
+     *         that level no colour is specified.
+     */
+    public static AnsiColour getColour(Level level) {
+        return COLOURS.get(level);
+    }
+    
+    /**
+     * Change the colour that shall be used to print messages of a certain level. Be aware that
+     * colouring must be enabled ({@link #setColourUsed(boolean)}) for actual colouring to take
+     * place.
+     * 
+     * @param level
+     *        The level whose colour shall be changed.
+     * @param colour
+     *        The new colour that shall be used for messages of the given level or {@code null} if
+     *        no special colour shall be used.
+     */
+    public static void setColour(Level level, AnsiColour colour) {
+        COLOURS.put(level, colour);
+    }
+    
+    private static String formatColour(AnsiColour colour) {
+        
+        switch (colour) {
+            case BLACK:
+                return "30";
+            case RED:
+                return "31";
+            case GREEN:
+                return "32";
+            case YELLOW:
+                return "33";
+            case BLUE:
+                return "34";
+            case MAGENTA:
+                return "35";
+            case CYAN:
+                return "36";
+            case WHITE:
+                return "37";
+            case BRIGHT_BLACK:
+                return "90";
+            case BRIGHT_RED:
+                return "91";
+            case BRIGHT_GREEN:
+                return "92";
+            case BRIGHT_YELLOW:
+                return "93";
+            case BRIGHT_BLUE:
+                return "94";
+            case BRIGHT_MAGENTA:
+                return "95";
+            case BRIGHT_CYAN:
+                return "96";
+            case BRIGHT_WHITE:
+                return "97";
+            default:
+                Log.warning("The colour " + colour + " is not implemented properly!");
+                return "";
+        }
+    }
+    
+    private static void log(StackTraceElement e, String line, Level modifier) {
         String className = e.getClassName();
+        String packageName = "<default>";
         
         if (className.contains(".")) {
+            packageName = className.substring(0, className.lastIndexOf("."));
             className = className.substring(className.lastIndexOf(".") + 1, className.length());
         }
         
@@ -385,32 +630,97 @@ public class Log {
             millis = "" + ms;
         }
         
-        String message = format;
-        
-        message = message.replaceAll("%D", days);
-        message = message.replaceAll("%n", months);
-        message = message.replaceAll("%y", year + "");
-        message = message.replaceAll("%H", hours);
-        message = message.replaceAll("%M", mins);
-        message = message.replaceAll("%S", secs);
-        message = message.replaceAll("%m", millis);
-        message = message.replaceAll("%T", Thread.currentThread().getName());
-        message = message.replaceAll("%i", "" + Thread.currentThread().getId());
-        message = message.replaceAll("%c", className);
-        message = message.replaceAll("%f", methodName);
-        message = message.replaceAll("%l", lineNumber);
-        message = message.replaceAll("%L", level.name());
-        
-        boolean first = true;
+        boolean colour = useColour && COLOURS.containsKey(modifier)
+                && COLOURS.get(modifier) != null;
         
         for (String ln : line.split("\n")) {
+            String raw = getFormat();
+            String message = "";
+            boolean escape = false;
             
-            if (first) {
-                handler.println(message.replaceAll("%t", ln));
-                first = false;
-            } else {
-                handler.println(message.replaceAll("%t", "  " + ln));
+            for (char c : raw.toCharArray()) {
+                
+                if (escape) {
+                    
+                    switch (c) {
+                        case 'D':
+                            message += days;
+                            break;
+                        case 'n':
+                            message += months;
+                            break;
+                        case 'y':
+                            message += year;
+                            break;
+                        case 'H':
+                            message += hours;
+                            break;
+                        case 'M':
+                            message += mins;
+                            break;
+                        case 'S':
+                            message += secs;
+                            break;
+                        case 'm':
+                            message += millis;
+                            break;
+                        case 'T':
+                            message += Thread.currentThread().getName();
+                            break;
+                        case 'i':
+                            message += Thread.currentThread().getId();
+                            break;
+                        case 'c':
+                            message += className;
+                            break;
+                        case 'p':
+                            message += packageName;
+                            break;
+                        case 'f':
+                            message += methodName;
+                            break;
+                        case 'l':
+                            message += lineNumber;
+                            break;
+                        case 'L':
+                            message += modifier.name();
+                            break;
+                        case 't':
+                            message += ln;
+                            break;
+                        case '%':
+                            message += '%';
+                            break;
+                        default:
+                            
+                            if (!warned.contains(c)) {
+                                warned.add(c);
+                                Log.warning("Ignoring unknown escape character “" + c + "”!");
+                            }
+                    }
+                    
+                    escape = false;
+                } else {
+                    
+                    if (c == '%') {
+                        escape = true;
+                    } else {
+                        message += c;
+                    }
+                }
             }
+            
+            if (colour) {
+                handler.print("\033[" + formatColour(COLOURS.get(modifier)) + "m");
+            }
+            
+            handler.print(message);
+            
+            if (colour) {
+                handler.print("\033[m");
+            }
+            
+            handler.println();
         }
         
         handler.flush();
