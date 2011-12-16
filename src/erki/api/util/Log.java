@@ -1,5 +1,5 @@
 /*
- * © Copyright 2007–2010 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
+ * © Copyright 2007–2011 by Edgar Kalkowski (eMail@edgar-kalkowski.de)
  * 
  * This file is part of Erki’s API.
  * 
@@ -17,7 +17,6 @@
 
 package erki.api.util;
 
-import java.awt.Color;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Calendar;
@@ -59,7 +58,7 @@ import java.util.TreeMap;
  * <p>
  * The log supports colouring which is by default disabled. To enable it use
  * {@link #setUseColours(boolean)}. By default it prints warnings in yellow and errors in red which
- * can be changed via {@link #setColour(Level, Color)}.
+ * can be changed via {@link #setColour(Level, AnsiColour)}.
  * <p>
  * All actual logging methods of this class are thread safe.
  * 
