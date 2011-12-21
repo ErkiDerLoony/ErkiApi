@@ -13,4 +13,8 @@ add_library(lcars SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(lcars ${QT_LIBRARIES})
 target_link_libraries(lcars util)
 
+add_library(lcars_static STATIC ${SRC} ${MOC_SRC})
+target_link_libraries(lcars_static ${QT_LIBRARIES})
+target_link_libraries(lcars_static util_static)
+
 install(TARGETS lcars DESTINATION ${CMAKE_BINARY_DIR})
