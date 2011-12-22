@@ -14,4 +14,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_library(util SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(util ${QT_LIBRARIES})
 
+add_library(util_static STATIC ${SRC} ${MOC_SRC})
+target_link_libraries(util_static ${QT_LIBRARIES})
+
 install(TARGETS util DESTINATION ${CMAKE_BINARY_DIR})

@@ -10,4 +10,4 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/plot)
 include_directories(${PROJECT_SOURCE_DIR}/src/plot/drawers)
 
-add_library(axes ${SRC})
+add_library(axes STATIC ${SRC})

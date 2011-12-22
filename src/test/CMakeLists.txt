@@ -27,17 +27,17 @@ include_directories(${PROJECT_SOURCE_DIR}/src/util)
 
 add_executable(testplot ${PLOT_SRC} ${MOC_SRC})
 target_link_libraries(testplot ${QT_LIBRARIES})
-target_link_libraries(testplot plot)
-target_link_libraries(testplot lcars)
-target_link_libraries(testplot util)
+target_link_libraries(testplot plot_static)
+target_link_libraries(testplot lcars_static)
+target_link_libraries(testplot util_static)
 install(TARGETS testplot DESTINATION ${CMAKE_BINARY_DIR})
 
 add_executable(testlog ${LOG_SRC})
-target_link_libraries(testlog util)
+target_link_libraries(testlog util_static)
 install(TARGETS testlog DESTINATION ${CMAKE_BINARY_DIR})
 
 add_executable(testcommandlineparser ${CLI_SRC})
-target_link_libraries(testcommandlineparser util)
+target_link_libraries(testcommandlineparser util_static)
 install(TARGETS testcommandlineparser DESTINATION ${CMAKE_BINARY_DIR})
 
 add_executable(testlogging ${LOGGING_SRC})
