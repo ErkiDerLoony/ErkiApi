@@ -11,6 +11,10 @@
 #include "Lcars.hpp"
 #include "null_pointer_exception.hpp"
 
+const float LcarsFrame::OFFSET = 5.0;
+const float LcarsFrame::DIAMETER = 30.0;
+const float LcarsFrame::BAR_WIDTH = 130.0;
+
 LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget(this)) {
 
   // Make the background black.

@@ -61,9 +61,9 @@ protected:
 private:
   QWidget* mContent;
   QString title;
-  static const float OFFSET = 5.0;
-  static const float DIAMETER = 30.0;
-  static const float BAR_WIDTH = 130.0;
+  static const float OFFSET;
+  static const float DIAMETER;
+  static const float BAR_WIDTH;
 
 };
 

@@ -2,6 +2,7 @@ set(SRC
   null_pointer_exception.cpp
   command_line_parser.cpp
   log.cpp
+  logging.cpp
 )
 
 find_package(Qt4 REQUIRED)
