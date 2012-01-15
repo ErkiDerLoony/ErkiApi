@@ -10,10 +10,6 @@ set(LOG_SRC
   test_log.cpp
 )
 
-set(LOGGING_SRC
-  test_logging.cpp
-)
-
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 qt4_automoc(${PLOT_SRC})
@@ -39,7 +35,3 @@ install(TARGETS testlog DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(testcommandlineparser ${CLI_SRC})
 target_link_libraries(testcommandlineparser erkiutil_static)
 install(TARGETS testcommandlineparser DESTINATION ${CMAKE_BINARY_DIR})
-
-add_executable(testlogging ${LOGGING_SRC})
-target_link_libraries(testlogging erkiutil_static)
-install(TARGETS testlogging DESTINATION ${CMAKE_BINARY_DIR})

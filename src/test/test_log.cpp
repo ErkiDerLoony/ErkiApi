@@ -1,6 +1,9 @@
 #include "log.hpp"
 
+using namespace erki;
+
 int main(int argc, char** argv) {
+  log::set_use_colour(true);
   log::level = log::INFO;
   LOG_INFO << "(0) The numbers in brackets should run from 0 to 5 without "
            << "leaving one out." << std::endl;
@@ -17,6 +20,6 @@ int main(int argc, char** argv) {
   LOG_INFO << "(4) Log level was reset to test file specific logging."
            << std::endl;
   LOG_ERROR << "(5) This error should again be displayed." << std::endl;
-  log::set_level_for_file(log::NONE, "log_test.cpp");
+  log::set_level_for_file(log::NONE, "test_log.cpp");
   LOG_ERROR << "(!) But this one NOT!" << std::endl;
 }
