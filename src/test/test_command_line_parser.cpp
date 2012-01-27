@@ -6,12 +6,12 @@
 int main(int argc, char** argv) {
   //log::set_level_for_file(log::DEBUG, "command_line_parser.cpp");
   command_line_parser args(argc, argv);
-  LOG_INFO << "Recognized switches: " << std::endl;
+  LOG_INFO("Recognized switches: ");
   std::map<std::string, std::string>::const_iterator it;
 
   for (it = args.begin(); it != args.end(); it++) {
     std::pair<std::string, std::string> val = *it;
-    LOG_INFO << val.first << " -> " << val.second << std::endl;
+    LOG_INFO(val.first << " -> " << val.second);
   }
 
   std::stringstream s;
@@ -26,6 +26,6 @@ int main(int argc, char** argv) {
     }
   }
 
-  LOG_INFO << "Recognized list (" << list.size() << " elements): "
-           << s.str() << std::endl;
+  LOG_INFO("Recognized list (" << list.size() << " elements): "
+           << s.str());
 }

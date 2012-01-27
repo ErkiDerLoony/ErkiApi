@@ -4,9 +4,13 @@
 
 #include "log.hpp"
 
+using namespace erki;
+
 std::ostream& log::output = std::cout;
 
 bool log::print_date = false;
+
+bool log::use_colour = false;
 
 log::loglevel log::level = log::INFO;
 
@@ -15,7 +19,7 @@ std::map<std::string, log::loglevel> log::mapping;
 std::map<log::loglevel, log::ansi_colour> log::colours = {
   std::pair<log::loglevel, log::ansi_colour>(ERROR, BRIGHT_RED),
   std::pair<log::loglevel, log::ansi_colour>(WARNING, BRIGHT_YELLOW),
-  std::pair<log::loglevel, log::ansi_colour>(INFO, BRIGHT_BLUE),
+  std::pair<log::loglevel, log::ansi_colour>(INFO, BRIGHT_GREEN),
   std::pair<log::loglevel, log::ansi_colour>(DEBUG, BRIGHT_BLACK),
   std::pair<log::loglevel, log::ansi_colour>(FINE_DEBUG, BRIGHT_BLACK),
   std::pair<log::loglevel, log::ansi_colour>(FINER_DEBUG, BRIGHT_BLACK),
@@ -77,10 +81,62 @@ void log::set_colour(log::loglevel level, log::ansi_colour colour) {
                                 log::ansi_colour>(level, colour));
 }
 
+void log::set_use_colour(bool use_colour) {
+  log::use_colour = use_colour;
+}
+
 std::string log::start_colour(log::loglevel level) {
 
-  switch (level) {
-  default:
+  if (log::use_colour) {
+    ansi_colour colour = log::colours[level];
+
+    switch (colour) {
+    case BLACK:
+      return "\e[30m";
+    case RED:
+      return "\e[31m";
+    case GREEN:
+      return "\e[32m";
+    case YELLOW:
+      return "\e[33m";
+    case BLUE:
+      return "\e[34m";
+    case MAGENTA:
+      return "\e[35m";
+    case CYAN:
+      return "\e[36m";
+    case WHITE:
+      return "\e[37m";
+    case BRIGHT_BLACK:
+      return "\e[90m";
+    case BRIGHT_RED:
+      return "\e[91m";
+    case BRIGHT_GREEN:
+      return "\e[92m";
+    case BRIGHT_YELLOW:
+      return "\e[93m";
+    case BRIGHT_BLUE:
+      return "\e[94m";
+    case BRIGHT_MAGENTA:
+      return "\e[95m";
+    case BRIGHT_CYAN:
+      return "\e[96m";
+    case BRIGHT_WHITE: 
+     return "\e[97m";
+    default:
+      return "";
+    }
+
+  } else {
+    return "";
+  }
+}
+
+std::string log::end_colour() {
+
+  if (log::use_colour) {
+    return "\e[m";
+  } else {
     return "";
   }
 }
