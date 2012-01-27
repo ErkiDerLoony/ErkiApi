@@ -1,7 +1,7 @@
 #ifndef POINT_HPP
 #define POINT_HPP
 
-class drawer;
+#include "drawer.hpp"
 
 class point : public drawer {
 
