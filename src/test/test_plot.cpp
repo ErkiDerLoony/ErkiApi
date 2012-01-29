@@ -1,8 +1,10 @@
-#include "frame.hpp"
+#include "gl/frame.hpp"
+
+#include <string>
 
 int main(int argc, char** argv) {
-  frame frame(argc, argv);
-  frame.show();
+  erki::gl::frame f(std::string("Plot test"));
+  f.show();
 
   return 0;
 }

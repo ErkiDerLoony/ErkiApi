@@ -10,54 +10,54 @@
  * used explicitely.
  */
 #define LOG(m, t)                                                       \
-  if (erki::log::is_loggable(m, erki::log::format_file(__FILE__)))      \
-    erki::log::output << erki::log::start_colour(m) << "["              \
-                      << erki::log::format_time() << " "                \
-                      << erki::log::format_file(__FILE__) << "::"       \
-                      << __FUNCTION__ << "(" << __LINE__ << ")] "       \
-                      << erki::log::format_modifier(m) << ": " << t     \
-                      << erki::log::end_colour() << std::endl;
+  if (erki::util::is_loggable(m, erki::util::format_file(__FILE__)))    \
+    erki::util::output << erki::util::start_colour(m) << "["            \
+                       << erki::util::format_time() << " "              \
+                       << erki::util::format_file(__FILE__) << "::"     \
+                       << __FUNCTION__ << "(" << __LINE__ << ")] "      \
+                       << erki::util::format_modifier(m) << ": " << t   \
+                       << erki::util::end_colour() << std::endl;
 
 /** This macro logs an error message if the log level is sufficiently high. */
 #define LOG_ERROR(t)                            \
-  LOG(erki::log::ERROR, t)
+  LOG(erki::util::ERROR, t)
 
 /** This macro logs a warning message if the log level is sufficiently high. */
 #define LOG_WARNING(t)                          \
-  LOG(erki::log::WARNING, t)
+  LOG(erki::util::WARNING, t)
 
 /** This macro logs an info message if the log level is sufficiently high. */
 #define LOG_INFO(t)                             \
-  LOG(erki::log::INFO, t)
+  LOG(erki::util::INFO, t)
 
 /** This macro logs debug information if the log level is sufficiently high. */
 #define LOG_DEBUG(t)                            \
-  LOG(erki::log::DEBUG, t)
+  LOG(erki::util::DEBUG, t)
 
 /**
  * This macro logs fine debug information if the log level is sufficiently
  * high.
  */
 #define LOG_FINE_DEBUG(t)                       \
-  LOG(erki::log::FINE_DEBUG, t)
+  LOG(erki::util::FINE_DEBUG, t)
 
 /**
  * This macro logs finer debug information if the log level is sufficiently
  * high.
  */
 #define LOG_FINER_DEBUG(t)                      \
-  LOG(erki::log::FINER_DEBUG, t)
+  LOG(erki::util::FINER_DEBUG, t)
 
 /**
  * This macro logs finest debug information if the log level is sufficiently
  * high.
  */
 #define LOG_FINEST_DEBUG(t)                     \
-  LOG(erki::log::FINEST_DEBUG, t)
+  LOG(erki::util::FINEST_DEBUG, t)
 
 namespace erki {
 
-namespace log {
+namespace util {
 
 /** This enum defines the possible log levels. */
 enum loglevel {

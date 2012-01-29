@@ -4,18 +4,10 @@ set(SRC
   log.cpp
 )
 
-find_package(Qt4 REQUIRED)
-include(${QT_USE_FILE})
-#qt4_automoc(${SRC})
+add_library(erkiutil_shared SHARED ${SRC} ${MOC_SRC})
+set_target_properties(erkiutil_shared PROPERTIES OUTPUT_NAME erkiutil)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-add_library(erkiutil SHARED ${SRC} ${MOC_SRC})
-target_link_libraries(erkiutil ${QT_LIBRARIES})
-
-add_library(erkiutil_static STATIC ${SRC} ${MOC_SRC})
-target_link_libraries(erkiutil_static ${QT_LIBRARIES})
-set_target_properties(erkiutil_static PROPERTIES OUTPUT_NAME erkiutil)
+add_library(erkiutil STATIC ${SRC} ${MOC_SRC})
 
 install(TARGETS erkiutil DESTINATION ${CMAKE_BINARY_DIR})
-install(TARGETS erkiutil_static DESTINATION ${CMAKE_BINARY_DIR})
+install(TARGETS erkiutil_shared DESTINATION ${CMAKE_BINARY_DIR})

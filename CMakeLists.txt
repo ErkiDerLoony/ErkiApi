@@ -2,6 +2,7 @@ project(ErkiApi CXX C)
 cmake_minimum_required(VERSION 2.6)
 add_definitions("-Wall -O2 -g -std=c++0x -fPIC")
 
+include_directories("src")
 add_subdirectory(src)
 
 find_package(Doxygen)

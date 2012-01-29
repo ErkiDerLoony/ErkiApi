@@ -4,7 +4,6 @@ add_subdirectory(drawers)
 
 set(SRC
   plot2d.cpp
-  frame.cpp
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
