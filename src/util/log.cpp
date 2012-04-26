@@ -21,7 +21,7 @@ std::map<std::string, loglevel> mapping;
 std::map<loglevel, ansi_colour> colours = {
   std::pair<loglevel, ansi_colour>(ERROR, BRIGHT_RED),
   std::pair<loglevel, ansi_colour>(WARNING, BRIGHT_YELLOW),
-  std::pair<loglevel, ansi_colour>(INFO, BRIGHT_GREEN),
+  //std::pair<loglevel, ansi_colour>(INFO, BRIGHT_GREEN),
   std::pair<loglevel, ansi_colour>(DEBUG, BRIGHT_BLACK),
   std::pair<loglevel, ansi_colour>(FINE_DEBUG, BRIGHT_BLACK),
   std::pair<loglevel, ansi_colour>(FINER_DEBUG, BRIGHT_BLACK),
@@ -38,10 +38,10 @@ std::string erki::util::format_file(std::string filename) {
 
 bool erki::util::is_loggable(loglevel level, std::string filename) {
 
-  if (mapping.find(filename) != mapping.end()) {
-    if (level < mapping[filename]) return false;
+  if (erki::util::mapping.find(filename) != erki::util::mapping.end()) {
+    if (level < erki::util::mapping[filename]) return false;
   } else {
-    if (level < level) return false;
+    if (level < erki::util::level) return false;
   }
 
   return true;
@@ -86,7 +86,7 @@ void erki::util::set_colour(loglevel level, ansi_colour colour) {
 }
 
 void erki::util::set_use_colour(bool use_colour) {
-  use_colour = use_colour;
+  erki::util::use_colour = use_colour;
 }
 
 std::string erki::util::start_colour(loglevel level) {
