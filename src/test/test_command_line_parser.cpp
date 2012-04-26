@@ -1,5 +1,5 @@
-#include "command_line_parser.hpp"
-#include "log.hpp"
+#include "util/command_line_parser.hpp"
+#include "util/log.hpp"
 
 #include <sstream>
 

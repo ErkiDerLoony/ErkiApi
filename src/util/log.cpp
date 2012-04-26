@@ -4,59 +4,63 @@
 
 #include "log.hpp"
 
-using namespace erki;
+using namespace erki::util;
 
-std::ostream& log::output = std::cout;
+namespace erki { namespace util {
 
-bool log::print_date = false;
+std::ostream& output = std::cout;
 
-bool log::use_colour = false;
+bool print_date = false;
 
-log::loglevel log::level = log::INFO;
+bool use_colour = false;
 
-std::map<std::string, log::loglevel> log::mapping;
+loglevel level = INFO;
 
-std::map<log::loglevel, log::ansi_colour> log::colours = {
-  std::pair<log::loglevel, log::ansi_colour>(ERROR, BRIGHT_RED),
-  std::pair<log::loglevel, log::ansi_colour>(WARNING, BRIGHT_YELLOW),
-  std::pair<log::loglevel, log::ansi_colour>(INFO, BRIGHT_GREEN),
-  std::pair<log::loglevel, log::ansi_colour>(DEBUG, BRIGHT_BLACK),
-  std::pair<log::loglevel, log::ansi_colour>(FINE_DEBUG, BRIGHT_BLACK),
-  std::pair<log::loglevel, log::ansi_colour>(FINER_DEBUG, BRIGHT_BLACK),
-  std::pair<log::loglevel, log::ansi_colour>(FINEST_DEBUG, BRIGHT_BLACK)
+std::map<std::string, loglevel> mapping;
+
+std::map<loglevel, ansi_colour> colours = {
+  std::pair<loglevel, ansi_colour>(ERROR, BRIGHT_RED),
+  std::pair<loglevel, ansi_colour>(WARNING, BRIGHT_YELLOW),
+  std::pair<loglevel, ansi_colour>(INFO, BRIGHT_GREEN),
+  std::pair<loglevel, ansi_colour>(DEBUG, BRIGHT_BLACK),
+  std::pair<loglevel, ansi_colour>(FINE_DEBUG, BRIGHT_BLACK),
+  std::pair<loglevel, ansi_colour>(FINER_DEBUG, BRIGHT_BLACK),
+  std::pair<loglevel, ansi_colour>(FINEST_DEBUG, BRIGHT_BLACK)
 };
 
-std::string log::format_file(std::string filename) {
+}}
+
+std::string erki::util::format_file(std::string filename) {
   int pos = filename.find_last_of("/");
   filename = filename.substr(pos + 1);
   return filename;
 }
 
-bool log::is_loggable(log::loglevel level, std::string filename) {
+bool erki::util::is_loggable(loglevel level, std::string filename) {
 
   if (mapping.find(filename) != mapping.end()) {
     if (level < mapping[filename]) return false;
   } else {
-    if (level < log::level) return false;
+    if (level < level) return false;
   }
 
   return true;
 }
 
-std::string log::format_time() {
+std::string erki::util::format_time() {
   time_t rawtime;
   struct tm *timeinfo;
   char buffer[80];
   time(&rawtime);
   timeinfo = localtime(&rawtime);
-  if (log::print_date)
+  if (print_date)
     strftime(buffer, 80, "%d.%m.%Y %H:%M:%S,", timeinfo);
   else
     strftime(buffer, 80, "%H:%M:%S", timeinfo);
   return std::string(buffer);
 }
 
-std::string log::format_modifier(log::loglevel mod) {
+std::string erki::util::format_modifier(loglevel mod) {
 
   switch (mod) {
   case DEBUG:
@@ -72,23 +76,23 @@ std::string log::format_modifier(log::loglevel mod) {
   }
 }
 
-void log::set_level_for_file(log::loglevel level, std::string file) {
-  log::mapping.insert(std::pair<std::string, log::loglevel>(file, level));
+void erki::util::set_level_for_file(loglevel level, std::string file) {
+  mapping.insert(std::pair<std::string, loglevel>(file, level));
 }
 
-void log::set_colour(log::loglevel level, log::ansi_colour colour) {
-  log::colours.insert(std::pair<log::loglevel,
-                                log::ansi_colour>(level, colour));
+void erki::util::set_colour(loglevel level, ansi_colour colour) {
+  colours.insert(std::pair<loglevel,
+                                ansi_colour>(level, colour));
 }
 
-void log::set_use_colour(bool use_colour) {
-  log::use_colour = use_colour;
+void erki::util::set_use_colour(bool use_colour) {
+  use_colour = use_colour;
 }
 
-std::string log::start_colour(log::loglevel level) {
+std::string erki::util::start_colour(loglevel level) {
 
-  if (log::use_colour) {
-    ansi_colour colour = log::colours[level];
+  if (use_colour) {
+    ansi_colour colour = colours[level];
 
     switch (colour) {
     case BLACK:
@@ -132,9 +136,9 @@ std::string log::start_colour(log::loglevel level) {
   }
 }
 
-std::string log::end_colour() {
+std::string erki::util::end_colour() {
 
-  if (log::use_colour) {
+  if (use_colour) {
     return "\e[m";
   } else {
     return "";
