@@ -1,12 +1,6 @@
-set(SRC
-  command_line_parser.cpp
-  log.cpp
-)
+file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-set(HEADER
-  command_line_parser.hpp
-  log.hpp
-)
+file(GLOB HEADER ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
 
 add_library(erkiutil SHARED ${SRC})
 
