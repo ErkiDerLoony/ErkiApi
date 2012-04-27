@@ -1,8 +1,8 @@
-#ifndef COORDINATE_TRANSFORMER_H
-#define COORDINATE_TRANSFORMER_H
+#ifndef COORDINATE_TRANSFORMER_HPP
+#define COORDINATE_TRANSFORMER_HPP
 
 /* Forward declarations. */
-class Plot2d;
+class plot2d;
 class QPoint;
 class QPointF;
 
@@ -12,16 +12,16 @@ class QPointF;
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
-class CoordinateTransformer {
+class coordinate_transformer {
 
 public:
 
   /**
-   * Create a new CoordinateTransformer.
+   * Create a new coordinate_transformer.
    *
    * @param plot  The plot instance this transformer belongs to.
    */
-  CoordinateTransformer(Plot2d* plot);
+  coordinate_transformer(plot2d* plot);
 
   /**
    * Translate math coordinates to screen coordinates.
@@ -43,8 +43,8 @@ public:
   QPointF* math(QPoint* point);
 
 private:
-  Plot2d* mPlot;
+  plot2d* mPlot;
 
 };
 
-#endif // COORDINATE_TRANSFORMER_H
+#endif /* COORDINATE_TRANSFORMER_HPP */

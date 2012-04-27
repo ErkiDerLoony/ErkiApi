@@ -1,8 +1,8 @@
 #ifndef LCARS_FRAME
 #define LCARS_FRAME
 
-#include <QWidget>
-#include <QFont>
+#include <Qt/qwidget.h>
+#include <Qt/qfont.h>
 
 #include "null_pointer_exception.hpp"
 
@@ -22,9 +22,16 @@ public:
   /**
    * Create a new LcarsFrame.
    *
+   * @param title  The title of the new frame.
+   */
+  //LcarsFrame(const char& title);
+
+  /**
+   * Create a new LcarsFrame.
+   *
    * @param title  the title of the new frame
    */
-  LcarsFrame(QString& title);
+  LcarsFrame(const QString& title);
 
   /** Delete this frame’s content before it is destroyed itself. */
   virtual ~LcarsFrame();

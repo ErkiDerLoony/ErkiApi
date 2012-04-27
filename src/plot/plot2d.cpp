@@ -1,6 +1,6 @@
 #include "plot2d.hpp"
 
-#include "drawer.hpp"
+#include "drawers/drawer.hpp"
 
 plot2d::plot2d(std::pair<double, double> x_range,
                std::pair<double, double> y_range) {
@@ -17,3 +17,5 @@ plot2d::~plot2d() {
 void plot2d::add(drawer* drawer) {
   drawers.push_back(drawer);
 }
+
+#include "plot2d.moc"
