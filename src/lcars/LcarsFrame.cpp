@@ -1,3 +1,5 @@
+#include "LcarsFrame.hpp"
+
 #include <algorithm>
 
 #include <QPainter>
@@ -6,8 +8,6 @@
 #include <QBrush>
 #include <QFont>
 
-#include "LcarsFrame.hpp"
-#include "LcarsFrame.moc"
 #include "Lcars.hpp"
 #include "null_pointer_exception.hpp"
 
@@ -15,7 +15,7 @@ const float LcarsFrame::OFFSET = 5.0;
 const float LcarsFrame::DIAMETER = 30.0;
 const float LcarsFrame::BAR_WIDTH = 130.0;
 
-LcarsFrame::LcarsFrame(QString& title) : mContent(new QWidget(this)) {
+LcarsFrame::LcarsFrame(const QString& title) : mContent(new QWidget(this)) {
 
   // Make the background black.
   QPalette p;
@@ -110,3 +110,5 @@ void LcarsFrame::paintEvent(QPaintEvent* event) {
              OFFSET + radius + 0.5*fm.height() - fm.descent(),
              windowTitle());
 }
+
+#include "LcarsFrame.moc"

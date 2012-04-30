@@ -1,10 +1,12 @@
-#include "gl/frame.hpp"
+#include "plot/plot2d.hpp"
 
-#include <string>
+#include <Qt/qapplication.h>
 
 int main(int argc, char** argv) {
-  erki::gl::frame f(std::string("Plot test"));
-  f.show();
+  QApplication app(argc, argv);
 
-  return 0;
+  plot2d* plot = new plot2d();
+  plot->show();
+
+  return app.exec();
 }

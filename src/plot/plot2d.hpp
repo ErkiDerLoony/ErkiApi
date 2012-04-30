@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <list>
+#include <Qt/qwidget.h>
 
 class drawer;
 
@@ -12,7 +13,9 @@ class drawer;
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
-class plot2d {
+class plot2d : public QWidget {
+
+Q_OBJECT
 
 public:
 
@@ -23,9 +26,6 @@ public:
    *                        (defaults to -1 to 1).
    * @param y_range         The initial range of the y axis of the new plot
    *                        (defaults to -1 to 1).
-   * @param style_provider  The style provider that will be used to determine
-   *                        the look of the new plot (defaults to
-   *                        a new style_provider instance).
    */
   plot2d(std::pair<double, double> x_range = std::pair<double, double>(-1.0, 1.0),
          std::pair<double, double> y_range = std::pair<double, double>(-1.0, 1.0));
@@ -34,7 +34,7 @@ public:
    * Destroy this plot. All remaining drawers will be deleted and their
    * ressources freed.
    */
-  virtual ~plot2d();
+  ~plot2d();
 
   /**
    * Add a new drawer to this plot.

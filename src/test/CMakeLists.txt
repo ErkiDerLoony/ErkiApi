@@ -1,8 +1,8 @@
-#add_executable(testplot test_plot.cpp)
-#target_link_libraries(testplot plot)
-#target_link_libraries(testplot erkiutil)
-#target_link_libraries(testplot erkigl)
-#install(TARGETS testplot DESTINATION bin)
+add_executable(testplot test_plot.cpp)
+target_link_libraries(testplot plot)
+target_link_libraries(testplot lcars)
+target_link_libraries(testplot erkiutil)
+install(TARGETS testplot DESTINATION bin)
 
 add_executable(testlog test_log.cpp)
 target_link_libraries(testlog erkiutil)
