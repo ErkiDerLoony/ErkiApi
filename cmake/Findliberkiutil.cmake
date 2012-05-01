@@ -1,10 +1,10 @@
 find_path(liberkiutil_INCLUDES
   NAMES log.hpp
-  PATHS
+  PATHS erkiapi/util/
 )
 
 find_library(liberkiutil_LIBRARIES
-  NAMES liberkiutil
+  NAMES liberkiutil.so
 )
 
 if(liberkiutil_LIBRARIES)

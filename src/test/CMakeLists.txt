@@ -1,4 +1,4 @@
-add_executable(testplot test_plot.cpp)
+add_executable(testplot TestPlot.cpp)
 target_link_libraries(testplot plot)
 target_link_libraries(testplot lcars)
 target_link_libraries(testplot erkiutil)

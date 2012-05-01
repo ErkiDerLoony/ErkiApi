@@ -1,19 +1,26 @@
 #ifndef PLOT2D_HPP
 #define PLOT2D_HPP
 
+/* Standard includes. */
 #include <utility>
 #include <list>
+
+/* Qt includes. */
 #include <Qt/qwidget.h>
 
-class drawer;
+/* Forward declarations. */
+class Drawer;
+
+/* Necessary other includes. */
+#include "CoordinateTransformer.hpp"
 
 /**
  * This class represents a 2D plot that can easily be extended by adding
- * instances of {@link drawer}.
+ * instances of {@link Drawer}.
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
-class plot2d : public QWidget {
+class Plot2D : public QWidget {
 
 Q_OBJECT
 
@@ -27,24 +34,29 @@ public:
    * @param y_range         The initial range of the y axis of the new plot
    *                        (defaults to -1 to 1).
    */
-  plot2d(std::pair<double, double> x_range = std::pair<double, double>(-1.0, 1.0),
+  Plot2D(std::pair<double, double> x_range = std::pair<double, double>(-1.0, 1.0),
          std::pair<double, double> y_range = std::pair<double, double>(-1.0, 1.0));
 
   /**
    * Destroy this plot. All remaining drawers will be deleted and their
    * ressources freed.
    */
-  ~plot2d();
+  ~Plot2D();
 
   /**
    * Add a new drawer to this plot.
    *
    * @param drawer  the new drawer to add
    */
-  void add(drawer* drawer);
+  void add(Drawer* drawer);
+
+protected:
+
+  void paintEvent(QPaintEvent* event);
 
 private:
-  std::list<drawer*> drawers;
+  CoordinateTransformer transformer;
+  std::list<Drawer*> drawers;
 
 };
 
