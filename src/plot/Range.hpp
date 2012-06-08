@@ -9,9 +9,9 @@ public:
 
   virtual ~Range();
 
-  T from();
-  T to();
-  T length();
+  T from() const;
+  T to() const;
+  T length() const;
 
   void setFrom(T from);
   void setTo(T to);
@@ -31,7 +31,7 @@ template<class T> Range<T>::~Range() {
 
 }
 
-template<class T> T Range<T>::from() {
+template<class T> T Range<T>::from() const {
   return mFrom;
 }
 
@@ -39,7 +39,7 @@ template<class T> void Range<T>::setFrom(T from) {
   mFrom = from;
 }
 
-template<class T> T Range<T>::to() {
+template<class T> T Range<T>::to() const {
   return mTo;
 }
 
@@ -47,7 +47,7 @@ template<class T> void Range<T>::setTo(T to) {
   mTo = to;
 }
 
-template<class T> T Range<T>::length() {
+template<class T> T Range<T>::length() const {
   return mTo - mFrom;
 }
 

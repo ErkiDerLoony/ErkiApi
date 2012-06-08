@@ -4,8 +4,13 @@
 #include "CoordinateTransformer.hpp"
 
 Plot2D::Plot2D(std::pair<double, double> x_range,
-               std::pair<double, double> y_range)
-  : transformer(CoordinateTransformer(*this)) {
+               std::pair<double, double> y_range) :
+transformer(CoordinateTransformer(Range<double>(-1.0, 1.0),
+                                  Range<double>(-1.0, 1.0),
+                                  Range<int>(0, width()),
+                                  Range<int>(0, height())))
+{
+  // Nothing else to do here.
 }
 
 Plot2D::~Plot2D() {
