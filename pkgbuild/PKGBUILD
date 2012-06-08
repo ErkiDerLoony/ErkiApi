@@ -1,8 +1,8 @@
 # Maintainer: Edgar Kalkowski <eMail@edgar-kalkowski.de>
-pkgname=erkiplot-git
+pkgname=erkiapi-git
 pkgver=20120608
 pkgrel=1
-pkgdesc="A scientific plot api based on Qt."
+pkgdesc="A plot api based on Qt and a GUI framework looking similar to LCARS."
 arch=('x86_64' 'i686')
 url=""
 license=('GPL')
@@ -43,11 +43,11 @@ build() {
   git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
   cd "$srcdir/$_gitname-build"
 
-  cmake .
-  make plot
+  cmake -DCMAKE_INSTALL_PREFIX=/usr/ .
+  make
 }
 
 package() {
   cd "$srcdir/$_gitname-build"
-  make DESTDIR="$pkgdir/" plot install
+  make DESTDIR="$pkgdir/" install
 }
