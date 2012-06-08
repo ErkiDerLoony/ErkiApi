@@ -23,13 +23,15 @@ void Plot2D::add(Drawer* drawer) {
   drawers.push_back(drawer);
 }
 
+void Plot2D::resizeEvent(QResizeEvent* event) {
+  transformer.setXPixelRange(Range<int>(0, width()));
+  transformer.setYPixelRange(Range<int>(0, height()));
+}
+
 void Plot2D::paintEvent(QPaintEvent* event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, true);
   painter.setRenderHint(QPainter::TextAntialiasing, true);
-
-  transformer.setXPixelRange(Range<int>(0, width()));
-  transformer.setYPixelRange(Range<int>(0, height()));
 
   std::list<Drawer*>::iterator it;
 

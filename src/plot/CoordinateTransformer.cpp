@@ -6,56 +6,56 @@ CoordinateTransformer::CoordinateTransformer(Range<double> xRange,
                                              Range<double> yRange,
                                              Range<int> xPixelRange,
                                              Range<int> yPixelRange) :
-  mXRange(xRange),
-  mYRange(yRange),
-  mXPixelRange(xPixelRange),
-  mYPixelRange(yPixelRange)
+  m_xRange(xRange),
+  m_yRange(yRange),
+  m_xPixelRange(xPixelRange),
+  m_yPixelRange(yPixelRange)
 {
   // Nothing else to do here.
 }
 
 void CoordinateTransformer::screen(const QPointF& src, QPoint& dst) {
-  const int x = (int) ((mXPixelRange.from() - 1) + ((src.x() - mXRange.from()) / (mXRange.to() - mXRange.from())) * (mXPixelRange.length() + 1));
-  const int y = (int) ((mYPixelRange.from() - 1) + ((src.y() - mYRange.to()) / (mYRange.from() - mYRange.to())) * (mYPixelRange.length() + 1));
+  const int x = (int) ((m_xPixelRange.from() - 1) + ((src.x() - m_xRange.from()) / (m_xRange.to() - m_xRange.from())) * (m_xPixelRange.length() + 1));
+  const int y = (int) ((m_yPixelRange.from() - 1) + ((src.y() - m_yRange.to()) / (m_yRange.from() - m_yRange.to())) * (m_yPixelRange.length() + 1));
   dst.setX(x);
   dst.setY(y);
 }
 
 void CoordinateTransformer::math(const QPoint& src, QPointF& dst) {
-  const double x = mXRange.from() + (((src.x() - mXPixelRange.from()) / (double) mXPixelRange.length()) * (mXRange.to() - mXRange.from()));
-  const double y = mYRange.to() - (((src.y() - mYPixelRange.from()) / (double) mYPixelRange.length()) * (mYRange.to() - mYRange.from()));
+  const double x = m_xRange.from() + (((src.x() - m_xPixelRange.from()) / (double) m_xPixelRange.length()) * (m_xRange.to() - m_xRange.from()));
+  const double y = m_yRange.to() - (((src.y() - m_yPixelRange.from()) / (double) m_yPixelRange.length()) * (m_yRange.to() - m_yRange.from()));
   dst.setX(x);
   dst.setY(y);
 }
 
 const Range<double>& CoordinateTransformer::xRange() {
-  return mXRange;
+  return m_xRange;
 }
 
 void CoordinateTransformer::setXRange(const Range<double>& range) {
-  mXRange = range;
+  m_xRange = range;
 }
 
 const Range<double>& CoordinateTransformer::yRange() {
-  return mYRange;
+  return m_yRange;
 }
 
 void CoordinateTransformer::setYRange(const Range<double>& range) {
-  mYRange = range;
+  m_yRange = range;
 }
 
 const Range<int>& CoordinateTransformer::xPixelRange() {
-  return mXPixelRange;
+  return m_xPixelRange;
 }
 
 void CoordinateTransformer::setXPixelRange(const Range<int>& range) {
-  mXPixelRange = range;
+  m_xPixelRange = range;
 }
 
 const Range<int>& CoordinateTransformer::yPixelRange() {
-  return mYPixelRange;
+  return m_yPixelRange;
 }
 
 void CoordinateTransformer::setYPixelRange(const Range<int>& range) {
-  mYPixelRange = range;
+  m_yPixelRange = range;
 }

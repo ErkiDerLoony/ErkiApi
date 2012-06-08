@@ -9,8 +9,9 @@ class QPointF;
 #include "Range.hpp"
 
 /**
- * This class is used by {@link Plot2D} to translate coordinates from math
- * coordinates to screen coordinates that can be drawn using a {@link QPainter}.
+ * This class is used by {@link Plot2D} to translate coordinates between a
+ * mathematical cartesian coordinate system and Qt’s pixel coordinates used for
+ * drawing operations on the screen.
  *
  * @author Edgar Kalkowski <eMail@edgar-kalkowski.de>
  */
@@ -20,8 +21,16 @@ public:
 
   /**
    * Create a new CoordinateTransformer.
+   *
+   * @param xRange       The horizontal range of the mathematical cartesian
+   *                     coordinate system.
+   * @param yRange       The vertical range of the mathematical cartesian
+   *                     coordinate system.
+   * @param xPixelRange  The horizontal range of the screen coordinate system.
+   * @param yPixelRange  The vertical range of the screen coordinate system.
    */
-  CoordinateTransformer(Range<double>, Range<double>, Range<int>, Range<int>);
+  CoordinateTransformer(Range<double> xRange, Range<double> yRange,
+                        Range<int> xPixelRange, Range<int> yPixelRange);
 
   virtual ~CoordinateTransformer() {};
 
@@ -42,23 +51,85 @@ public:
    */
   void math(const QPoint& src, QPointF& dst);
 
+  /**
+   * Access the range of the horizontal axis of the math coordinate system.
+   *
+   * @return  The range of the horizontal axis in math coordinates.
+   */
   const Range<double>& xRange();
-  void setXRange(const Range<double>& xRange);
 
+  /**
+   * Change the range of the horizontal axis of the math coordinate system.
+   *
+   * @param range  The new range of the horizontal axis of the math coordinate
+   *               system.
+   */
+  void setXRange(const Range<double>& range);
+
+  /**
+   * Access the range of the vertical axis of the math coordinate system.
+   *
+   * @return  The range of the vertical axis in math coordinates.
+   */
   const Range<double>& yRange();
-  void setYRange(const Range<double>& yRange);
 
+  /**
+   * Change the range of the vertical axis of the math coordinate system.
+   *
+   * @param range  The new range of the vertical axis of the math coordinate
+   *               system.
+   */
+  void setYRange(const Range<double>& range);
+
+  /**
+   * Access the horizontal range of the screen coordinate system.
+   *
+   * @return  The range of the horizontal axis of the screen coordinate system.
+   */
   const Range<int>& xPixelRange();
-  void setXPixelRange(const Range<int>& xPixelRange);
 
+  /**
+   * Change the range of the horizontal axis of the screen coordinate system.
+   *
+   * @param range  The new range of the horizontal axis of the screen coordinate
+   *               system.
+   */
+  void setXPixelRange(const Range<int>& range);
+
+  /**
+   * Access the range of the vertical axis of the screen coordinate system.
+   *
+   * @return  The range of the vertical axis of the screen coordinate system.
+   */
   const Range<int>& yPixelRange();
+
+  /**
+   * Change the range of the vertical axis of the screen coordinate system.
+   *
+   * @param range  The new range of the vertical axis of the screen coordinate
+   *               system.
+   */
   void setYPixelRange(const Range<int>& yPixelRange);
 
+  /**
+   * Access the width of the screen coordinate system.
+   *
+   * @return  The width of the screen coordinate system in pixels.
+   */
+  int width();
+
+  /**
+   * Access the height of the screen coordinate system.
+   *
+   * @return  The height of the screen coordinate system in pixels.
+   */
+  int height();
+
 private:
-  Range<double> mXRange;
-  Range<double> mYRange;
-  Range<int> mXPixelRange;
-  Range<int> mYPixelRange;
+  Range<double> m_xRange;
+  Range<double> m_yRange;
+  Range<int> m_xPixelRange;
+  Range<int> m_yPixelRange;
 
 };
 

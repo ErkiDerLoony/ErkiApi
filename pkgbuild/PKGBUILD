@@ -19,7 +19,7 @@ source=()
 noextract=()
 md5sums=()
 
-_gitroot=ssh://xpeter.de/var/git/ErkiApi
+_gitroot=../..
 _gitname=erkiplot
 
 build() {

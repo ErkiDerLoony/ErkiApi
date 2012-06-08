@@ -52,7 +52,9 @@ public:
 
 protected:
 
-  void paintEvent(QPaintEvent* event);
+  virtual void paintEvent(QPaintEvent* event);
+
+  virtual void resizeEvent(QResizeEvent* event);
 
 private:
   CoordinateTransformer transformer;
