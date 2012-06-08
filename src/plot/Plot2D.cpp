@@ -3,10 +3,8 @@
 #include "drawers/Drawer.hpp"
 #include "CoordinateTransformer.hpp"
 
-Plot2D::Plot2D(std::pair<double, double> x_range,
-               std::pair<double, double> y_range) :
-transformer(CoordinateTransformer(Range<double>(-1.0, 1.0),
-                                  Range<double>(-1.0, 1.0),
+Plot2D::Plot2D(Range<double> xRange, Range<double> yRange) :
+transformer(CoordinateTransformer(xRange, yRange,
                                   Range<int>(0, width()),
                                   Range<int>(0, height())))
 {
