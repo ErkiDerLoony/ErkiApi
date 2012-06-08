@@ -20,10 +20,10 @@ public:
 
   /**
    * Create a new CoordinateTransformer.
-   *
-   * @param plot  The plot instance this transformer belongs to.
    */
-  CoordinateTransformer(const Plot2D& plot);
+  CoordinateTransformer(Range<double>, Range<double>, Range<int>, Range<int>);
+
+  virtual ~CoordinateTransformer() {};
 
   /**
    * Translate math coordinates to screen coordinates.
@@ -42,40 +42,19 @@ public:
    */
   void math(const QPoint& src, QPointF& dst);
 
-  /**
-   * Update the range of this transformer’s horizontal axis of mathematical
-   * coordinates.
-   *
-   * @param xRange  The new range of the horizontal axis in math coordinates.
-   */
+  const Range<double>& xRange();
   void setXRange(const Range<double>& xRange);
 
-  /**
-   * Update the range of this transformer’s vertical axis of mathematical
-   * coordinates.
-   *
-   * @param yRange  The new range of the vertical axis in math coordinates.
-   */
+  const Range<double>& yRange();
   void setYRange(const Range<double>& yRange);
 
-  /**
-   * Update the range of this transformer’s horizontal axis of screen
-   * coordinates.
-   *
-   * @param xPixelRange  The new range of the horizontal axis in pixels.
-   */
+  const Range<int>& xPixelRange();
   void setXPixelRange(const Range<int>& xPixelRange);
 
-  /**
-   * Update the range of this transformer’s vertical axis of screen
-   * coordinates.
-   *
-   * @param yPixelRange  The new range of the vertical axis in pixels.
-   */
+  const Range<int>& yPixelRange();
   void setYPixelRange(const Range<int>& yPixelRange);
 
 private:
-  const Plot2D& mPlot;
   Range<double> mXRange;
   Range<double> mYRange;
   Range<int> mXPixelRange;

@@ -29,13 +29,13 @@ public:
   /**
    * Create a new plot with given initial ranges.
    *
-   * @param x_range         The initial range of the x axis of the new plot
-   *                        (defaults to -1 to 1).
-   * @param y_range         The initial range of the y axis of the new plot
-   *                        (defaults to -1 to 1).
+   * @param xRange         The initial range of the x axis of the new plot
+   *                       (defaults to -1 to 1).
+   * @param yRange         The initial range of the y axis of the new plot
+   *                       (defaults to -1 to 1).
    */
-  Plot2D(std::pair<double, double> x_range = std::pair<double, double>(-1.0, 1.0),
-         std::pair<double, double> y_range = std::pair<double, double>(-1.0, 1.0));
+  Plot2D(Range<double> xRange = Range<double>(-1.0, 1.0),
+         Range<double> yRange = Range<double>(-1.0, 1.0));
 
   /**
    * Destroy this plot. All remaining drawers will be deleted and their

@@ -1,0 +1,53 @@
+# Maintainer: Edgar Kalkowski <eMail@edgar-kalkowski.de>
+pkgname=erkiapi-git
+pkgver=20120608
+pkgrel=1
+pkgdesc="A plot api based on Qt and a GUI framework looking similar to LCARS."
+arch=('x86_64' 'i686')
+url=""
+license=('GPL')
+groups=()
+depends=()
+makedepends=('git')
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+source=()
+noextract=()
+md5sums=()
+
+_gitroot=ssh://xpeter.de/var/git/ErkiApi
+_gitname=erkiplot
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+
+  if [[ -d "$_gitname" ]]; then
+    cd "$_gitname" && git pull origin
+    msg "The local files are updated."
+  else
+    git clone "$_gitroot" "$_gitname"
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting build..."
+
+  rm -rf "$srcdir/$_gitname-build"
+  cd "$srcdir/$_gitname"
+  git checkout cpp
+  cd "$srcdir"
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+  cd "$srcdir/$_gitname-build"
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr/ .
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+  make DESTDIR="$pkgdir/" install
+}
