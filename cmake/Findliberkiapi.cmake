@@ -1,6 +1,6 @@
 find_path(liberkiapi_INCLUDES
-  NAMES log.hpp
-  PATHS erkiapi/util/
+  NAMES Plot2d.hpp
+  PATHS erkiapi/plot/
 )
 
 find_library(liberkiapi_LIBRARIES

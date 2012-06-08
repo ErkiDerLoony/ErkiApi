@@ -18,4 +18,4 @@ target_link_libraries(plot drawers)
 #target_link_libraries(plot style)
 
 install(TARGETS plot LIBRARY DESTINATION lib)
-install(FILES ${HEADER} DESTINATION include/erkiapi/util)
+install(FILES ${HEADER} DESTINATION include/erkiapi/plot)
