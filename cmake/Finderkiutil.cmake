@@ -1,5 +1,7 @@
 find_path(erkiutil_INCLUDES
-  NAMES Plot2D.hpp
+  NAMES log.hpp
+  PATHS /usr/include/erkiapi/util
+        /usr/local/include/erkiapi/util
 )
 
 find_library(erkiutil_LIBRARIES
