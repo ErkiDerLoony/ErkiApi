@@ -11,11 +11,11 @@ add_subdirectory(drawers)
 #add_subdirectory(style)
 #add_subdirectory(axes)
 
-add_library(plot SHARED ${SRC} ${MOC_SRC})
+add_library(erkiplot SHARED ${SRC} ${MOC_SRC})
 target_link_libraries(plot ${QT_LIBRARIES})
 target_link_libraries(plot drawers)
 #target_link_libraries(plot axes)
 #target_link_libraries(plot style)
 
-install(TARGETS plot LIBRARY DESTINATION lib)
+install(TARGETS erkiplot LIBRARY DESTINATION lib)
 install(FILES ${HEADER} DESTINATION include/erkiapi/plot)
