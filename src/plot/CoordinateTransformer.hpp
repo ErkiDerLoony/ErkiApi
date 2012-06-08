@@ -42,36 +42,16 @@ public:
    */
   void math(const QPoint& src, QPointF& dst);
 
-  /**
-   * Update the range of this transformer’s horizontal axis of mathematical
-   * coordinates.
-   *
-   * @param xRange  The new range of the horizontal axis in math coordinates.
-   */
+  const Range<double>& getXRange();
   void setXRange(const Range<double>& xRange);
 
-  /**
-   * Update the range of this transformer’s vertical axis of mathematical
-   * coordinates.
-   *
-   * @param yRange  The new range of the vertical axis in math coordinates.
-   */
+  const Range<double>& getYRange();
   void setYRange(const Range<double>& yRange);
 
-  /**
-   * Update the range of this transformer’s horizontal axis of screen
-   * coordinates.
-   *
-   * @param xPixelRange  The new range of the horizontal axis in pixels.
-   */
+  const Range<int>& getXPixelRange();
   void setXPixelRange(const Range<int>& xPixelRange);
 
-  /**
-   * Update the range of this transformer’s vertical axis of screen
-   * coordinates.
-   *
-   * @param yPixelRange  The new range of the vertical axis in pixels.
-   */
+  const Range<int>& getYPixelRange();
   void setYPixelRange(const Range<int>& yPixelRange);
 
 private:

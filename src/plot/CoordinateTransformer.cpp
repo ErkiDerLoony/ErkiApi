@@ -19,16 +19,32 @@ void CoordinateTransformer::math(const QPoint& src, QPointF& dst) {
   dst.setY(y);
 }
 
+const Range<double>& CoordinateTransformer::getXRange() {
+  return mXRange;
+}
+
 void CoordinateTransformer::setXRange(const Range<double>& range) {
   mXRange = range;
+}
+
+const Range<double>& CoordinateTransformer::getYRange() {
+  return mYRange;
 }
 
 void CoordinateTransformer::setYRange(const Range<double>& range) {
   mYRange = range;
 }
 
+const Range<int>& CoordinateTransformer::getXPixelRange() {
+  return mXPixelRange;
+}
+
 void CoordinateTransformer::setXPixelRange(const Range<int>& range) {
   mXPixelRange = range;
+}
+
+const Range<int>& CoordinateTransformer::getYPixelRange() {
+  return mYPixelRange;
 }
 
 void CoordinateTransformer::setYPixelRange(const Range<int>& range) {
