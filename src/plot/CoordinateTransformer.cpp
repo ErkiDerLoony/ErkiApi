@@ -59,3 +59,11 @@ const Range<int>& CoordinateTransformer::yPixelRange() {
 void CoordinateTransformer::setYPixelRange(const Range<int>& range) {
   m_yPixelRange = range;
 }
+
+int CoordinateTransformer::width() {
+  return m_xPixelRange.length();
+}
+
+int CoordinateTransformer::height() {
+  return m_yPixelRange.length();
+}
