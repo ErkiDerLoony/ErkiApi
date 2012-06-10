@@ -22,6 +22,7 @@ public:
   void setTo(const T to);
 
   bool operator==(Range<T> other);
+  bool operator!=(Range<T> other);
 
 private:
 
@@ -32,16 +33,23 @@ private:
 
 template<class T> Range<T>::Range(const T from, const T to) :
   mFrom(from), mTo(to) {
-
 }
 
 template<class T> Range<T>::~Range() {
-
 }
 
 template<class T> bool Range<T>::operator==(Range<T> other) {
 
   if (from() == other.from() && to() == other.to()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+template<class T> bool Range<T>::operator!=(Range<T> other) {
+
+  if (from() != other.from() || to() != other.to()) {
     return true;
   } else {
     return false;
