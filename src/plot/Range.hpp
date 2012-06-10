@@ -21,8 +21,8 @@ public:
   void setFrom(const T from);
   void setTo(const T to);
 
-  bool operator==(Range<T> other);
-  bool operator!=(Range<T> other);
+  const bool operator==(const Range<T> other) const;
+  const bool operator!=(const Range<T> other) const;
 
 private:
 
@@ -38,7 +38,7 @@ template<class T> Range<T>::Range(const T from, const T to) :
 template<class T> Range<T>::~Range() {
 }
 
-template<class T> bool Range<T>::operator==(Range<T> other) {
+template<class T> const bool Range<T>::operator==(const Range<T> other) const {
 
   if (from() == other.from() && to() == other.to()) {
     return true;
@@ -47,7 +47,7 @@ template<class T> bool Range<T>::operator==(Range<T> other) {
   }
 }
 
-template<class T> bool Range<T>::operator!=(Range<T> other) {
+template<class T> const bool Range<T>::operator!=(const Range<T> other) const {
 
   if (from() != other.from() || to() != other.to()) {
     return true;
