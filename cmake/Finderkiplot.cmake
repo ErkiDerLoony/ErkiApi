@@ -19,7 +19,7 @@ else()
 endif()
 
 if(erkiplot_LIBRARIES)
-  message(STATUS "Found ErkiPlot libraries: ${erkiplot_LIBRARIES}.")
+  message(STATUS "Found ErkiPlot libraries: ${erkiplot_LIBRARIES}")
   set(erkiplot_FOUND TRUE)
 else()
   if(erkiplot_FIND_REQUIRED)

@@ -19,7 +19,7 @@ else()
 endif()
 
 if(erkiutil_LIBRARIES)
-  message(STATUS "Found ErkiUtil libraries: ${erkiutil_LIBRARIES}.")
+  message(STATUS "Found ErkiUtil libraries: ${erkiutil_LIBRARIES}")
   set(erkiutil_FOUND TRUE)
 else()
   if(erkiutil_FIND_REQUIRED)
