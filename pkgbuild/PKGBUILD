@@ -1,6 +1,6 @@
 # Maintainer: Edgar Kalkowski <eMail@edgar-kalkowski.de>
 pkgname=erkiapi-git
-pkgver=20120608
+pkgver=20120610
 pkgrel=1
 pkgdesc="A plot api based on Qt and a GUI framework looking similar to LCARS."
 arch=('x86_64' 'i686')

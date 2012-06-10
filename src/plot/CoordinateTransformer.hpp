@@ -56,7 +56,7 @@ public:
    *
    * @return  The range of the horizontal axis in math coordinates.
    */
-  const Range<double>& xRange();
+  const Range<double>& xRange() const;
 
   /**
    * Change the range of the horizontal axis of the math coordinate system.
@@ -71,7 +71,7 @@ public:
    *
    * @return  The range of the vertical axis in math coordinates.
    */
-  const Range<double>& yRange();
+  const Range<double>& yRange() const;
 
   /**
    * Change the range of the vertical axis of the math coordinate system.
@@ -86,7 +86,7 @@ public:
    *
    * @return  The range of the horizontal axis of the screen coordinate system.
    */
-  const Range<int>& xPixelRange();
+  const Range<int>& xPixelRange() const;
 
   /**
    * Change the range of the horizontal axis of the screen coordinate system.
@@ -101,7 +101,7 @@ public:
    *
    * @return  The range of the vertical axis of the screen coordinate system.
    */
-  const Range<int>& yPixelRange();
+  const Range<int>& yPixelRange() const;
 
   /**
    * Change the range of the vertical axis of the screen coordinate system.
@@ -116,14 +116,14 @@ public:
    *
    * @return  The width of the screen coordinate system in pixels.
    */
-  int width();
+  int width() const;
 
   /**
    * Access the height of the screen coordinate system.
    *
    * @return  The height of the screen coordinate system in pixels.
    */
-  int height();
+  int height() const;
 
 private:
   Range<double> m_xRange;

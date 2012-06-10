@@ -15,7 +15,7 @@ class Drawer {
 
 public:
 
-  virtual ~Drawer() {};
+  virtual ~Drawer() {}
 
   /**
    * This method is called by Plot2D to trigger a repaint of the contents of

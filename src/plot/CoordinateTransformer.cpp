@@ -28,7 +28,7 @@ void CoordinateTransformer::math(const QPoint& src, QPointF& dst) {
   dst.setY(y);
 }
 
-const Range<double>& CoordinateTransformer::xRange() {
+const Range<double>& CoordinateTransformer::xRange() const {
   return m_xRange;
 }
 
@@ -36,7 +36,7 @@ void CoordinateTransformer::setXRange(const Range<double>& range) {
   m_xRange = range;
 }
 
-const Range<double>& CoordinateTransformer::yRange() {
+const Range<double>& CoordinateTransformer::yRange() const {
   return m_yRange;
 }
 
@@ -44,7 +44,7 @@ void CoordinateTransformer::setYRange(const Range<double>& range) {
   m_yRange = range;
 }
 
-const Range<int>& CoordinateTransformer::xPixelRange() {
+const Range<int>& CoordinateTransformer::xPixelRange() const {
   return m_xPixelRange;
 }
 
@@ -52,7 +52,7 @@ void CoordinateTransformer::setXPixelRange(const Range<int>& range) {
   m_xPixelRange = range;
 }
 
-const Range<int>& CoordinateTransformer::yPixelRange() {
+const Range<int>& CoordinateTransformer::yPixelRange() const {
   return m_yPixelRange;
 }
 
@@ -60,10 +60,10 @@ void CoordinateTransformer::setYPixelRange(const Range<int>& range) {
   m_yPixelRange = range;
 }
 
-int CoordinateTransformer::width() {
+int CoordinateTransformer::width() const {
   return m_xPixelRange.length();
 }
 
-int CoordinateTransformer::height() {
+int CoordinateTransformer::height() const {
   return m_yPixelRange.length();
 }
