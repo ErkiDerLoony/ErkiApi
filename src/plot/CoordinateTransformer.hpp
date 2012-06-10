@@ -41,7 +41,7 @@ public:
    * @param dst  A point on the screen that corresponds to the given
    *             mathematical point.
    */
-  void screen(const QPointF& src, QPoint& dst);
+  void screen(const QPointF& src, QPoint& dst) const;
 
   /**
    * Translate screen coordinates to math coordinates.
@@ -49,7 +49,7 @@ public:
    * @param src  A point in screen coordinates.
    * @param dst  The math coordinates of the given point.
    */
-  void math(const QPoint& src, QPointF& dst);
+  void math(const QPoint& src, QPointF& dst) const;
 
   /**
    * Access the range of the horizontal axis of the math coordinate system.
