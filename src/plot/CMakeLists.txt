@@ -8,6 +8,7 @@ qt4_automoc(${SRC})
 include_directories(${CMAKE_CURRENT_BINARY_DIR} drawers)
 
 add_subdirectory(drawers)
+add_subdirectory(actions)
 #add_subdirectory(style)
 #add_subdirectory(axes)
 

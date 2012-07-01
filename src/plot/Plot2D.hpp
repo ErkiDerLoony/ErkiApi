@@ -22,7 +22,7 @@ class Drawer;
  */
 class Plot2D : public QWidget {
 
-Q_OBJECT
+  Q_OBJECT
 
 public:
 
@@ -41,14 +41,16 @@ public:
    * Destroy this plot. All remaining drawers will be deleted and their
    * ressources freed.
    */
-  ~Plot2D();
+  virtual ~Plot2D();
 
   /**
    * Add a new drawer to this plot.
    *
    * @param drawer  the new drawer to add
    */
-  void add(Drawer* drawer);
+  virtual void add(Drawer* drawer);
+
+  virtual void mousePressEvent(QMouseEvent* event);
 
 protected:
 
