@@ -137,6 +137,12 @@ public class CommandLineParser {
     public boolean contains(String... keys) {
         
         for (String key : keys) {
+
+            if (key.startsWith("--")) {
+                key = key.substring(2);
+            } else if (key.startsWith("-")) {
+                key = key.substring(1);
+            }
             
             if (map.containsKey(key)) {
                 return true;
@@ -163,6 +169,12 @@ public class CommandLineParser {
         String result = null;
         
         for (String key : keys) {
+
+            if (key.startsWith("--")) {
+                key = key.substring(2);
+            } else if (key.startsWith("-")) {
+                key = key.substring(1);
+            }
             
             if (contains(key)) {
                 result = map.get(key);
@@ -180,6 +192,12 @@ public class CommandLineParser {
         String result = null;
         
         for (String key : keys) {
+
+            if (key.startsWith("--")) {
+                key = key.substring(2);
+            } else if (key.startsWith("-")) {
+                key = key.substring(1);
+            }
             
             if (contains(key)) {
                 result = map.get(key);
